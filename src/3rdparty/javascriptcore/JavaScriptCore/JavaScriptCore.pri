@@ -102,6 +102,7 @@ SOURCES += \
     interpreter/CallFrame.cpp \
     interpreter/Interpreter.cpp \
     interpreter/RegisterFile.cpp \
+    jit/ExecutableAllocatorFixedVMPool.cpp \
     jit/ExecutableAllocatorPosix.cpp \
     jit/ExecutableAllocatorSymbian.cpp \
     jit/ExecutableAllocatorWin.cpp \
