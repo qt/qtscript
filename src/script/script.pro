@@ -1,3 +1,5 @@
+load(qt_module)
+
 TARGET     = QtScript
 QPRO_PWD   = $$PWD
 QT         = core
@@ -9,22 +11,13 @@ DEFINES   += QLALR_NO_QSCRIPTGRAMMAR_DEBUG_INFO
 
 unix|win32-g++*:QMAKE_PKGCONFIG_REQUIRES = QtCore
 
-include(../qbase.pri)
+include($$QT_SOURCE_TREE/src/qbase.pri)
 
 CONFIG += building-libs
 
-# FIXME: shared the statically built JavaScriptCore
+WEBKITDIR = $$PWD/../3rdparty/javascriptcore
+GENERATED_SOURCES_DIR = generated
 
-# Fetch the base WebKit directory from the WEBKITDIR environment variable;
-# fall back to src/3rdparty otherwise
-WEBKITDIR = $$(WEBKITDIR)
-isEmpty(WEBKITDIR) {
-    WEBKITDIR = $$PWD/../3rdparty/javascriptcore
-    GENERATED_SOURCES_DIR = generated
-} else {
-    message(using external WebKit from $$WEBKITDIR)
-    CONFIG -= QTDIR_build
-}
 include($$WEBKITDIR/WebKit.pri)
 
 # Disable a few warnings on Windows.
@@ -53,6 +46,10 @@ qpa:mac {
 }
 
 include($$WEBKITDIR/JavaScriptCore/JavaScriptCore.pri)
+
+INCLUDEPATH += $$OUT_PWD/../../include \
+    $$OUT_PWD/../../include/QtScript \
+    $$OUT_PWD/../../include/QtScript/private
 
 INCLUDEPATH += $$WEBKITDIR/JavaScriptCore
 INCLUDEPATH += $$WEBKITDIR/JavaScriptCore/parser
