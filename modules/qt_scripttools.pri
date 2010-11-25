@@ -4,6 +4,6 @@ QT_SCRIPTTOOLS_MINOR_VERSION = $$QT_MINOR_VERSION
 QT_SCRIPTTOOLS_PATCH_VERSION = $$QT_PATCH_VERSION
 
 QT.scripttools.name = QtScriptTools
-QT.scripttools.includes = $$QT_MODULE_INCLUDE_BASE/QtScriptTools
+QT.scripttools.includes = $$QT_MODULE_INCLUDE_BASE $$QT_MODULE_INCLUDE_BASE/QtScriptTools
 QT.scripttools.libs = $$QT_MODULE_LIB_BASE
 QT.scripttools.depends = script gui network
