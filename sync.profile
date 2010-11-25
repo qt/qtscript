@@ -11,3 +11,7 @@
     "gui" => "#include <QtGui/QtGui>\n",
     "scripttools" => "#include <QtScriptTools/QtScriptTools>\n",
 );
+%modulepris = (
+    "QtScript" => "$basedir/modules/qt_script.pri",
+    "QtScriptTools" => "$basedir/modules/qt_scripttools.pri",
+);

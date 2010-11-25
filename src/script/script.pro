@@ -47,10 +47,6 @@ qpa:mac {
 
 include($$WEBKITDIR/JavaScriptCore/JavaScriptCore.pri)
 
-INCLUDEPATH += $$OUT_PWD/../../include \
-    $$OUT_PWD/../../include/QtScript \
-    $$OUT_PWD/../../include/QtScript/private
-
 INCLUDEPATH += $$WEBKITDIR/JavaScriptCore
 INCLUDEPATH += $$WEBKITDIR/JavaScriptCore/parser
 INCLUDEPATH += $$WEBKITDIR/JavaScriptCore/bytecompiler

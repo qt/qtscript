@@ -13,10 +13,4 @@ include($$QT_SOURCE_TREE/src/qbase.pri)
 
 include(debugging/debugging.pri)
 
-INCLUDEPATH += $$OUT_PWD/../../include \
-    $$OUT_PWD/../../include/QtScript \
-    $$OUT_PWD/../../include/QtScript/private \
-    $$OUT_PWD/../../include/QtScriptTools \
-    $$OUT_PWD/../../include/QtScriptTools/private
-
 symbian:TARGET.UID3=0x2001E625
