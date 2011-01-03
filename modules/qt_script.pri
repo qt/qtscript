@@ -9,3 +9,6 @@ QT.script.private_includes = $$QT_MODULE_INCLUDE_BASE/QtScript/private
 QT.script.sources = $$QT_MODULE_BASE/src/script
 QT.script.libs = $$QT_MODULE_LIB_BASE
 QT.script.depends = core
+QT.script.DEFINES = QT_SCRIPT_LIB
+
+QT_CONFIG += script
