@@ -9,7 +9,7 @@
 %mastercontent = (
     "core" => "#include <QtCore/QtCore>\n",
     "gui" => "#include <QtGui/QtGui>\n",
-    "scripttools" => "#include <QtScriptTools/QtScriptTools>\n",
+    "script" => "#include <QtScript/QtScript>\n",
 );
 %modulepris = (
     "QtScript" => "$basedir/modules/qt_script.pri",
