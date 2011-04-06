@@ -157,3 +157,5 @@ SOURCES += \
 
 HEADERS += \
     $$PWD/qscriptenginedebugger.h
+
+!contains(QT_CONFIG, svg) DEFINES *= QT_NO_SVG
