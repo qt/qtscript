@@ -2,7 +2,7 @@ load(qt_module)
 
 TARGET     = QtScript
 QPRO_PWD   = $$PWD
-QT         = core
+QT         = core-private
 
 CONFIG += module
 MODULE_PRI = ../../modules/qt_script.pri

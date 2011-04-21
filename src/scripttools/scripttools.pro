@@ -2,7 +2,7 @@ load(qt_module)
 
 TARGET     = QtScriptTools
 QPRO_PWD   = $$PWD
-QT         = core gui script
+QT         = core-private gui-private script
 
 CONFIG += module
 MODULE_PRI = ../../modules/qt_scripttools.pri
