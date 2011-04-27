@@ -13,4 +13,4 @@ sources.files = $$RESOURCES $$FORMS main.cpp qscript.pro
 sources.path = $$[QT_INSTALL_EXAMPLES]/qtscript/script/qscript
 INSTALLS += target sources
 
-symbian: include($$QT_SOURCE_TREE/examples/symbianpkgrules.pri)
+symbian: CONFIG += qt_example

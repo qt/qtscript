@@ -24,7 +24,7 @@ INSTALLS += target sources
 
 symbian:{
     TARGET.UID3 = 0xA000C608
-    include($$QT_SOURCE_TREE/examples/symbianpkgrules.pri)
+    CONFIG += qt_example
     TARGET.EPOCHEAPSIZE = 0x200000 0xA00000
     contextScripts.path = .
     contextScripts.files = scripts
