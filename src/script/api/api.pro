@@ -2,7 +2,8 @@ load(qt_module)
 
 TARGET     = QtScript
 QPRO_PWD   = $$PWD
-QT         = core
+QT         = core-private script-private
+
 DEFINES   += QT_BUILD_SCRIPT_LIB
 DEFINES   += QT_NO_USING_NAMESPACE
 #win32-msvc*|win32-icc:QMAKE_LFLAGS += /BASE:0x66000000       ### FIXME
