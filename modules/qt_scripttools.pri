@@ -1,12 +1,12 @@
-QT_SCRIPTTOOLS_VERSION = $$QT_VERSION
-QT_SCRIPTTOOLS_MAJOR_VERSION = $$QT_MAJOR_VERSION
-QT_SCRIPTTOOLS_MINOR_VERSION = $$QT_MINOR_VERSION
-QT_SCRIPTTOOLS_PATCH_VERSION = $$QT_PATCH_VERSION
+QT.scripttools.VERSION = 4.8.0
+QT.scripttools.MAJOR_VERSION = 4
+QT.scripttools.MINOR_VERSION = 8
+QT.scripttools.PATCH_VERSION = 0
 
 QT.scripttools.name = QtScriptTools
 QT.scripttools.bins = $$QT_MODULE_BIN_BASE
 QT.scripttools.includes = $$QT_MODULE_INCLUDE_BASE $$QT_MODULE_INCLUDE_BASE/QtScriptTools
-QT.scripttools.private_includes = $$QT_MODULE_INCLUDE_BASE/QtScriptTools/private
+QT.scripttools.private_includes = $$QT_MODULE_INCLUDE_BASE/QtScriptTools/$$QT.scripttools.VERSION
 QT.scripttools.sources = $$QT_MODULE_BASE/src/scripttools
 QT.scripttools.libs = $$QT_MODULE_LIB_BASE
 QT.scripttools.plugins = $$QT_MODULE_PLUGIN_BASE
