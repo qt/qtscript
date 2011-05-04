@@ -1,3 +1,5 @@
+load(qt_module)
+
 TARGET     = QtScriptTools
 QPRO_PWD   = $$PWD
 QT         = core gui script
@@ -7,8 +9,7 @@ DEFINES   += QT_NO_USING_NAMESPACE
 
 unix|win32-g++*:QMAKE_PKGCONFIG_REQUIRES = QtCore QtGui QtScript
 
-include(../qbase.pri)
-
+include($$QT_SOURCE_TREE/src/qbase.pri)
 
 include(debugging/debugging.pri)
 

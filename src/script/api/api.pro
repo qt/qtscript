@@ -1,3 +1,5 @@
+load(qt_module)
+
 TARGET     = QtScript
 QPRO_PWD   = $$PWD
 QT         = core
@@ -7,7 +9,7 @@ DEFINES   += QT_NO_USING_NAMESPACE
 
 unix:QMAKE_PKGCONFIG_REQUIRES = QtCore
 
-include($$PWD/../../qbase.pri)
+include($$QT_SOURCE_TREE/src/qbase.pri)
 
 CONFIG += building-libs
 

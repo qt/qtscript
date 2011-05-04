@@ -17,3 +17,6 @@ SUBDIRS=\
            qscriptvaluegenerated \
            qscriptvaluestable \
            qscriptvalueiterator
+
+!cross_compile:                             SUBDIRS += host.pro
+
