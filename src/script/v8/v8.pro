@@ -115,7 +115,7 @@ V8SOURCES = \
     $$V8DIR/src/extensions/externalize-string-extension.cc \
 
 
-arch_arm {
+contains(QT_ARCH, arm) {
 DEFINES += V8_TARGET_ARCH_ARM
 V8SOURCES += \
     $$V8DIR/src/jump-target-light.cc \
@@ -144,7 +144,7 @@ V8SOURCES += \
 
 }
 
-arch_mips {
+contains(QT_ARCH, mips) {
 DEFINES += V8_TARGET_ARCH_MIPS
 V8SOURCES += \
     $$V8DIR/src/mips/assembler-mips.cc \
@@ -165,7 +165,7 @@ V8SOURCES += \
 
 }
 
-arch_i386 {
+contains(QT_ARCH, i386) {
 DEFINES += V8_TARGET_ARCH_IA32
 V8SOURCES += \
     $$V8DIR/src/jump-target-heavy.cc \
@@ -194,7 +194,7 @@ V8SOURCES += \
 }
 
 # FIXME Should we use QT_CONFIG instead? What about 32 bit Macs?
-arch_x86_64|contains(CONFIG, x86_64) {
+contains(QT_ARCH, x86_64)|contains(CONFIG, x86_64) {
 DEFINES += V8_TARGET_ARCH_X64
 V8SOURCES += \
     $$V8DIR/src/jump-target-heavy.cc \
