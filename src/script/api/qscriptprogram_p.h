@@ -24,56 +24,119 @@
 #ifndef QSCRIPTPROGRAM_P_H
 #define QSCRIPTPROGRAM_P_H
 
-//
-//  W A R N I N G
-//  -------------
-//
-// This file is not part of the Qt API.  It exists purely as an
-// implementation detail.  This header file may change from version to
-// version without notice, or even be removed.
-//
-// We mean it.
-//
+#include "qscriptconverter_p.h"
+#include "qscriptprogram.h"
+#include "qscriptshareddata_p.h"
+#include <QtCore/qstring.h>
 
-#include <QtCore/qobjectdefs.h>
-
-#include "RefPtr.h"
-
-namespace JSC
-{
-    class EvalExecutable;
-    class ExecState;
-}
+#include <v8.h>
 
 QT_BEGIN_NAMESPACE
 
+/*
+   FIXME The QScriptProgramPrivate potentially could be much faster.
+*/
+
 class QScriptEnginePrivate;
 
-class QScriptProgramPrivate
+class QScriptProgramPrivate : public QScriptSharedData
 {
 public:
-    QScriptProgramPrivate(const QString &sourceCode,
-                          const QString &fileName,
-                          int firstLineNumber);
-    ~QScriptProgramPrivate();
+    inline static QScriptProgramPrivate* get(const QScriptProgram& program);
+    inline QScriptProgramPrivate();
+    inline QScriptProgramPrivate(const QString& sourceCode,
+                   const QString fileName,
+                   int firstLineNumber);
 
-    static QScriptProgramPrivate *get(const QScriptProgram &q);
+    inline ~QScriptProgramPrivate();
 
-    JSC::EvalExecutable *executable(JSC::ExecState *exec,
-                                    QScriptEnginePrivate *engine);
-    void detachFromEngine();
+    inline bool isNull() const;
 
-    QBasicAtomicInt ref;
+    inline QString sourceCode() const;
+    inline QString fileName() const;
+    inline int firstLineNumber() const;
 
-    QString sourceCode;
-    QString fileName;
-    int firstLineNumber;
+    inline bool operator==(const QScriptProgramPrivate& other) const;
+    inline bool operator!=(const QScriptProgramPrivate& other) const;
 
-    QScriptEnginePrivate *engine;
-    WTF::RefPtr<JSC::EvalExecutable> _executable;
-    intptr_t sourceId;
-    bool isCompiled;
+    inline int line() const;
+    inline bool isCompiled() const;
+    v8::Persistent<v8::Script> compiled(const QScriptEnginePrivate* engine);
+
+    QString m_program;
+    QString m_fileName;
+    int m_line;
+    QScriptEnginePrivate *m_engine;
+    v8::Persistent<v8::Script> m_compiled;
+private:
+    Q_DISABLE_COPY(QScriptProgramPrivate)
 };
+
+QScriptProgramPrivate* QScriptProgramPrivate::get(const QScriptProgram& program)
+{
+    return const_cast<QScriptProgramPrivate*>(program.d_ptr.constData());
+}
+
+QScriptProgramPrivate::QScriptProgramPrivate()
+    : m_line(-1)
+{}
+
+QScriptProgramPrivate::QScriptProgramPrivate(const QString& sourceCode,
+               const QString fileName,
+               int firstLineNumber)
+                   : m_program(sourceCode)
+                   , m_fileName(fileName)
+                   , m_line(firstLineNumber)
+{}
+
+QScriptProgramPrivate::~QScriptProgramPrivate()
+{
+    m_compiled.Dispose();
+}
+
+bool QScriptProgramPrivate::isNull() const
+{
+    return m_program.isNull();
+}
+
+QString QScriptProgramPrivate::sourceCode() const
+{
+    return m_program;
+}
+
+QString QScriptProgramPrivate::fileName() const
+{
+    return m_fileName;
+}
+
+int QScriptProgramPrivate::firstLineNumber() const
+{
+    return m_line;
+}
+
+bool QScriptProgramPrivate::operator==(const QScriptProgramPrivate& other) const
+{
+    return m_line == other.m_line
+            && m_fileName == other.m_fileName
+            && m_program == other.m_program;
+}
+
+bool QScriptProgramPrivate::operator!=(const QScriptProgramPrivate& other) const
+{
+    return m_line != other.m_line
+            || m_fileName != other.m_fileName
+            || m_program != other.m_program;
+}
+
+int QScriptProgramPrivate::line() const
+{
+    return m_line;
+}
+
+bool QScriptProgramPrivate::isCompiled() const
+{
+    return m_engine;
+}
 
 QT_END_NAMESPACE
 

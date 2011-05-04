@@ -5,6 +5,7 @@ SUBDIRS=\
            qscriptcontext \
            qscriptcontextinfo \
            qscriptengine \
+           qscriptenginestable \
            qscriptengineagent \
            qscriptenginedebugger \
            qscriptextensionplugin \
@@ -14,5 +15,5 @@ SUBDIRS=\
            qscriptv8testsuite \
            qscriptvalue \
            qscriptvaluegenerated \
-           qscriptvalueiterator \
-
+           qscriptvaluestable \
+           qscriptvalueiterator

@@ -36,24 +36,34 @@
 //
 
 #include <QtCore/qobjectdefs.h>
+#include "qscripttools_p.h"
+#include "qscriptengine_p.h"
+#include "qscriptcontext_p.h"
+#include "qscriptable.h"
 
 QT_BEGIN_NAMESPACE
 
 class QScriptable;
 class QScriptablePrivate
+        : public QScriptLinkedNode
 {
     Q_DECLARE_PUBLIC(QScriptable)
 public:
-    inline QScriptablePrivate()
-        : engine(0)
-        { }
+    static inline QScriptablePrivate *get(QScriptable *q) { return q->d_func(); }
 
-    static inline QScriptablePrivate *get(QScriptable *q)
-        { return q->d_func(); }
+    QScriptablePrivate(const QScriptable* q) : q_ptr(const_cast<QScriptable*>(q)), m_engine(0) {}
+    inline void reinitialize();
 
-    QScriptEngine *engine;
+    inline QScriptEnginePrivate* engine() const;
+    inline QScriptContextPrivate* context() const;
+    inline QScriptPassPointer<QScriptValuePrivate> thisObject() const;
+    inline int argumentCount() const;
+    inline QScriptPassPointer<QScriptValuePrivate> argument(int index) const;
 
+    inline QScriptEnginePrivate *swapEngine(QScriptEnginePrivate *);
+private:
     QScriptable *q_ptr;
+    QScriptEnginePrivate *m_engine;
 };
 
 QT_END_NAMESPACE

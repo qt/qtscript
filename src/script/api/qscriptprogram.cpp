@@ -21,19 +21,18 @@
 **
 ****************************************************************************/
 
-#include "config.h"
 #include "qscriptprogram.h"
 #include "qscriptprogram_p.h"
-#include "qscriptengine.h"
+#include "qscriptisolate_p.h"
 #include "qscriptengine_p.h"
-
-#include "SamplingTool.h"
-#include "Executable.h"
+#include "qscriptable_p.h"
+#include "qscript_impl_p.h"
 
 QT_BEGIN_NAMESPACE
 
 /*!
-  \since 4.7
+  \internal
+
   \class QScriptProgram
 
   \brief The QScriptProgram class encapsulates a Qt Script program.
@@ -51,97 +50,41 @@ QT_BEGIN_NAMESPACE
   \endcode
 */
 
-QScriptProgramPrivate::QScriptProgramPrivate(const QString &src,
-                                             const QString &fn,
-                                             int ln)
-    : sourceCode(src), fileName(fn), firstLineNumber(ln),
-      engine(0), _executable(0), sourceId(-1), isCompiled(false)
-{
-    ref = 0;
-}
-
-QScriptProgramPrivate::~QScriptProgramPrivate()
-{
-    if (engine) {
-        QScript::APIShim shim(engine);
-        _executable.clear();
-        engine->unregisterScriptProgram(this);
-    }
-}
-
-QScriptProgramPrivate *QScriptProgramPrivate::get(const QScriptProgram &q)
-{
-    return const_cast<QScriptProgramPrivate*>(q.d_func());
-}
-
-JSC::EvalExecutable *QScriptProgramPrivate::executable(JSC::ExecState *exec,
-                                                       QScriptEnginePrivate *eng)
-{
-    if (_executable) {
-        if (eng == engine)
-            return _executable.get();
-        // "Migrating" to another engine; clean up old state
-        QScript::APIShim shim(engine);
-        _executable.clear();
-        engine->unregisterScriptProgram(this);
-    }
-    WTF::PassRefPtr<QScript::UStringSourceProviderWithFeedback> provider
-        = QScript::UStringSourceProviderWithFeedback::create(sourceCode, fileName, firstLineNumber, eng);
-    sourceId = provider->asID();
-    JSC::SourceCode source(provider, firstLineNumber); //after construction of SourceCode provider variable will be null.
-    _executable = JSC::EvalExecutable::create(exec, source);
-    engine = eng;
-    engine->registerScriptProgram(this);
-    isCompiled = false;
-    return _executable.get();
-}
-
-void QScriptProgramPrivate::detachFromEngine()
-{
-    _executable.clear();
-    sourceId = -1;
-    isCompiled = false;
-    engine = 0;
-}
-
 /*!
   Constructs a null QScriptProgram.
 */
 QScriptProgram::QScriptProgram()
-    : d_ptr(0)
-{
-}
+    : d_ptr(new QScriptProgramPrivate)
+{}
 
 /*!
   Constructs a new QScriptProgram with the given \a sourceCode, \a
   fileName and \a firstLineNumber.
 */
-QScriptProgram::QScriptProgram(const QString &sourceCode,
-                               const QString fileName,
-                               int firstLineNumber)
+QScriptProgram::QScriptProgram(const QString& sourceCode,
+               const QString fileName,
+               int firstLineNumber)
     : d_ptr(new QScriptProgramPrivate(sourceCode, fileName, firstLineNumber))
-{
-}
-
-/*!
-  Constructs a new QScriptProgram that is a copy of \a other.
-*/
-QScriptProgram::QScriptProgram(const QScriptProgram &other)
-    : d_ptr(other.d_ptr)
-{
-}
+{}
 
 /*!
   Destroys this QScriptProgram.
 */
 QScriptProgram::~QScriptProgram()
+{}
+
+/*!
+  Constructs a new QScriptProgram that is a copy of \a other.
+*/
+QScriptProgram::QScriptProgram(const QScriptProgram& other)
 {
+    d_ptr = other.d_ptr;
 }
 
 /*!
   Assigns the \a other value to this QScriptProgram.
 */
-QScriptProgram &QScriptProgram::operator=(const QScriptProgram &other)
+QScriptProgram& QScriptProgram::operator=(const QScriptProgram& other)
 {
     d_ptr = other.d_ptr;
     return *this;
@@ -153,8 +96,7 @@ QScriptProgram &QScriptProgram::operator=(const QScriptProgram &other)
 */
 bool QScriptProgram::isNull() const
 {
-    Q_D(const QScriptProgram);
-    return (d == 0);
+    return d_ptr->isNull();
 }
 
 /*!
@@ -162,10 +104,7 @@ bool QScriptProgram::isNull() const
 */
 QString QScriptProgram::sourceCode() const
 {
-    Q_D(const QScriptProgram);
-    if (!d)
-        return QString();
-    return d->sourceCode;
+    return d_ptr->sourceCode();
 }
 
 /*!
@@ -173,10 +112,7 @@ QString QScriptProgram::sourceCode() const
 */
 QString QScriptProgram::fileName() const
 {
-    Q_D(const QScriptProgram);
-    if (!d)
-        return QString();
-    return d->fileName;
+    return d_ptr->fileName();
 }
 
 /*!
@@ -184,33 +120,51 @@ QString QScriptProgram::fileName() const
 */
 int QScriptProgram::firstLineNumber() const
 {
-    Q_D(const QScriptProgram);
-    if (!d)
-        return -1;
-    return d->firstLineNumber;
+    return d_ptr->firstLineNumber();
 }
 
 /*!
   Returns true if this QScriptProgram is equal to \a other;
   otherwise returns false.
 */
-bool QScriptProgram::operator==(const QScriptProgram &other) const
+bool QScriptProgram::operator==(const QScriptProgram& other) const
 {
-    Q_D(const QScriptProgram);
-    if (d == other.d_func())
-        return true;
-    return (sourceCode() == other.sourceCode())
-        && (fileName() == other.fileName())
-        && (firstLineNumber() == other.firstLineNumber());
+    return d_ptr == other.d_ptr || *d_ptr == *other.d_ptr;
 }
 
 /*!
   Returns true if this QScriptProgram is not equal to \a other;
   otherwise returns false.
 */
-bool QScriptProgram::operator!=(const QScriptProgram &other) const
+bool QScriptProgram::operator!=(const QScriptProgram& other) const
 {
-    return !operator==(other);
+    return d_ptr != other.d_ptr && *d_ptr != *other.d_ptr;
 }
+
+/*!
+ *  \internal
+ *  Compiles script. The engine is used only for error checking (warn about engine mixing).
+ *  \attention It assumes that there is created a right context, handleScope and tryCatch on the stack.
+ */
+v8::Persistent<v8::Script> QScriptProgramPrivate::compiled(const QScriptEnginePrivate* engine)
+{
+    Q_ASSERT(engine);
+    if (isCompiled() && m_engine == engine)
+        return m_compiled;
+
+    if (m_engine) {
+        //Different engine, we need to dicard the old handle with the other isolate
+        QScriptIsolate api(m_engine, QScriptIsolate::NotNullEngine);
+        Q_ASSERT(!m_compiled.IsEmpty());
+        m_compiled.Dispose();
+        m_compiled.Clear();
+    }
+    // Recompile the script
+    // FIXME maybe we can reuse the same script?
+    m_engine = const_cast<QScriptEnginePrivate*>(engine);
+    m_compiled = v8::Persistent<v8::Script>::New(v8::Script::Compile(QScriptConverter::toString(sourceCode()), QScriptConverter::toString(fileName())));
+    return m_compiled;
+}
+
 
 QT_END_NAMESPACE

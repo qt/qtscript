@@ -35,24 +35,78 @@
 // We mean it.
 //
 
-#include <QtCore/qobjectdefs.h>
-
-namespace JSC
-{
-    class JSObject;
-    class ArgList;
-    class ExecState;
-}
+#include <QtCore/QVarLengthArray>
+#include <QtCore/QPair>
+#include "qscriptcontext.h"
+#include "qscriptshareddata_p.h"
+#include "qscriptvalue_p.h"
+#include "v8.h"
 
 QT_BEGIN_NAMESPACE
 
 class QScriptEnginePrivate;
-
 class QScriptContext;
 
-QT_END_NAMESPACE
+class QScriptContextPrivate : public QScriptContext
+{
+    Q_DECLARE_PUBLIC(QScriptContext);
+public:
+    static QScriptContextPrivate *get(const QScriptContext *q) { Q_ASSERT(q->d_ptr); return q->d_ptr; }
+    static QScriptContext *get(QScriptContextPrivate *d) { return d->q_func(); }
 
-#include "wtf/Platform.h"
-#include "JSValue.h"
+    inline QScriptContextPrivate(QScriptEnginePrivate *engine); // the global context (member of QScriptEnginePrivate)
+    inline QScriptContextPrivate(QScriptEnginePrivate *engine, const v8::Arguments *args, v8::Handle<v8::Value> callee = v8::Handle<v8::Value>(), v8::Handle<v8::Object> customThisObject = v8::Handle<v8::Object>()); // native function context (on the stack)
+    inline QScriptContextPrivate(QScriptEnginePrivate *engine, const v8::AccessorInfo *accessor); // native acessors (on the stack)
+    inline QScriptContextPrivate(QScriptEnginePrivate *engine, v8::Handle<v8::Context> context); // from QScriptEngine::pushContext
+    inline QScriptContextPrivate(QScriptContextPrivate *parent, v8::Handle<v8::StackFrame> frame); // internal, for js frame (allocated in parentContext())
+    inline ~QScriptContextPrivate();
+
+    inline bool isGlobalContext() const { return !parent; }
+    inline bool isNativeFunction() const { return arguments; }
+    inline bool isNativeAccessor() const { return accessorInfo; }
+    inline bool isJSFrame() const { return !frame.IsEmpty(); }
+    inline bool isPushedContext() const { return !context.IsEmpty() && !arguments && !accessorInfo; }
+
+    inline QScriptPassPointer<QScriptValuePrivate> argument(int index) const;
+    inline int argumentCount() const;
+    inline QScriptPassPointer<QScriptValuePrivate> argumentsObject() const;
+    v8::Handle<v8::Object> thisObject() const;
+    inline void setThisObject(QScriptValuePrivate *);
+    inline QScriptPassPointer<QScriptValuePrivate> callee() const;
+
+    inline QScriptPassPointer<QScriptValuePrivate> activationObject() const;
+    inline void setActivationObject(QScriptValuePrivate *);
+    inline QScriptValueList scopeChain() const;
+    inline void pushScope(QScriptValuePrivate *object);
+    inline QScriptPassPointer<QScriptValuePrivate> popScope();
+    inline QScriptPassPointer<QScriptValuePrivate> createArgumentsObject();
+    inline void initializeArgumentsProperty();
+
+    inline v8::Handle<v8::Value> throwError(Error error, const QString &text);
+
+    QScriptContext* q_ptr;
+    QScriptEnginePrivate *engine;
+    const v8::Arguments *arguments;
+    const v8::AccessorInfo *accessorInfo;
+    v8::Persistent<v8::Context> context;
+    QList<v8::Persistent<v8::Context> > scopes;
+    v8::Persistent<v8::Context> inheritedScope;
+    QScriptContextPrivate *parent; //the parent native frame as seen by the engine
+    mutable QScriptContextPrivate *previous; //the previous js frame (lazily build)
+    v8::Persistent<v8::StackFrame> frame; //only for js frames
+    QScriptSharedDataPointer<QScriptValuePrivate> argsObject;
+    v8::Persistent<v8::Object> m_thisObject;
+    v8::Persistent<v8::Value> m_callee;
+    bool hasArgumentGetter;
+
+    static const int stackTraceLimit = 100;
+
+private:
+    static v8::Handle<v8::Value> argumentsPropertyGetter(v8::Local<v8::String> , const v8::AccessorInfo &);
+    Q_DISABLE_COPY(QScriptContextPrivate)
+};
+
+
+QT_END_NAMESPACE
 
 #endif

@@ -21,14 +21,11 @@
 **
 ****************************************************************************/
 
-#include "config.h"
 #include "qscriptengineagent.h"
 #include "qscriptengineagent_p.h"
 #include "qscriptengine.h"
 #include "qscriptengine_p.h"
-
-#include "CodeBlock.h"
-#include "Instruction.h"
+#include "qscript_impl_p.h"
 
 QT_BEGIN_NAMESPACE
 
@@ -111,105 +108,6 @@ QT_BEGIN_NAMESPACE
   \sa extension()
 */
 
-
-void QScriptEngineAgentPrivate::attach()
-{
-    if (engine->originalGlobalObject()->debugger())
-        engine->originalGlobalObject()->setDebugger(0);
-    JSC::Debugger::attach(engine->originalGlobalObject());
-    if (!QScriptEnginePrivate::get(engine)->isEvaluating())
-        JSC::Debugger::recompileAllJSFunctions(engine->globalData);
-}
-
-void QScriptEngineAgentPrivate::detach()
-{
-    JSC::Debugger::detach(engine->originalGlobalObject());
-}
-
-void QScriptEngineAgentPrivate::returnEvent(const JSC::DebuggerCallFrame& frame, intptr_t sourceID, int lineno)
-{
-    Q_UNUSED(frame);
-    Q_UNUSED(lineno);
-    Q_UNUSED(sourceID);
-}
-
-void QScriptEngineAgentPrivate::exceptionThrow(const JSC::DebuggerCallFrame& frame, intptr_t sourceID, bool hasHandler)
-{
-    JSC::CallFrame *oldFrame = engine->currentFrame;
-    int oldAgentLineNumber = engine->agentLineNumber;
-    engine->currentFrame = frame.callFrame();
-    QScriptValue value(engine->scriptValueFromJSCValue(frame.exception()));
-    engine->agentLineNumber = value.property(QLatin1String("lineNumber")).toInt32();
-    q_ptr->exceptionThrow(sourceID, value, hasHandler);
-    engine->agentLineNumber = oldAgentLineNumber;
-    engine->currentFrame = oldFrame;
-    engine->setCurrentException(value);
-};
-
-void QScriptEngineAgentPrivate::exceptionCatch(const JSC::DebuggerCallFrame& frame, intptr_t sourceID)
-{
-    JSC::CallFrame *oldFrame = engine->currentFrame;
-    engine->currentFrame = frame.callFrame();
-    QScriptValue value(engine->scriptValueFromJSCValue(frame.exception()));
-    q_ptr->exceptionCatch(sourceID, value);
-    engine->currentFrame = oldFrame;
-    engine->clearCurrentException();
-}
-
-void QScriptEngineAgentPrivate::atStatement(const JSC::DebuggerCallFrame& frame, intptr_t sourceID, int lineno/*, int column*/)
-{
-    QScript::UStringSourceProviderWithFeedback *source = engine->loadedScripts.value(sourceID);
-    if (!source) {
-        // QTBUG-6108: We don't have the source for this script, so ignore.
-        return;
-    }
-//    column = source->columnNumberFromOffset(column);
-    int column = 1;
-    JSC::CallFrame *oldFrame = engine->currentFrame;
-    int oldAgentLineNumber = engine->agentLineNumber;
-    engine->currentFrame = frame.callFrame();
-    engine->agentLineNumber = lineno;
-    q_ptr->positionChange(sourceID, lineno, column);
-    engine->currentFrame = oldFrame;
-    engine->agentLineNumber = oldAgentLineNumber;
-}
-
-void QScriptEngineAgentPrivate::functionExit(const JSC::JSValue& returnValue, intptr_t sourceID)
-{
-    QScriptValue result = engine->scriptValueFromJSCValue(returnValue);
-    q_ptr->functionExit(sourceID, result);
-    q_ptr->contextPop();
-}
-
-void QScriptEngineAgentPrivate::evaluateStop(const JSC::JSValue& returnValue, intptr_t sourceID)
-{
-    QScriptValue result = engine->scriptValueFromJSCValue(returnValue);
-    q_ptr->functionExit(sourceID, result);
-}
-
-void QScriptEngineAgentPrivate::didReachBreakpoint(const JSC::DebuggerCallFrame& frame,
-                                                   intptr_t sourceID, int lineno/*, int column*/)
-{
-    if (q_ptr->supportsExtension(QScriptEngineAgent::DebuggerInvocationRequest)) {
-        QScript::UStringSourceProviderWithFeedback *source = engine->loadedScripts.value(sourceID);
-        if (!source) {
-            // QTBUG-6108: We don't have the source for this script, so ignore.
-            return;
-        }
-//        column = source->columnNumberFromOffset(column);
-        int column = 1;
-        JSC::CallFrame *oldFrame = engine->currentFrame;
-        int oldAgentLineNumber = engine->agentLineNumber;
-        engine->currentFrame = frame.callFrame();
-        engine->agentLineNumber = lineno;
-        QList<QVariant> args;
-        args << qint64(sourceID) << lineno << column;
-        q_ptr->extension(QScriptEngineAgent::DebuggerInvocationRequest, args);
-        engine->currentFrame = oldFrame;
-        engine->agentLineNumber = oldAgentLineNumber;
-    }
-};
-
 /*!
     Constructs a QScriptEngineAgent object for the given \a engine.
 
@@ -219,29 +117,14 @@ void QScriptEngineAgentPrivate::didReachBreakpoint(const JSC::DebuggerCallFrame&
     agent.
 */
 QScriptEngineAgent::QScriptEngineAgent(QScriptEngine *engine)
-        : d_ptr(new QScriptEngineAgentPrivate())
-{
-    d_ptr->q_ptr = this;
-    d_ptr->engine = QScriptEnginePrivate::get(engine);
-    d_ptr->engine->ownedAgents.append(this);
-}
-
-/*!
-  \internal
-*/
-QScriptEngineAgent::QScriptEngineAgent(QScriptEngineAgentPrivate &dd, QScriptEngine *engine)
-    : d_ptr(&dd)
-{
-    d_ptr->q_ptr = this;
-    d_ptr->engine = QScriptEnginePrivate::get(engine);
-}
+    : d_ptr(new QScriptEngineAgentPrivate(this, QScriptEnginePrivate::get(engine)))
+{}
 
 /*!
   Destroys this QScriptEngineAgent.
 */
 QScriptEngineAgent::~QScriptEngineAgent()
 {
-    d_ptr->engine->agentDeleted(this); //### TODO: Can this throw?
 }
 
 /*!
@@ -438,27 +321,6 @@ void QScriptEngineAgent::exceptionCatch(qint64 scriptId,
     Q_UNUSED(exception);
 }
 
-#if 0
-/*!
-  This function is called when a property of the given \a object has
-  been added, changed or removed.
-
-  Reimplement this function if you want to handle this event.
-
-  The default implementation does nothing.
-*/
-void QScriptEngineAgent::propertyChange(qint64 scriptId,
-                                        const QScriptValue &object,
-                                        const QString &propertyName,
-                                        PropertyChange change)
-{
-    Q_UNUSED(scriptId);
-    Q_UNUSED(object);
-    Q_UNUSED(propertyName);
-    Q_UNUSED(change);
-}
-#endif
-
 /*!
   Returns true if the QScriptEngineAgent supports the given \a
   extension; otherwise, false is returned. By default, no extensions
@@ -504,7 +366,21 @@ QVariant QScriptEngineAgent::extension(Extension extension,
 QScriptEngine *QScriptEngineAgent::engine() const
 {
     Q_D(const QScriptEngineAgent);
-    return QScriptEnginePrivate::get(d->engine);
+    return QScriptEnginePrivate::get(d->engine());
 }
+
+/*!
+    \internal
+    This function is called when v8:Script object is garbage collected.
+*/
+void QScriptEngineAgentPrivate::UnloadData::UnloadHandler(v8::Persistent<v8::Value> object, void *dataPtr)
+{
+    Q_ASSERT(dataPtr);
+    QScriptEngineAgentPrivate::UnloadData *data = static_cast<QScriptEngineAgentPrivate::UnloadData*>(dataPtr);
+    // data will call all callbacks if needed
+    delete data;
+    object.Dispose();
+}
+
 
 QT_END_NAMESPACE

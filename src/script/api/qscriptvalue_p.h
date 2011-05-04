@@ -21,9 +21,6 @@
 **
 ****************************************************************************/
 
-#ifndef QSCRIPTVALUE_P_H
-#define QSCRIPTVALUE_P_H
-
 //
 //  W A R N I N G
 //  -------------
@@ -35,110 +32,198 @@
 // We mean it.
 //
 
-#include <QtCore/qobjectdefs.h>
+#ifndef QSCRIPTVALUE_P_H
+#define QSCRIPTVALUE_P_H
 
-#include "wtf/Platform.h"
-#include "JSValue.h"
+#include <v8.h>
+
+#include <QtCore/qbytearray.h>
+#include <QtCore/qdatetime.h>
+#include <QtCore/qmath.h>
+#include <QtCore/qvarlengtharray.h>
+#include <qdebug.h>
+
+#include "qscriptconverter_p.h"
+#include "qscripttools_p.h"
+#include "qscriptshareddata_p.h"
+#include "qscriptvalue.h"
+#include "qscriptstring_p.h"
 
 QT_BEGIN_NAMESPACE
 
-class QString;
-class QScriptEnginePrivate;
-
-class QScriptValue;
+class QScriptClassPrivate;
+/*!
+  \internal
+  \class QScriptValuePrivate
+*/
 class QScriptValuePrivate
+        : public QSharedData
+        , public QScriptLinkedNode
 {
-    Q_DISABLE_COPY(QScriptValuePrivate)
 public:
-    inline void* operator new(size_t, QScriptEnginePrivate*);
-    inline void operator delete(void*);
-
-    enum Type {
-        JavaScriptCore,
-        Number,
-        String
-    };
-
-    inline QScriptValuePrivate(QScriptEnginePrivate*);
+    inline QScriptValuePrivate();
+    inline static QScriptValuePrivate* get(const QScriptValue& q);
+    inline static QScriptValue get(const QScriptValuePrivate* d);
+    inline static QScriptValue get(QScriptValuePrivate* d);
+    inline static QScriptValue get(QScriptPassPointer<QScriptValuePrivate> d);
     inline ~QScriptValuePrivate();
 
-    inline void initFrom(JSC::JSValue value);
-    inline void initFrom(qsreal value);
-    inline void initFrom(const QString &value);
+    inline QScriptValuePrivate(bool value);
+    inline QScriptValuePrivate(int value);
+    inline QScriptValuePrivate(uint value);
+    inline QScriptValuePrivate(qsreal value);
+    inline QScriptValuePrivate(const QString& value);
+    inline QScriptValuePrivate(QScriptValue::SpecialValue value);
 
-    inline bool isJSC() const;
+    inline QScriptValuePrivate(QScriptEnginePrivate* engine, bool value);
+    inline QScriptValuePrivate(QScriptEnginePrivate* engine, int value);
+    inline QScriptValuePrivate(QScriptEnginePrivate* engine, uint value);
+    inline QScriptValuePrivate(QScriptEnginePrivate* engine, qsreal value);
+    inline QScriptValuePrivate(QScriptEnginePrivate* engine, const QString& value);
+    inline QScriptValuePrivate(QScriptEnginePrivate* engine, QScriptValue::SpecialValue value);
+    inline QScriptValuePrivate(QScriptEnginePrivate* engine, v8::Handle<v8::Value>);
+    inline void reinitialize();
+    inline void reinitialize(QScriptEnginePrivate* engine, v8::Handle<v8::Value> value);
+
+    inline bool toBool() const;
+    inline qsreal toNumber() const;
+    inline QScriptPassPointer<QScriptValuePrivate> toObject() const;
+    inline QScriptPassPointer<QScriptValuePrivate> toObject(QScriptEnginePrivate* engine) const;
+    inline QString toString() const;
+    inline qsreal toInteger() const;
+    inline qint32 toInt32() const;
+    inline quint32 toUInt32() const;
+    inline quint16 toUInt16() const;
+    inline QDateTime toDataTime() const;
+    inline QRegExp toRegExp() const;
+    inline QObject *toQObject() const;
+    inline QVariant toVariant() const;
+    inline const QMetaObject *toQMetaObject() const;
+
+    inline bool isArray() const;
+    inline bool isBool() const;
+    inline bool isCallable() const;
+    inline bool isError() const;
+    inline bool isFunction() const;
+    inline bool isNull() const;
+    inline bool isNumber() const;
     inline bool isObject() const;
+    inline bool isString() const;
+    inline bool isUndefined() const;
+    inline bool isValid() const;
+    inline bool isVariant() const;
+    inline bool isDate() const;
+    inline bool isRegExp() const;
+    inline bool isQObject() const;
+    inline bool isQMetaObject() const;
 
-    static inline QScriptValuePrivate *get(const QScriptValue &q)
-    {
-        return q.d_ptr.data();
-    }
+    inline bool equals(QScriptValuePrivate* other);
+    inline bool strictlyEquals(QScriptValuePrivate* other);
+    inline bool lessThan(QScriptValuePrivate *other) const;
+    inline bool instanceOf(QScriptValuePrivate*) const;
+    inline bool instanceOf(v8::Handle<v8::Object> other) const;
 
-    static inline QScriptValue toPublic(QScriptValuePrivate *d)
-    {
-        return QScriptValue(d);
-    }
+    inline QScriptPassPointer<QScriptValuePrivate> prototype() const;
+    inline void setPrototype(QScriptValuePrivate* prototype);
+    QScriptClassPrivate* scriptClass() const;
+    void setScriptClass(QScriptClassPrivate* scriptclass);
 
-    static inline QScriptEnginePrivate *getEngine(const QScriptValue &q)
-    {
-        if (!q.d_ptr)
-            return 0;
-        return q.d_ptr->engine;
-    }
+    inline void setProperty(const QScriptStringPrivate *name, QScriptValuePrivate *value, uint attribs = 0);
+    inline void setProperty(const QString &name, QScriptValuePrivate *value, uint attribs = 0);
+    inline void setProperty(v8::Handle<v8::String> name, QScriptValuePrivate *value, uint attribs = 0);
+    inline void setProperty(quint32 index, QScriptValuePrivate* value, uint attribs = 0);
+    inline QScriptPassPointer<QScriptValuePrivate> property(const QString& name, const QScriptValue::ResolveFlags& mode) const;
+    inline QScriptPassPointer<QScriptValuePrivate> property(QScriptStringPrivate* name, const QScriptValue::ResolveFlags& mode) const;
+    inline QScriptPassPointer<QScriptValuePrivate> property(v8::Handle<v8::String> name, const QScriptValue::ResolveFlags& mode) const;
+    inline QScriptPassPointer<QScriptValuePrivate> property(quint32 index, const QScriptValue::ResolveFlags& mode) const;
+    template<typename T>
+    inline QScriptPassPointer<QScriptValuePrivate> property(T name, const QScriptValue::ResolveFlags& mode) const;
+    inline bool deleteProperty(const QString& name);
+    inline QScriptValue::PropertyFlags propertyFlags(const QString& name, const QScriptValue::ResolveFlags& mode) const;
+    inline QScriptValue::PropertyFlags propertyFlags(const QScriptStringPrivate* name, const QScriptValue::ResolveFlags& mode) const;
+    inline QScriptValue::PropertyFlags propertyFlags(v8::Handle<v8::String> name, const QScriptValue::ResolveFlags& mode) const;
+    inline void setData(QScriptValuePrivate* value) const;
+    inline QScriptPassPointer<QScriptValuePrivate> data() const;
 
-    inline JSC::JSValue property(const JSC::Identifier &id,
-                                 const QScriptValue::ResolveFlags &mode = QScriptValue::ResolvePrototype) const;
-    inline JSC::JSValue property(quint32 index, const QScriptValue::ResolveFlags &mode = QScriptValue::ResolvePrototype) const;
-    inline JSC::JSValue property(const JSC::UString &, const QScriptValue::ResolveFlags &mode = QScriptValue::ResolvePrototype) const;
-    inline void setProperty(const JSC::UString &name, const JSC::JSValue &value,
-                            const QScriptValue::PropertyFlags &flags = QScriptValue::KeepExistingFlags);
-    inline void setProperty(const JSC::Identifier &id, const JSC::JSValue &value,
-                            const QScriptValue::PropertyFlags &flags = QScriptValue::KeepExistingFlags);
-    inline void setProperty(quint32 index, const JSC::JSValue &value,
-                            const QScriptValue::PropertyFlags &flags = QScriptValue::KeepExistingFlags);
-    inline QScriptValue::PropertyFlags propertyFlags(
-        const JSC::Identifier &id, const QScriptValue::ResolveFlags &mode = QScriptValue::ResolvePrototype) const;
+    inline int convertArguments(QVarLengthArray<v8::Handle<v8::Value>, 8> *argv, const QScriptValue& arguments);
 
-    void detachFromEngine();
+    inline QScriptPassPointer<QScriptValuePrivate> call(QScriptValuePrivate* thisObject, const QScriptValueList& args);
+    inline QScriptPassPointer<QScriptValuePrivate> call(QScriptValuePrivate* thisObject, const QScriptValue& arguments);
+    inline QScriptPassPointer<QScriptValuePrivate> call(QScriptValuePrivate* thisObject, int argc, v8::Handle< v8::Value >* argv);
+    inline QScriptPassPointer<QScriptValuePrivate> construct(int argc, v8::Handle<v8::Value> *argv);
+    inline QScriptPassPointer<QScriptValuePrivate> construct(const QScriptValueList& args);
+    inline QScriptPassPointer<QScriptValuePrivate> construct(const QScriptValue& arguments);
 
-    qint64 objectId()
-    {
-        if ( (type == JavaScriptCore) && (engine) && jscValue.isCell() )
-            return (qint64)jscValue.asCell();
-        else
-            return -1;
-    }
+    inline bool assignEngine(QScriptEnginePrivate* engine);
+    inline QScriptEnginePrivate* engine() const;
 
-    QScriptEnginePrivate *engine;
-    Type type;
-    JSC::JSValue jscValue;
-    qsreal numberValue;
-    QString stringValue;
+    inline operator v8::Handle<v8::Value>() const;
+    inline operator v8::Handle<v8::Object>() const;
+    inline v8::Handle<v8::Value> asV8Value(QScriptEnginePrivate* engine);
+    inline qint64 objectId() const;
+private:
+    QScriptEnginePrivate *m_engine;
 
-    // linked list of engine's script values
-    QScriptValuePrivate *prev;
-    QScriptValuePrivate *next;
+    // Please, update class documentation when you change the enum.
+    enum State {
+        Invalid = 0,
+        CString = 0x1000,
+        CNumber,
+        CBool,
+        CNull,
+        CUndefined,
+        JSValue = 0x2000, // V8 values are equal or higher then this value.
+        // JSPrimitive,
+        // JSObject
+    } m_state;
 
-    QBasicAtomicInt ref;
+    union CValue {
+        bool m_bool;
+        qsreal m_number;
+        QString* m_string;
+
+        CValue() : m_number(0) {}
+        CValue(bool value) : m_bool(value) {}
+        CValue(int number) : m_number(number) {}
+        CValue(uint number) : m_number(number) {}
+        CValue(qsreal number) : m_number(number) {}
+        CValue(QString* string) : m_string(string) {}
+    } u;
+    // v8::Persistent is not a POD, so can't be part of the union.
+    v8::Persistent<v8::Value> m_value;
+
+    Q_DISABLE_COPY(QScriptValuePrivate)
+    inline bool isJSBased() const;
+    inline bool isNumberBased() const;
+    inline bool isStringBased() const;
+    inline bool prepareArgumentsForCall(v8::Handle<v8::Value> argv[], const QScriptValueList& arguments) const;
+
+    friend bool qScriptConnect(QObject *, const char *, const QScriptValue &, const QScriptValue &);
+    friend bool qScriptDisconnect(QObject *, const char *, const QScriptValue &, const QScriptValue &);
 };
 
-inline QScriptValuePrivate::QScriptValuePrivate(QScriptEnginePrivate *e)
-    : engine(e), prev(0), next(0)
+template<>
+class QGlobalStaticDeleter<QScriptValuePrivate>
 {
-    ref = 0;
-}
+public:
+    QGlobalStatic<QScriptValuePrivate> &globalStatic;
+    QGlobalStaticDeleter(QGlobalStatic<QScriptValuePrivate> &_globalStatic)
+        : globalStatic(_globalStatic)
+    {
+        globalStatic.pointer->ref.ref();
+    }
 
-inline bool QScriptValuePrivate::isJSC() const
-{
-    return (type == JavaScriptCore);
-}
+    inline ~QGlobalStaticDeleter()
+    {
+        if (!globalStatic.pointer->ref.deref()) { // Logic copy & paste from SharedDataPointer
+            delete globalStatic.pointer;
+        }
+        globalStatic.pointer = 0;
+        globalStatic.destroyed = true;
+    }
+};
 
-inline bool QScriptValuePrivate::isObject() const
-{
-    return isJSC() && jscValue && jscValue.isObject();
-}
-
-// Rest of inline functions implemented in qscriptengine_p.h
+Q_GLOBAL_STATIC(QScriptValuePrivate, InvalidValue)
 
 QT_END_NAMESPACE
 

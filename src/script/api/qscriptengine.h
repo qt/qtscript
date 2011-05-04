@@ -28,17 +28,12 @@
 
 #include <QtCore/qvariant.h>
 #include <QtCore/qsharedpointer.h>
-
-#ifndef QT_NO_QOBJECT
 #include <QtCore/qobject.h>
-#else
-#include <QtCore/qobjectdefs.h>
-#endif
-
 #include <QtScript/qscriptvalue.h>
 #include <QtScript/qscriptcontext.h>
 #include <QtScript/qscriptstring.h>
 #include <QtScript/qscriptprogram.h>
+#include <QtScript/qscriptsyntaxcheckresult.h>
 
 QT_BEGIN_HEADER
 
@@ -51,15 +46,11 @@ class QScriptClass;
 class QScriptEngineAgent;
 class QScriptEnginePrivate;
 
-#ifndef QT_NO_QOBJECT
-
 template <class T>
 inline QScriptValue qscriptQMetaObjectConstructor(QScriptContext *, QScriptEngine *, T *)
 {
     return QScriptValue();
 }
-
-#endif // QT_NO_QOBJECT
 
 #ifndef QT_NO_REGEXP
 class QRegExp;
@@ -71,45 +62,16 @@ inline QScriptValue qScriptValueFromValue(QScriptEngine *, const T &);
 template <typename T>
 inline T qscriptvalue_cast(const QScriptValue &);
 
-class QScriptSyntaxCheckResultPrivate;
-class Q_SCRIPT_EXPORT QScriptSyntaxCheckResult
+class Q_SCRIPT_EXPORT QScriptEngine
+    : public QObject
 {
+    Q_OBJECT
 public:
-    enum State {
-        Error,
-        Intermediate,
-        Valid
+    enum ContextOwnership {
+        AdoptCurrentContext,
+        CreateNewContext
     };
 
-    QScriptSyntaxCheckResult(const QScriptSyntaxCheckResult &other);
-    ~QScriptSyntaxCheckResult();
-
-    State state() const;
-    int errorLineNumber() const;
-    int errorColumnNumber() const;
-    QString errorMessage() const;
-
-    QScriptSyntaxCheckResult &operator=(const QScriptSyntaxCheckResult &other);
-
-private:
-    QScriptSyntaxCheckResult();
-    QScriptSyntaxCheckResult(QScriptSyntaxCheckResultPrivate *d);
-    QExplicitlySharedDataPointer<QScriptSyntaxCheckResultPrivate> d_ptr;
-
-    Q_DECLARE_PRIVATE(QScriptSyntaxCheckResult)
-    friend class QScriptEngine;
-    friend class QScriptEnginePrivate;
-};
-
-class Q_SCRIPT_EXPORT QScriptEngine
-#ifndef QT_NO_QOBJECT
-    : public QObject
-#endif
-{
-#ifndef QT_NO_QOBJECT
-    Q_OBJECT
-#endif
-public:
     enum ValueOwnership {
         QtOwnership,
         ScriptOwnership,
@@ -131,9 +93,8 @@ public:
     Q_DECLARE_FLAGS(QObjectWrapOptions, QObjectWrapOption)
 
     QScriptEngine();
-#ifndef QT_NO_QOBJECT
+    explicit QScriptEngine(ContextOwnership ownership);
     explicit QScriptEngine(QObject *parent);
-#endif
     virtual ~QScriptEngine();
 
     QScriptValue globalObject() const;
@@ -185,7 +146,6 @@ public:
     QScriptValue newDate(const QDateTime &value);
     QScriptValue newActivationObject();
 
-#ifndef QT_NO_QOBJECT
     QScriptValue newQObject(QObject *object, ValueOwnership ownership = QtOwnership,
                             const QObjectWrapOptions &options = 0);
     QScriptValue newQObject(const QScriptValue &scriptObject, QObject *qtObject,
@@ -195,10 +155,6 @@ public:
     QScriptValue newQMetaObject(const QMetaObject *metaObject, const QScriptValue &ctor = QScriptValue());
 
     template <class T> QScriptValue scriptValueFromQMetaObject();
-
-#endif // QT_NO_QOBJECT
-
-
 
     QScriptValue defaultPrototype(int metaTypeId) const;
     void setDefaultPrototype(int metaTypeId, const QScriptValue &prototype);
@@ -240,10 +196,8 @@ public:
 
     QScriptValue objectById(qint64 id) const;
 
-#ifndef QT_NO_QOBJECT
 Q_SIGNALS:
     void signalHandlerException(const QScriptValue &exception);
-#endif
 
 private:
     QScriptValue create(int type, const void *ptr);
@@ -261,24 +215,11 @@ private:
 
     friend inline bool qscriptvalue_cast_helper(const QScriptValue &, int, void *);
 
-protected:
-#ifdef QT_NO_QOBJECT
-    QScopedPointer<QScriptEnginePrivate> d_ptr;
-
-    QScriptEngine(QScriptEnginePrivate &dd);
-#else
-    QScriptEngine(QScriptEnginePrivate &dd, QObject *parent = 0);
-#endif
-
 private:
     Q_DECLARE_PRIVATE(QScriptEngine)
     Q_DISABLE_COPY(QScriptEngine)
-#ifndef QT_NO_QOBJECT
-    Q_PRIVATE_SLOT(d_func(), void _q_objectDestroyed(QObject *))
-#endif
+    Q_PRIVATE_SLOT(d_func(), void _q_removeConnectedObject(QObject*))
 };
-
-#ifndef QT_NO_QOBJECT
 
 #define Q_SCRIPT_DECLARE_QMETAOBJECT(T, _Arg1) \
 template<> inline QScriptValue qscriptQMetaObjectConstructor<T>(QScriptContext *ctx, QScriptEngine *eng, T *) \
@@ -312,8 +253,6 @@ inline QT_DEPRECATED QScriptValue qScriptValueFromQMetaObject(
     return engine->scriptValueFromQMetaObject<T>();
 }
 #endif
-
-#endif // QT_NO_QOBJECT
 
 inline QScriptValue qScriptValueFromValue_helper(QScriptEngine *engine, int type, const void *ptr)
 {
@@ -433,14 +372,12 @@ int qScriptRegisterSequenceMetaType(
                                       qScriptValueToSequence, prototype);
 }
 
-#ifndef QT_NO_QOBJECT
 Q_SCRIPT_EXPORT bool qScriptConnect(QObject *sender, const char *signal,
                                     const QScriptValue &receiver,
                                     const QScriptValue &function);
 Q_SCRIPT_EXPORT bool qScriptDisconnect(QObject *sender, const char *signal,
                                        const QScriptValue &receiver,
                                        const QScriptValue &function);
-#endif // QT_NO_QOBJECT
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(QScriptEngine::QObjectWrapOptions)
 

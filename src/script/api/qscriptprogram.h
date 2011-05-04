@@ -24,9 +24,8 @@
 #ifndef QSCRIPTPROGRAM_H
 #define QSCRIPTPROGRAM_H
 
-#include <QtCore/qsharedpointer.h>
-
 #include <QtCore/qstring.h>
+#include <QtCore/qshareddata.h>
 
 QT_BEGIN_HEADER
 

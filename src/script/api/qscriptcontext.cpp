@@ -21,23 +21,15 @@
 **
 ****************************************************************************/
 
-#include "config.h"
-#include "qscriptcontext.h"
-
-#include "qscriptcontext_p.h"
-#include "qscriptcontextinfo.h"
-#include "qscriptengine.h"
-#include "qscriptengine_p.h"
-#include "../bridge/qscriptactivationobject_p.h"
-
-#include "Arguments.h"
-#include "CodeBlock.h"
-#include "Error.h"
-#include "JSFunction.h"
-#include "JSObject.h"
-#include "JSGlobalObject.h"
-
 #include <QtCore/qstringlist.h>
+#include "qscriptcontextinfo.h"
+#include "qscriptisolate_p.h"
+#include "qscriptcontext.h"
+#include "qscriptcontext_p.h"
+#include "qscriptengine.h"
+#include "qscriptvalue_p.h"
+#include "qscript_impl_p.h"
+
 
 QT_BEGIN_NAMESPACE
 
@@ -147,9 +139,8 @@ QT_BEGIN_NAMESPACE
   \internal
 */
 QScriptContext::QScriptContext()
+    : d_ptr(static_cast<QScriptContextPrivate *>(this))
 {
-    //QScriptContext doesn't exist,  pointer to QScriptContext are just pointer to  JSC::CallFrame
-    Q_ASSERT(false);
 }
 
 /*!
@@ -160,10 +151,13 @@ QScriptContext::QScriptContext()
 */
 QScriptValue QScriptContext::throwValue(const QScriptValue &value)
 {
-    JSC::CallFrame *frame = QScriptEnginePrivate::frameForContext(this);
-    QScript::APIShim shim(QScript::scriptEngineFromExec(frame));
-    JSC::JSValue jscValue = QScript::scriptEngineFromExec(frame)->scriptValueToJSCValue(value);
-    frame->setException(jscValue);
+    Q_D(QScriptContext);
+    QScriptIsolate api(d->engine);
+    v8::HandleScope handleScope;
+    v8::Handle<v8::Value> exception = QScriptValuePrivate::get(value)->asV8Value(d->engine);
+    if (exception.IsEmpty())
+        exception = v8::Undefined();
+    d->engine->throwException(exception);
     return value;
 }
 
@@ -183,30 +177,10 @@ QScriptValue QScriptContext::throwValue(const QScriptValue &value)
 */
 QScriptValue QScriptContext::throwError(Error error, const QString &text)
 {
-    JSC::CallFrame *frame = QScriptEnginePrivate::frameForContext(this);
-    QScript::APIShim shim(QScript::scriptEngineFromExec(frame));
-    JSC::ErrorType jscError = JSC::GeneralError;
-    switch (error) {
-    case UnknownError:
-        break;
-    case ReferenceError:
-        jscError = JSC::ReferenceError;
-        break;
-    case SyntaxError:
-        jscError = JSC::SyntaxError;
-        break;
-    case TypeError:
-        jscError = JSC::TypeError;
-        break;
-    case RangeError:
-        jscError = JSC::RangeError;
-        break;
-    case URIError:
-        jscError = JSC::URIError;
-        break;
-    }
-    JSC::JSObject *result = JSC::throwError(frame, jscError, text);
-    return QScript::scriptEngineFromExec(frame)->scriptValueFromJSCValue(result);
+    Q_D(QScriptContext);
+    QScriptIsolate api(d->engine);
+    v8::HandleScope handleScope;
+    return d->engine->scriptValueFromInternal(d->throwError(error, text));
 }
 
 /*!
@@ -219,10 +193,10 @@ QScriptValue QScriptContext::throwError(Error error, const QString &text)
 */
 QScriptValue QScriptContext::throwError(const QString &text)
 {
-    JSC::CallFrame *frame = QScriptEnginePrivate::frameForContext(this);
-    QScript::APIShim shim(QScript::scriptEngineFromExec(frame));
-    JSC::JSObject *result = JSC::throwError(frame, JSC::GeneralError, text);
-    return QScript::scriptEngineFromExec(frame)->scriptValueFromJSCValue(result);
+    Q_D(QScriptContext);
+    QScriptIsolate api(d->engine);
+    v8::HandleScope handleScope;
+    return d->engine->scriptValueFromInternal(d->throwError(UnknownError, text));
 }
 
 /*!
@@ -230,8 +204,6 @@ QScriptValue QScriptContext::throwError(const QString &text)
 */
 QScriptContext::~QScriptContext()
 {
-    //QScriptContext doesn't exist,  pointer to QScriptContext are just pointer to JSC::CallFrame
-    Q_ASSERT(false);
 }
 
 /*!
@@ -239,8 +211,8 @@ QScriptContext::~QScriptContext()
 */
 QScriptEngine *QScriptContext::engine() const
 {
-    const JSC::CallFrame *frame = QScriptEnginePrivate::frameForContext(this);
-    return QScriptEnginePrivate::get(QScript::scriptEngineFromExec(frame));
+    Q_D(const QScriptContext);
+    return QScriptEnginePrivate::get(d->engine);
 }
 
 /*!
@@ -253,12 +225,9 @@ QScriptEngine *QScriptContext::engine() const
 */
 QScriptValue QScriptContext::argument(int index) const
 {
-    if (index < 0)
-        return QScriptValue();
-    if (index >= argumentCount())
-        return QScriptValue(QScriptValue::UndefinedValue);
-    QScriptValue v = argumentsObject().property(index);
-    return v;
+    Q_D(const QScriptContext);
+    QScriptIsolate api(d->engine);
+    return QScriptValuePrivate::get(d->argument(index));
 }
 
 /*!
@@ -267,15 +236,10 @@ QScriptValue QScriptContext::argument(int index) const
 */
 QScriptValue QScriptContext::callee() const
 {
-    const JSC::CallFrame *frame = QScriptEnginePrivate::frameForContext(this);
-    QScriptEnginePrivate *eng = QScript::scriptEngineFromExec(frame);
-    QScript::APIShim shim(eng);
-    if (frame->callee() == eng->originalGlobalObject()) {
-        // This is a pushContext()-created context; the callee is a lie.
-        Q_ASSERT(QScriptEnginePrivate::contextFlags(const_cast<JSC::CallFrame*>(frame)) & QScriptEnginePrivate::NativeContext);
-        return QScriptValue();
-    }
-    return eng->scriptValueFromJSCValue(frame->callee());
+    Q_D(const QScriptContext);
+    QScriptIsolate api(d->engine);
+    v8::HandleScope handleScope;
+    return QScriptValuePrivate::get(d->callee());
 }
 
 /*!
@@ -295,39 +259,10 @@ QScriptValue QScriptContext::callee() const
 */
 QScriptValue QScriptContext::argumentsObject() const
 {
-    JSC::CallFrame *frame = const_cast<JSC::ExecState*>(QScriptEnginePrivate::frameForContext(this));
-    QScript::APIShim shim(QScript::scriptEngineFromExec(frame));
-
-    if (frame == frame->lexicalGlobalObject()->globalExec()) {
-        // <global> context doesn't have arguments. return an empty object
-        return QScriptEnginePrivate::get(QScript::scriptEngineFromExec(frame))->newObject();
-    }
-
-    //for a js function
-    if (frame->codeBlock() && frame->callee()) {
-        if (!QScriptEnginePrivate::hasValidCodeBlockRegister(frame)) {
-            // We have a built-in JS host call.
-            // codeBlock is needed by retrieveArguments(), but since it
-            // contains junk, we would crash. Return an invalid value for now.
-            return QScriptValue();
-        }
-        JSC::JSValue result = frame->interpreter()->retrieveArguments(frame, JSC::asFunction(frame->callee()));
-        return QScript::scriptEngineFromExec(frame)->scriptValueFromJSCValue(result);
-    }
-
-    if (frame->callerFrame()->hasHostCallFrameFlag()) {
-        // <eval> context doesn't have arguments. return an empty object
-        return QScriptEnginePrivate::get(QScript::scriptEngineFromExec(frame))->newObject();
-    }
-
-    //for a native function
-    if (!frame->optionalCalleeArguments()
-        && QScriptEnginePrivate::hasValidCodeBlockRegister(frame)) { // Make sure we don't go here for host JSFunctions
-        Q_ASSERT(frame->argumentCount() > 0); //we need at least 'this' otherwise we'll crash later
-        JSC::Arguments* arguments = new (&frame->globalData())JSC::Arguments(frame, JSC::Arguments::NoParameters);
-        frame->setCalleeArguments(arguments);
-    }
-    return QScript::scriptEngineFromExec(frame)->scriptValueFromJSCValue(frame->optionalCalleeArguments());
+    Q_D(const QScriptContext);
+    QScriptIsolate api(d->engine);
+    v8::HandleScope handleScope;
+    return QScriptValuePrivate::get(d->argumentsObject());
 }
 
 /*!
@@ -342,31 +277,11 @@ QScriptValue QScriptContext::argumentsObject() const
 */
 bool QScriptContext::isCalledAsConstructor() const
 {
-    JSC::CallFrame *frame = const_cast<JSC::ExecState*>(QScriptEnginePrivate::frameForContext(this));
-    QScript::APIShim shim(QScript::scriptEngineFromExec(frame));
-
-    //For native functions, look up flags.
-    uint flags = QScriptEnginePrivate::contextFlags(frame);
-    if (flags & QScriptEnginePrivate::NativeContext)
-        return flags & QScriptEnginePrivate::CalledAsConstructorContext;
-
-    //Not a native function, try to look up in the bytecode if we where called from op_construct
-    JSC::Instruction* returnPC = frame->returnPC();
-
-    if (!returnPC)
-        return false;
-
-    JSC::CallFrame *callerFrame = QScriptEnginePrivate::frameForContext(parentContext());
-    if (!callerFrame)
-        return false;
-
-    if (returnPC[-JSC::op_construct_length].u.opcode == frame->interpreter()->getOpcode(JSC::op_construct)) {
-        //We are maybe called from the op_construct opcode which has 6 opperands.
-        //But we need to check we are not called from op_call with 4 opperands
-
-        //we make sure that the returnPC[-1] (thisRegister) is smaller than the returnPC[-3] (registerOffset)
-        //as if it was an op_call, the returnPC[-1] would be the registerOffset, bigger than returnPC[-3] (funcRegister)
-        return returnPC[-1].u.operand < returnPC[-3].u.operand;
+    if (d_ptr->isNativeFunction())
+        return d_ptr->arguments->IsConstructCall();
+    if (d_ptr->isJSFrame()) {
+        QScriptIsolate api(d_ptr->engine);
+        return d_ptr->frame->IsConstructor();
     }
     return false;
 }
@@ -376,10 +291,23 @@ bool QScriptContext::isCalledAsConstructor() const
 */
 QScriptContext *QScriptContext::parentContext() const
 {
-    const JSC::CallFrame *frame = QScriptEnginePrivate::frameForContext(this);
-    QScript::APIShim shim(QScript::scriptEngineFromExec(frame));
-    JSC::CallFrame *callerFrame = frame->callerFrame()->removeHostCallFrameFlag();
-    return QScriptEnginePrivate::contextForFrame(callerFrame);
+    if (!d_ptr->previous && d_ptr->parent && d_ptr == d_ptr->engine->currentContext()) {
+        QScriptIsolate api(d_ptr->engine);
+        v8::HandleScope handleScope;
+        v8::Handle<v8::StackTrace> stacktrace = v8::StackTrace::CurrentStackTrace(QScriptContextPrivate::stackTraceLimit, v8::StackTrace::kDetailed);
+        //build a linked list of QScriptContextPrivate for the js frames
+        QScriptContextPrivate **tail = &d_ptr->previous;
+        for (int i = 0; i < stacktrace->GetFrameCount(); ++i) {
+            v8::Local<v8::StackFrame> fr = stacktrace->GetFrame(i);
+            *tail = new QScriptContextPrivate(d_ptr->parent, fr);
+            tail = &((*tail)->previous);
+        }
+    }
+    if (d_ptr->previous)
+        return d_ptr->previous;
+    if (d_ptr->isJSFrame())
+        return 0; //skip all the native contexts. They are unfortunately hidden by V8, we reached the end of the stack already.
+    return d_ptr->parent;
 }
 
 /*!
@@ -394,11 +322,8 @@ QScriptContext *QScriptContext::parentContext() const
 */
 int QScriptContext::argumentCount() const
 {
-    const JSC::CallFrame *frame = QScriptEnginePrivate::frameForContext(this);
-    int argc = frame->argumentCount();
-    if (argc != 0)
-        --argc; // -1 due to "this"
-    return argc;
+    Q_D(const QScriptContext);
+    return d->argumentCount();
 }
 
 /*!
@@ -406,7 +331,7 @@ int QScriptContext::argumentCount() const
 */
 QScriptValue QScriptContext::returnValue() const
 {
-    qWarning("QScriptContext::returnValue() not implemented");
+    Q_UNIMPLEMENTED();
     return QScriptValue();
 }
 
@@ -415,13 +340,8 @@ QScriptValue QScriptContext::returnValue() const
 */
 void QScriptContext::setReturnValue(const QScriptValue &result)
 {
-    JSC::CallFrame *frame = QScriptEnginePrivate::frameForContext(this);
-    JSC::CallFrame *callerFrame = frame->callerFrame();
-    if (!callerFrame->codeBlock())
-        return;
-    Q_ASSERT_X(false, Q_FUNC_INFO, "check me");
-    int dst = frame->registers()[JSC::RegisterFile::ReturnValueRegister].i(); // returnValueRegister() is private
-    callerFrame[dst] = QScript::scriptEngineFromExec(frame)->scriptValueToJSCValue(result);
+    Q_UNUSED(result);
+    Q_UNIMPLEMENTED();
 }
 
 /*!
@@ -437,53 +357,10 @@ void QScriptContext::setReturnValue(const QScriptValue &result)
 
 QScriptValue QScriptContext::activationObject() const
 {
-    JSC::CallFrame *frame = const_cast<JSC::ExecState*>(QScriptEnginePrivate::frameForContext(this));
-    QScript::APIShim shim(QScript::scriptEngineFromExec(frame));
-    JSC::JSObject *result = 0;
-
-    uint flags = QScriptEnginePrivate::contextFlags(frame);
-    if ((flags & QScriptEnginePrivate::NativeContext) && !(flags & QScriptEnginePrivate::HasScopeContext)) {
-        //For native functions, lazily create it if needed
-        QScript::QScriptActivationObject *scope = new (frame) QScript::QScriptActivationObject(frame);
-        frame->setScopeChain(frame->scopeChain()->copy()->push(scope));
-        result = scope;
-        QScriptEnginePrivate::setContextFlags(frame, flags | QScriptEnginePrivate::HasScopeContext);
-    } else {
-        // look in scope chain
-        JSC::ScopeChainNode *node = frame->scopeChain();
-        JSC::ScopeChainIterator it(node);
-        for (it = node->begin(); it != node->end(); ++it) {
-            if ((*it) && (*it)->isVariableObject()) {
-                result = *it;
-                break;
-            }
-        }
-    }
-    if (!result) {
-        if (!parentContext())
-            return engine()->globalObject();
-
-        qWarning("QScriptContext::activationObject:  could not get activation object for frame");
-        return QScriptValue();
-        /*JSC::CodeBlock *codeBlock = frame->codeBlock();
-        if (!codeBlock) {
-            // non-Qt native function 
-            Q_ASSERT(true); //### this should in theorry not happen
-            result = new (frame)QScript::QScriptActivationObject(frame);
-        } else {
-            // ### this is wrong
-            JSC::FunctionBodyNode *body = static_cast<JSC::FunctionBodyNode*>(codeBlock->ownerNode());
-            result = new (frame)JSC::JSActivation(frame, body);
-        }*/
-    }
-
-    if (result && result->inherits(&QScript::QScriptActivationObject::info)
-        && (static_cast<QScript::QScriptActivationObject*>(result)->delegate() != 0)) {
-        // Return the object that property access is being delegated to
-        result = static_cast<QScript::QScriptActivationObject*>(result)->delegate();
-    }
-
-    return QScript::scriptEngineFromExec(frame)->scriptValueFromJSCValue(result);
+    Q_D(const QScriptContext);
+    QScriptIsolate api(d->engine);
+    v8::HandleScope handleScope;
+    return QScriptValuePrivate::get(d->activationObject());
 }
 
 /*!
@@ -493,57 +370,15 @@ QScriptValue QScriptContext::activationObject() const
   If \a activation is not an object, this function does nothing.
 
   \note For a context corresponding to a JavaScript function, this is only
-  guaranteed to work if there was an QScriptEngineAgent active on the
+  guarenteed to work if there was an QScriptEngineAgent active on the
   engine while the function was evaluated.
 */
 void QScriptContext::setActivationObject(const QScriptValue &activation)
 {
-    if (!activation.isObject())
-        return;
-    else if (activation.engine() != engine()) {
-        qWarning("QScriptContext::setActivationObject() failed: "
-                 "cannot set an object created in "
-                 "a different engine");
-        return;
-    }
-    JSC::CallFrame *frame = QScriptEnginePrivate::frameForContext(this);
-    QScriptEnginePrivate *engine = QScript::scriptEngineFromExec(frame);
-    QScript::APIShim shim(engine);
-    JSC::JSObject *object = JSC::asObject(engine->scriptValueToJSCValue(activation));
-    if (object == engine->originalGlobalObjectProxy)
-        object = engine->originalGlobalObject();
-
-    uint flags = QScriptEnginePrivate::contextFlags(frame);
-    if ((flags & QScriptEnginePrivate::NativeContext) && !(flags & QScriptEnginePrivate::HasScopeContext)) {
-        //For native functions, we create a scope node
-        JSC::JSObject *scope = object;
-        if (!scope->isVariableObject()) {
-            // Create a QScriptActivationObject that acts as a proxy
-            scope = new (frame) QScript::QScriptActivationObject(frame, scope);
-        }
-        frame->setScopeChain(frame->scopeChain()->copy()->push(scope));
-        QScriptEnginePrivate::setContextFlags(frame, flags | QScriptEnginePrivate::HasScopeContext);
-        return;
-    }
-
-    // else replace the first activation object in the scope chain
-    JSC::ScopeChainNode *node = frame->scopeChain();
-    while (node != 0) {
-        if (node->object && node->object->isVariableObject()) {
-            if (!object->isVariableObject()) {
-                if (node->object->inherits(&QScript::QScriptActivationObject::info)) {
-                    static_cast<QScript::QScriptActivationObject*>(node->object)->setDelegate(object);
-                } else {
-                    // Create a QScriptActivationObject that acts as a proxy
-                    node->object = new (frame) QScript::QScriptActivationObject(frame, object);
-                }
-            } else {
-                node->object = object;
-            }
-            break;
-        }
-        node = node->next;
-    }
+    Q_D(QScriptContext);
+    QScriptIsolate api(d->engine);
+    v8::HandleScope handleScope;
+    d->setActivationObject(QScriptValuePrivate::get(activation));
 }
 
 /*!
@@ -551,13 +386,10 @@ void QScriptContext::setActivationObject(const QScriptValue &activation)
 */
 QScriptValue QScriptContext::thisObject() const
 {
-    JSC::CallFrame *frame = const_cast<JSC::ExecState*>(QScriptEnginePrivate::frameForContext(this));
-    QScriptEnginePrivate *engine = QScript::scriptEngineFromExec(frame);
-    QScript::APIShim shim(engine);
-    JSC::JSValue result = engine->thisForContext(frame);
-    if (!result || result.isNull())
-        result = frame->globalThisValue();
-    return engine->scriptValueFromJSCValue(result);
+    Q_D(const QScriptContext);
+    QScriptIsolate api(d->engine);
+    v8::HandleScope handleScope;
+    return d->engine->scriptValueFromInternal(d->thisObject());
 }
 
 /*!
@@ -568,28 +400,10 @@ QScriptValue QScriptContext::thisObject() const
 */
 void QScriptContext::setThisObject(const QScriptValue &thisObject)
 {
-    JSC::CallFrame *frame = QScriptEnginePrivate::frameForContext(this);
-    QScript::APIShim shim(QScript::scriptEngineFromExec(frame));
-    if (!thisObject.isObject())
-        return;
-    if (thisObject.engine() != engine()) {
-        qWarning("QScriptContext::setThisObject() failed: "
-                 "cannot set an object created in "
-                 "a different engine");
-        return;
-    }
-    if (frame == frame->lexicalGlobalObject()->globalExec()) {
-        engine()->setGlobalObject(thisObject);
-        return;
-    }
-    JSC::JSValue jscThisObject = QScript::scriptEngineFromExec(frame)->scriptValueToJSCValue(thisObject);
-    JSC::CodeBlock *cb = frame->codeBlock();
-    if (cb != 0) {
-        frame[cb->thisRegister()] = jscThisObject;
-    } else {
-        JSC::Register* thisRegister = QScriptEnginePrivate::thisRegisterForFrame(frame);
-        thisRegister[0] = jscThisObject;
-    }
+    Q_D(QScriptContext);
+    QScriptIsolate api(d->engine);
+    v8::HandleScope handleScope;
+    d->setThisObject(QScriptValuePrivate::get(thisObject));
 }
 
 /*!
@@ -597,9 +411,12 @@ void QScriptContext::setThisObject(const QScriptValue &thisObject)
 */
 QScriptContext::ExecutionState QScriptContext::state() const
 {
-    const JSC::CallFrame *frame = QScriptEnginePrivate::frameForContext(this);
-    if (frame->hadException())
-        return QScriptContext::ExceptionState;
+    Q_D(const QScriptContext);
+    QScriptEnginePrivate *engine = d->engine;
+    if (engine) {
+        QScriptIsolate api(engine, QScriptIsolate::NotNullEngine);
+        return engine->hasUncaughtException() ? QScriptContext::ExceptionState : QScriptContext::NormalState;
+    }
     return QScriptContext::NormalState;
 }
 
@@ -640,16 +457,17 @@ QString QScriptContext::toString() const
 
     QString functionName = info.functionName();
     if (functionName.isEmpty()) {
-        if (parentContext()) {
-            const JSC::CallFrame *frame = QScriptEnginePrivate::frameForContext(this);
-            if (info.functionType() == QScriptContextInfo::ScriptFunction)
-                result.append(QLatin1String("<anonymous>"));
-            else if(frame->callerFrame()->hasHostCallFrameFlag())
-                result.append(QLatin1String("<eval>"));
-            else
+        if (d_ptr->isGlobalContext() || (!d_ptr->previous && d_ptr->isJSFrame())) {
+            result.append(QLatin1String("<global>"));
+        } else if (!d_ptr->isJSFrame()) {
                 result.append(QLatin1String("<native>"));
         } else {
-            result.append(QLatin1String("<global>"));
+            QScriptIsolate api(d_ptr->engine);
+            if (d_ptr->frame->IsEval()) {
+                result.append(QLatin1String("<eval>"));
+            } else {
+                result.append(QLatin1String("<anonymous>"));
+            }
         }
     } else {
         result.append(functionName);
@@ -670,7 +488,6 @@ QString QScriptContext::toString() const
         result.append(arg.toString());
         if (arg.isString())
             result.append(QLatin1Char('\''));
-
     }
     result.append(QLatin1Char(')'));
 
@@ -693,25 +510,10 @@ QString QScriptContext::toString() const
 */
 QScriptValueList QScriptContext::scopeChain() const
 {
-    activationObject(); //ensure the creation of the normal scope for native context
-    const JSC::CallFrame *frame = QScriptEnginePrivate::frameForContext(this);
-    QScriptEnginePrivate *engine = QScript::scriptEngineFromExec(frame);
-    QScript::APIShim shim(engine);
-    QScriptValueList result;
-    JSC::ScopeChainNode *node = frame->scopeChain();
-    JSC::ScopeChainIterator it(node);
-    for (it = node->begin(); it != node->end(); ++it) {
-        JSC::JSObject *object = *it;
-        if (!object)
-            continue;
-        if (object->inherits(&QScript::QScriptActivationObject::info)
-            && (static_cast<QScript::QScriptActivationObject*>(object)->delegate() != 0)) {
-            // Return the object that property access is being delegated to
-            object = static_cast<QScript::QScriptActivationObject*>(object)->delegate();
-        }
-        result.append(engine->scriptValueFromJSCValue(object));
-    }
-    return result;
+    Q_D(const QScriptContext);
+    QScriptIsolate api(d->engine);
+    v8::HandleScope handleScope;
+    return d->scopeChain();
 }
 
 /*!
@@ -724,33 +526,14 @@ QScriptValueList QScriptContext::scopeChain() const
 */
 void QScriptContext::pushScope(const QScriptValue &object)
 {
-    activationObject(); //ensure the creation of the normal scope for native context
-    if (!object.isObject())
+    Q_D(QScriptContext);
+    Q_ASSERT(this == d->engine->currentContext());
+    QScriptIsolate api(d->engine);
+    v8::HandleScope handleScope;
+    QScriptValuePrivate *object_p = QScriptValuePrivate::get(object);
+    if (!object_p->isObject())
         return;
-    else if (object.engine() != engine()) {
-        qWarning("QScriptContext::pushScope() failed: "
-                 "cannot push an object created in "
-                 "a different engine");
-        return;
-    }
-    JSC::CallFrame *frame = QScriptEnginePrivate::frameForContext(this);
-    QScriptEnginePrivate *engine = QScript::scriptEngineFromExec(frame);
-    QScript::APIShim shim(engine);
-    JSC::JSObject *jscObject = JSC::asObject(engine->scriptValueToJSCValue(object));
-    if (jscObject == engine->originalGlobalObjectProxy)
-        jscObject = engine->originalGlobalObject();
-    JSC::ScopeChainNode *scope = frame->scopeChain();
-    Q_ASSERT(scope != 0);
-    if (!scope->object) {
-        // pushing to an "empty" chain
-        if (!jscObject->isGlobalObject()) {
-            qWarning("QScriptContext::pushScope() failed: initial object in scope chain has to be the Global Object");
-            return;
-        }
-        scope->object = jscObject;
-    }
-    else
-        frame->setScopeChain(scope->push(jscObject));
+    d->pushScope(object_p);
 }
 
 /*!
@@ -765,20 +548,21 @@ void QScriptContext::pushScope(const QScriptValue &object)
 */
 QScriptValue QScriptContext::popScope()
 {
-    activationObject(); //ensure the creation of the normal scope for native context
-    JSC::CallFrame *frame = QScriptEnginePrivate::frameForContext(this);
-    JSC::ScopeChainNode *scope = frame->scopeChain();
-    Q_ASSERT(scope != 0);
-    QScriptEnginePrivate *engine = QScript::scriptEngineFromExec(frame);
-    QScript::APIShim shim(engine);
-    QScriptValue result = engine->scriptValueFromJSCValue(scope->object);
-    if (!scope->next) {
-        // We cannot have a null scope chain, so just zap the object pointer.
-        scope->object = 0;
-    } else {
-        frame->setScopeChain(scope->pop());
-    }
-    return result;
+    Q_D(QScriptContext);
+    QScriptIsolate api(d->engine);
+    v8::HandleScope handleScope;
+    return QScriptValuePrivate::get(d->popScope());
+}
+
+v8::Handle<v8::Value> QScriptContextPrivate::argumentsPropertyGetter(v8::Local<v8::String> property, const v8::AccessorInfo &info)
+{
+    v8::Local<v8::Object> self = info.Holder();
+    QScriptContextPrivate *ctx = static_cast<QScriptContextPrivate *>(v8::External::Unwrap(info.Data()));
+
+    QScriptSharedDataPointer<QScriptValuePrivate> argsObject(ctx->argumentsObject());
+    self->ForceSet(property, *argsObject);
+    ctx->hasArgumentGetter = false;
+    return *argsObject;
 }
 
 QT_END_NAMESPACE

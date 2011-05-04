@@ -28,7 +28,8 @@
 
 #include <QtCore/qlist.h>
 #include <QtCore/qstringlist.h>
-#include <QtCore/qsharedpointer.h>
+
+#include <QtCore/qshareddata.h>
 
 QT_BEGIN_HEADER
 

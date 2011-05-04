@@ -21,9 +21,12 @@
 **
 ****************************************************************************/
 
+#include "qscriptisolate_p.h"
 #include "qscriptable.h"
 #include "qscriptable_p.h"
+#include "qscriptcontext_p.h"
 #include "qscriptengine.h"
+#include "qscript_impl_p.h"
 
 QT_BEGIN_NAMESPACE
 
@@ -82,9 +85,8 @@ QT_BEGIN_NAMESPACE
   \internal
 */
 QScriptable::QScriptable()
-    : d_ptr(new QScriptablePrivate())
+    : d_ptr(new QScriptablePrivate(this))
 {
-    d_ptr->q_ptr = this;
 }
 
 /*!
@@ -102,7 +104,10 @@ QScriptable::~QScriptable()
 QScriptEngine *QScriptable::engine() const
 {
     Q_D(const QScriptable);
-    return d->engine;
+    QScriptEnginePrivate* engine = d->engine();
+    if (engine)
+        return QScriptEnginePrivate::get(engine);
+    return 0;
 }
 
 /*!
@@ -112,10 +117,9 @@ QScriptEngine *QScriptable::engine() const
 */
 QScriptContext *QScriptable::context() const
 {
-    if (QScriptEngine *e = engine())
-        return e->currentContext();
-
-    return 0;
+    Q_D(const QScriptable);
+    QScriptContextPrivate* c = d->context();
+    return c ? QScriptContextPrivate::get(c) : 0;
 }
 
 /*!
@@ -126,10 +130,9 @@ QScriptContext *QScriptable::context() const
 
 QScriptValue QScriptable::thisObject() const
 {
-    if (QScriptContext *c = context())
-        return c->thisObject();
-
-    return QScriptValue();
+    Q_D(const QScriptable);
+    QScriptIsolate api(d->engine());
+    return QScriptValuePrivate::get(d->thisObject());
 }
 
 /*!
@@ -141,10 +144,9 @@ QScriptValue QScriptable::thisObject() const
 */
 int QScriptable::argumentCount() const
 {
-    if (QScriptContext *c = context())
-        return c->argumentCount();
-
-    return -1;
+    Q_D(const QScriptable);
+    QScriptIsolate api(d->engine());
+    return d->argumentCount();
 }
 
 /*!
@@ -155,10 +157,9 @@ int QScriptable::argumentCount() const
 */
 QScriptValue QScriptable::argument(int index) const
 {
-    if (QScriptContext *c = context())
-        return c->argument(index);
-
-    return QScriptValue();
+    Q_D(const QScriptable);
+    QScriptIsolate api(d->engine());
+    return QScriptValuePrivate::get(d->argument(index));
 }
 
 QT_END_NAMESPACE

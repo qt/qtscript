@@ -57,8 +57,6 @@ class QScriptClassPropertyIteratorPrivate
 {
     Q_DECLARE_PUBLIC(QScriptClassPropertyIterator)
 public:
-    QScriptClassPropertyIteratorPrivate() {}
-    virtual ~QScriptClassPropertyIteratorPrivate() {}
 
     QScriptValue object;
 
@@ -82,7 +80,7 @@ QScriptClassPropertyIterator::QScriptClassPropertyIterator(const QScriptValue &o
   \internal
 */
 QScriptClassPropertyIterator::QScriptClassPropertyIterator(const QScriptValue &object,
-                                           QScriptClassPropertyIteratorPrivate &dd)
+                                                           QScriptClassPropertyIteratorPrivate &dd)
     : d_ptr(&dd)
 {
     d_ptr->q_ptr = this;
