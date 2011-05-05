@@ -2540,12 +2540,9 @@ bool qScriptConnect(QObject *sender, const char *signal,
                          function.engine(), SLOT(_q_removeConnectedObject(QObject*)));
     }
 
-    QString signalName(QString::fromLatin1(signal));
-    signalName.remove(0, 1);
-
-    v8::Handle<v8::Object> signalData =  v8Sender->Get(QScriptConverter::toString(signalName))->ToObject();
+    v8::Handle<v8::Object> signalData =  v8Sender->Get(v8::String::New(++signal))->ToObject();
     if (signalData.IsEmpty() || signalData->IsError() || signalData->IsUndefined()) {
-        qWarning("qScriptConnect(): signal '%s' is undefined", qPrintable(signalName));
+        qWarning("qScriptConnect(): signal '%s' is undefined", qPrintable(signal));
         return false;
     }
     v8::Handle<v8::Object> v8Receiver;
@@ -2576,15 +2573,17 @@ bool qScriptDisconnect(QObject *sender, const char *signal,
         return false;
     }
 
-    QString signalName(QString::fromLatin1(signal));
-    signalName.remove(0, 1);
-
-    v8::Handle<v8::Object> signalData =  v8Sender->Get(QScriptConverter::toString(signalName))->ToObject();
+    v8::Handle<v8::Object> signalData =  v8Sender->Get(v8::String::New(++signal))->ToObject();
     if (signalData.IsEmpty() || signalData->IsError() || signalData->IsUndefined()) {
-        qWarning("qScriptDisconnect(): signal '%s' is undefined", qPrintable(signalName));
+        qWarning("qScriptDisconnect(): signal '%s' is undefined", qPrintable(signal));
         return false;
     }
-    return !QScriptSignalData::get(signalData)->disconnect(v8::Handle<v8::Function>::Cast(v8::Handle<v8::Value>(*QScriptValuePrivate::get(function))))->IsError();
+
+    v8::Handle<v8::Object> v8Function = v8::Handle<v8::Object>::Cast(v8::Handle<v8::Value>(*QScriptValuePrivate::get(function)));
+    v8::Handle<v8::Object> v8Receiver;
+    if (receiver.isObject())
+        v8Receiver = v8::Handle<v8::Object>(*QScriptValuePrivate::get(receiver));
+    return !QScriptSignalData::get(signalData)->disconnect(v8Receiver, v8Function)->IsError();
 }
 
 #ifdef QT_BUILD_INTERNAL

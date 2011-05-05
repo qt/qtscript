@@ -397,14 +397,17 @@ public:
     QScriptConnection(QScriptSignalData *signal);
     ~QScriptConnection();
 
-    bool connect(v8::Handle<v8::Object> receiver, v8::Handle<v8::Object> callback, Qt::ConnectionType type);
+    bool connect(v8::Handle<v8::Object> receiver, v8::Handle<v8::Object> slot, Qt::ConnectionType type);
     bool disconnect();
 
     QScriptEnginePrivate *engine() const
     {
         return m_signal->engine;
     }
-    v8::Handle<v8::Object> callback() const
+
+    v8::Handle<v8::Object> receiver() const
+    { return m_receiver; }
+    v8::Handle<v8::Object> slot() const
     { return m_callback; }
 
     // This class implements qt_metacall() and friends manually; moc should
@@ -503,13 +506,15 @@ v8::Handle<v8::Value> QScriptSignalData::connect(v8::Handle<v8::Object> receiver
      return v8::Undefined();
 }
 
-// Disconnect this signal from the given callback.
+// Disconnect this signal from the given receiver/slot pair.
 // Returns undefined if the disconnection succeeded, otherwise throws an error.
-v8::Handle<v8::Value> QScriptSignalData::disconnect(v8::Handle<v8::Function> callback)
+v8::Handle<v8::Value> QScriptSignalData::disconnect(v8::Handle<v8::Object> receiver, v8::Handle<v8::Object> slot)
 {
     for (int i = 0; i < m_connections.size(); ++i) {
         QScriptConnection *connection = m_connections.at(i);
-        if (connection->callback()->StrictEquals(callback)) {
+        v8::Handle<v8::Object> rec = connection->receiver();
+        if (receiver.IsEmpty() == rec.IsEmpty() && (receiver.IsEmpty() || receiver->StrictEquals(rec))
+            && connection->slot()->StrictEquals(slot)) {
             if (!connection->disconnect())
                 return v8::ThrowException(v8::Exception::Error(v8::String::New("QtSignal.disconnect(): failed to disconnect")));
             m_connections.removeAt(i);
@@ -1144,6 +1149,55 @@ v8::Handle<v8::Value> QtMetaObjectCallback(const v8::Arguments& args)
     return v8::Handle<v8::Value>();
 }
 
+// Parses the args, and sets the receiver and slot objects. Returns a thrown exception if there's an error.
+static v8::Handle<v8::Value> getConnectCallbackArguments(const v8::Arguments& args,
+                                                         v8::Handle<v8::Object> *receiver, v8::Handle<v8::Object> *slot,
+                                                         const char *caller)
+{
+    v8::Local<v8::Value> (*error)(v8::Handle<v8::String>) = 0;
+    const char *errorMessage = 0;
+
+    switch (args.Length()) {
+    case 0:
+        error = v8::Exception::SyntaxError;
+        errorMessage = "no arguments given";
+        break;
+    case 1:
+        if (args[0]->IsObject())
+            *slot = v8::Handle<v8::Object>(v8::Object::Cast(*args[0]));
+        break;
+    case 2: {
+        *receiver = v8::Handle<v8::Object>(v8::Object::Cast(*args[0]));
+        v8::Local<v8::Value> arg1 = args[1];
+        if (arg1->IsObject() && !arg1->IsString()) {
+            *slot = v8::Handle<v8::Object>(v8::Object::Cast(*arg1));
+        } else if (!(*receiver).IsEmpty() && arg1->IsString()) {
+            v8::Local<v8::String> propertyName = arg1->ToString();
+            *slot = v8::Handle<v8::Object>(v8::Object::Cast(*(*receiver)->Get(propertyName)));
+        }
+        break;
+    }
+    default:
+        error = v8::Exception::SyntaxError;
+        errorMessage = "too many arguments";
+        break;
+    }
+
+    if ((*slot).IsEmpty() || !(*slot)->IsCallable()) {
+        error = v8::Exception::TypeError;
+        errorMessage = "target is not a function";
+    }
+
+    if (error) {
+        v8::Handle<v8::String> message =
+                QScriptConverter::toString(QLatin1String("QtSignal.") + QLatin1String(caller) + QLatin1String("(): ") +
+                                           QLatin1String(errorMessage));
+        return v8::ThrowException(error(message));
+    }
+
+    return v8::Handle<v8::Value>();
+}
+
 // This callback implements the connect() method of signal wrapper objects.
 // The this-object is a QtSignal wrapper.
 // If the connect succeeds, this function returns undefined; otherwise,
@@ -1156,35 +1210,10 @@ v8::Handle<v8::Value> QScriptSignalData::QtConnectCallback(const v8::Arguments& 
     v8::Local<v8::Object> self = args.Holder();
     QScriptSignalData *data = QScriptSignalData::get(self);
 
-    if (args.Length() == 0)
-        return v8::ThrowException(v8::Exception::SyntaxError(v8::String::New("QtSignal.connect(): no arguments given")));
-
     if (data->resolveMode() == QScriptSignalData::ResolvedByName) {
         // ### Check if the signal is overloaded. If it is, throw an error,
         // since it's not possible to know which of the overloads we should connect to.
         // Can probably figure this out at class/instance construction time
-    }
-
-    v8::Handle<v8::Object> receiver;
-    v8::Handle<v8::Object> slot;
-    if (args.Length() == 1) {
-        //simple function
-        if (!args[0]->IsObject())
-            return handleScope.Close(v8::ThrowException(v8::Exception::TypeError(v8::String::New("QtSignal.connect(): argument is not a function"))));
-        slot = v8::Handle<v8::Object>(v8::Object::Cast(*args[0]));
-    } else {
-        receiver = v8::Handle<v8::Object>(v8::Object::Cast(*args[0]));
-        v8::Local<v8::Value> arg1 = args[1];
-        if (arg1->IsObject() && !arg1->IsString()) {
-            slot = v8::Handle<v8::Object>(v8::Object::Cast(*arg1));
-        } else if (!receiver.IsEmpty() && arg1->IsString()) {
-            v8::Local<v8::String> propertyName = arg1->ToString();
-            slot = v8::Handle<v8::Object>(v8::Object::Cast(*receiver->Get(propertyName)));
-        }
-    }
-
-    if (slot.IsEmpty() || !slot->IsCallable()) {
-        return handleScope.Close(v8::ThrowException(v8::Exception::TypeError(v8::String::New("QtSignal.connect(): target is not a function"))));
     }
 
     // Options:
@@ -1196,7 +1225,11 @@ v8::Handle<v8::Value> QScriptSignalData::QtConnectCallback(const v8::Arguments& 
     // disconnect() needs to be able to go introspect connections
     // of that signal only, for that wrapper only.
 
-    // qDebug() << "connect" << data->object() << data->index();
+    v8::Handle<v8::Object> receiver;
+    v8::Handle<v8::Object> slot;
+    v8::Handle<v8::Value> error = getConnectCallbackArguments(args, &receiver, &slot, "connect");
+    if (!error.IsEmpty())
+        return handleScope.Close(error);
     return handleScope.Close(data->connect(receiver, slot));
 }
 
@@ -1206,17 +1239,16 @@ v8::Handle<v8::Value> QScriptSignalData::QtConnectCallback(const v8::Arguments& 
 // an error is thrown.
 v8::Handle<v8::Value> QScriptSignalData::QtDisconnectCallback(const v8::Arguments& args)
 {
+    v8::HandleScope handleScope;
     v8::Local<v8::Object> self = args.Holder();
     QScriptSignalData *data = QScriptSignalData::get(self);
 
-    if (args.Length() == 0)
-        return v8::ThrowException(v8::Exception::SyntaxError(v8::String::New("QtSignal.disconnect(): no arguments given")));
-
-    // ### Should be able to take any [[Callable]], but there is no v8 API for that.
-    if (!args[0]->IsFunction())
-        return v8::ThrowException(v8::Exception::TypeError(v8::String::New("QtSignal.disconnect(): argument is not a function")));
-
-    return data->disconnect(v8::Handle<v8::Function>(v8::Function::Cast(*args[0])));
+    v8::Handle<v8::Object> receiver;
+    v8::Handle<v8::Object> slot;
+    v8::Handle<v8::Value> error = getConnectCallbackArguments(args, &receiver, &slot, "disconnect");
+    if (!error.IsEmpty())
+        return handleScope.Close(error);
+    return handleScope.Close(data->disconnect(receiver, slot));
 }
 
 static v8::Handle<v8::Value> QtGetMetaMethod(v8::Local<v8::String> property, const v8::AccessorInfo& info)

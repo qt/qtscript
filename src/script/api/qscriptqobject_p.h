@@ -256,7 +256,7 @@ public:
     v8::Handle<v8::Value> connect(v8::Handle<v8::Object> receiver,
                                   v8::Handle<v8::Object> slot,
                                   Qt::ConnectionType type = Qt::AutoConnection);
-    v8::Handle<v8::Value> disconnect(v8::Handle<v8::Function> callback);
+    v8::Handle<v8::Value> disconnect(v8::Handle<v8::Object> receiver, v8::Handle<v8::Object> callback);
 
     static QScriptSignalData *get(v8::Handle<v8::Object> object)
     {
