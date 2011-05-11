@@ -629,7 +629,7 @@ void QScriptEnginePrivate::abortEvaluation(v8::Handle< v8::Value > result)
     m_shouldAbort = true;
     m_abortResult.Dispose();
     m_abortResult = v8::Persistent<v8::Value>::New(result);
-    v8::V8::TerminateExecution();
+    v8::V8::TerminateExecution(m_isolate);
 }
 
 QT_END_NAMESPACE
