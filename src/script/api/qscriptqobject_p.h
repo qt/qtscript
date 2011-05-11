@@ -192,8 +192,6 @@ public:
 
     v8::Handle<v8::Value> call();
 
-    v8::Persistent<v8::Object> m_object;
-    QScriptMetaMethodInfo m_info;
 private:
     static void objectDestroyed(v8::Persistent<v8::Value> object, void *data) {
         QScriptGenericMetaMethodData *that = static_cast<QScriptGenericMetaMethodData *>(data);
@@ -203,6 +201,9 @@ private:
         // Note that since the method keep a reference to the object in its internal field,
         // this is only called when the QScriptGenericMetaMethodData is about to be garbage collected as well.
     }
+
+    v8::Persistent<v8::Object> m_object;
+    QScriptMetaMethodInfo m_info;
 };
 
 class QScriptMetaMethodData : public QScriptGenericMetaMethodData<QScriptMetaMethodData, &QScriptEnginePrivate::metaMethodTemplate>
