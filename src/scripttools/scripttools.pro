@@ -15,6 +15,8 @@ unix|win32-g++*:QMAKE_PKGCONFIG_REQUIRES = QtCore QtGui QtScript
 
 include($$QT_SOURCE_TREE/src/qbase.pri)
 
+HEADERS += qtscripttoolsversion.h
+
 include(debugging/debugging.pri)
 
 symbian:TARGET.UID3=0x2001E625

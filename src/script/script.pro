@@ -17,6 +17,8 @@ unix|win32-g++*:QMAKE_PKGCONFIG_REQUIRES = QtCore
 
 include($$QT_SOURCE_TREE/src/qbase.pri)
 
+HEADERS += qtscriptversion.h
+
 CONFIG += building-libs
 
 WEBKITDIR = $$PWD/../3rdparty/javascriptcore
