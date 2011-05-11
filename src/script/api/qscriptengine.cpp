@@ -1294,7 +1294,7 @@ bool QScriptEngine::isEvaluating() const
 void QScriptEngine::abortEvaluation(const QScriptValue &result)
 {
     Q_D(QScriptEngine);
-    QScriptIsolate api(d);
+    QScriptIsolate api(d, QScriptIsolate::NotNullEngine);
     v8::HandleScope handleScope;
     d->abortEvaluation(QScriptValuePrivate::get(result)->asV8Value(d));
 }
