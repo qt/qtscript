@@ -4,7 +4,7 @@ TARGET = tst_bench_qscriptengine
 
 SOURCES += tst_qscriptengine.cpp
 
-QT += script
+QT += script script-private
 
 symbian* {
     TARGET.EPOCHEAPSIZE  = 0x20000 0x2000000 // Min 128kB, Max 32MB
