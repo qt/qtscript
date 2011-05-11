@@ -16,4 +16,7 @@ SUBDIRS=\
            qscriptvaluegenerated \
            qscriptvalueiterator \
 
+!contains(QT_CONFIG,private-tests):SUBDIRS -= \
+           qscriptcontext \
+
 !cross_compile:                             SUBDIRS += host.pro
