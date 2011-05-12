@@ -1,5 +1,5 @@
 load(qttest_p4)
-QT = core gui script
+QT = core gui script script-private
 SOURCES += tst_qscriptengine.cpp 
 RESOURCES += qscriptengine.qrc
 
