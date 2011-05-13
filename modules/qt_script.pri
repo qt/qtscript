@@ -1,6 +1,6 @@
-QT.script.VERSION = 4.8.0
-QT.script.MAJOR_VERSION = 4
-QT.script.MINOR_VERSION = 8
+QT.script.VERSION = 5.0.0
+QT.script.MAJOR_VERSION = 5
+QT.script.MINOR_VERSION = 0
 QT.script.PATCH_VERSION = 0
 
 QT.script.name = QtScript
