@@ -1009,7 +1009,7 @@ QScriptEngine::QScriptEngine(QObject *parent)
 QScriptEngine::~QScriptEngine()
 {
     Q_D(QScriptEngine);
-    QScriptIsolate api(d);
+    QScriptIsolate api(d, QScriptIsolate::NotNullEngine);
     // We need to delete all Agents here as they have virtual destructor which can use public engine
     // pointer.
     d->invalidateAllAgents();
