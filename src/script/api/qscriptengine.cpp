@@ -819,17 +819,33 @@ QScriptEnginePrivate::~QScriptEnginePrivate()
     invalidateAllScripts();
     invalidateAllValues();
     invalidateAllString();
+    invalidateAllScriptable();
 
-    // FIXME Do we really need to dispose all persistent handlers before context destruction?
-    m_variantTemplate.Dispose();
-    m_metaObjectTemplate.Dispose();
-    m_abortResult.Dispose();
-
-    ClassTemplateHash::iterator i = m_qtClassTemplates.begin();
-    for (; i != m_qtClassTemplates.end(); ++i) {
-        (*i).Dispose();
+    {   // destroy all connection to JS values
+        QHash<const QObject *, v8::Persistent<v8::Object> >::const_iterator i = m_connectedObjects.constBegin();
+        for(; i != m_connectedObjects.constEnd(); ++i) {
+            // we use const_iterator which would block us form calling Dispose
+            v8::Persistent<v8::Object>(i.value()).Dispose();
+        }
+        m_connectedObjects.clear();
     }
-    m_qobjectBaseTemplate.Dispose();
+
+    {   // destroy all templates for different classes
+        m_variantTemplate.Dispose();
+        m_metaObjectTemplate.Dispose();
+
+        ClassTemplateHash::iterator i = m_qtClassTemplates.begin();
+        for (; i != m_qtClassTemplates.end(); ++i) {
+            (*i).Dispose();
+        }
+        m_qtClassTemplates.clear();
+        m_scriptClassToStringTemplate.Dispose();
+        m_qobjectBaseTemplate.Dispose();
+    }
+
+    m_abortResult.Dispose();
+    m_qtDataId.Dispose();
+    m_baseQsContext.reset();
 
     m_typeInfos.clear();
     clearExceptions();
