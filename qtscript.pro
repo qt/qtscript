@@ -6,6 +6,9 @@ module_qtscript_src.target = module-qtscript-src
 module_qtscript_examples.subdir = examples
 module_qtscript_examples.target = module-qtscript-examples
 module_qtscript_examples.depends = module_qtscript_src
+!contains(QT_BUILD_PARTS,examples) {
+    module_qtscript_examples.CONFIG += no_default_install no_default_target
+}
 
 module_qtscript_tests.subdir = tests
 module_qtscript_tests.target = module-qtscript-tests
