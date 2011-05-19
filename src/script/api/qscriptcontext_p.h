@@ -59,9 +59,136 @@ protected:
     inline QScriptContextPrivate(const AllocationType type, QScriptEnginePrivate *engine, v8::Handle<v8::Context> context); // from QScriptEngine::pushContext
     inline QScriptContextPrivate(const AllocationType type, QScriptContextPrivate *parent, v8::Handle<v8::StackFrame> frame); // internal, for js frame (allocated in parentContext())
 
+    inline QScriptContextPrivate(const AllocationType type, QScriptEnginePrivate *engine, const v8::Arguments *args, v8::Local<v8::Value> callee = v8::Local<v8::Value>(), v8::Local<v8::Object> customThisObject = v8::Local<v8::Object>()); // native function context (on the stack)
+    inline QScriptContextPrivate(const AllocationType type, QScriptEnginePrivate *engine, v8::Local<v8::Context> context); // from QScriptEngine::pushContext
+    inline QScriptContextPrivate(const AllocationType type, QScriptContextPrivate *parent, v8::Local<v8::StackFrame> frame); // internal, for js frame (allocated in parentContext())
 public:
     class Stack;
     class Heap;
+    template<class T>
+    class Handle : protected v8::Handle<T>
+    {
+    public:
+        typedef QScriptContextPrivate::AllocationType Type;
+
+        Handle()
+            : m_type(HeapAllocation) // lazy fall-back to Persistent
+        {}
+
+        Handle(Type type)
+            : m_type(type)
+        {}
+
+        Handle(Type type, v8::Handle<T> handle)
+            : m_type(type)
+        {
+            switch (m_type){
+            case Local: *asLocal() = v8::Local<T>::New(handle); break;
+            case Persistent: *asPersistent() = v8::Persistent<T>::New(handle); break;
+            }
+        }
+
+        Handle(Type type, v8::Local<T> handle)
+            : m_type(type)
+        {
+            switch (m_type){
+            case Local:
+                // We do not need to call Local::New because this local is already protected by
+                // a higher HandleScope that would survive longer than this QScriptContextPrivate
+                *asLocal() = handle;
+                break;
+            case Persistent: *asPersistent() = v8::Persistent<T>::New(handle); break;
+            }
+        }
+
+
+        Handle(const Handle<T>& handle)
+            : v8::Handle<T>(*handle)
+            , m_type(handle.m_type)
+        {
+            switch (m_type){
+            case Local:
+                // The other handle is already protected, its live time would the same or a bit longer
+                // so we do not need Local::New here.
+                break;
+            case Persistent: *asPersistent() = v8::Persistent<T>::New(handle); break;
+            }
+        }
+
+        void operator =(v8::Handle<T> handle)
+        {
+            switch (m_type){
+            case Local: *asLocal() = v8::Local<T>::New(handle); break;
+            case Persistent:
+                asPersistent()->Dispose();
+                *asPersistent() = v8::Persistent<T>::New(handle);
+                break;
+            }
+        }
+
+        void operator =(v8::Local<T> handle)
+        {
+            switch (m_type){
+            case Local:
+                // The other handle is already protected, its live time would the same or a bit longer
+                // so we do not need Local::New here.
+                *asLocal() = handle;
+                break;
+            case Persistent:
+                asPersistent()->Dispose();
+                *asPersistent() = v8::Persistent<T>::New(handle);
+                break;
+            }
+        }
+
+        void operator =(Handle<T> handle)
+        {
+            Q_ASSERT(handle.m_type == m_type);
+            switch (m_type) {
+            case Local:
+                // The other handle is already protected, its live time would the same or a bit longer
+                // so we do not need Local::New here.
+                *asLocal() = *handle.asLocal();
+                break;
+            case Persistent:
+                asPersistent()->Dispose();
+                *asPersistent() = v8::Persistent<T>::New(handle);
+                break;
+            }
+        }
+
+        void Dispose()
+        {
+            if (m_type == Persistent) {
+                asPersistent()->Dispose();
+                // FIXME: maybe it is not needed ?
+                asPersistent()->Clear();
+            }
+        }
+
+        inline T* operator->() const { return v8::Handle<T>::operator ->(); }
+        inline T* operator*() const { return v8::Handle<T>::operator *(); }
+        inline bool IsEmpty() const { return v8::Handle<T>::IsEmpty(); }
+        inline v8::Handle<T> v8Handle() const { return v8::Handle<T>(*this); }
+
+    private:
+        static const int Persistent = QScriptContextPrivate::HeapAllocation;
+        static const int Local = QScriptContextPrivate::StackAllocation;
+        const Type m_type;
+
+        inline v8::Persistent<T> *asPersistent()
+        {
+            Q_ASSERT(m_type == Persistent);
+            return reinterpret_cast<v8::Persistent<T> *>(this);
+        }
+
+        inline v8::Local<T> *asLocal()
+        {
+            Q_ASSERT(m_type == Local);
+            return reinterpret_cast<v8::Local<T> *>(this);
+        }
+    };
+
 
     static QScriptContextPrivate *get(const QScriptContext *q) { Q_ASSERT(q->d_ptr); return q->d_ptr; }
     static QScriptContext *get(QScriptContextPrivate *d) { return d->q_func(); }
@@ -96,15 +223,15 @@ public:
     QScriptEnginePrivate *engine;
     const v8::Arguments *arguments;
     const v8::AccessorInfo *accessorInfo;
-    v8::Persistent<v8::Context> context;
-    QList<v8::Persistent<v8::Context> > scopes;
-    v8::Persistent<v8::Context> inheritedScope;
+    Handle<v8::Context> context;
+    QList<Handle<v8::Context> > scopes;
+    Handle<v8::Context> inheritedScope;
     QScriptContextPrivate *parent; //the parent native frame as seen by the engine
     mutable QScriptContextPrivate *previous; //the previous js frame (lazily build)
-    v8::Persistent<v8::StackFrame> frame; //only for js frames
+    Handle<v8::StackFrame> frame; //only for js frames
     QScriptSharedDataPointer<QScriptValuePrivate> argsObject;
-    v8::Persistent<v8::Object> m_thisObject;
-    v8::Persistent<v8::Value> m_callee;
+    Handle<v8::Object> m_thisObject;
+    Handle<v8::Value> m_callee;
     bool hasArgumentGetter;
 
     static const int stackTraceLimit = 100;
@@ -123,7 +250,7 @@ class QScriptContextPrivate::Stack : public QScriptContextPrivate
 {
 public:
     inline Stack(QScriptEnginePrivate *engine); // the global context (member of QScriptEnginePrivate)
-    inline Stack(QScriptEnginePrivate *engine, const v8::Arguments *args, v8::Handle<v8::Value> callee = v8::Handle<v8::Value>(), v8::Handle<v8::Object> customThisObject = v8::Handle<v8::Object>()); // native function context (on the stack)
+    inline Stack(QScriptEnginePrivate *engine, const v8::Arguments *args, v8::Local<v8::Value> callee = v8::Local<v8::Value>(), v8::Local<v8::Object> customThisObject = v8::Local<v8::Object>()); // native function context (on the stack)
     inline Stack(QScriptEnginePrivate *engine, const v8::AccessorInfo *accessor); // native acessors (on the stack)
     // Only base class is used so destructor here is pointless
 private:
@@ -144,7 +271,6 @@ public:
     inline Heap(QScriptContextPrivate *parent, v8::Handle<v8::StackFrame> frame); // internal, for js frame (allocated in parentContext())
     // Only base class is used so a destructor here is pointless
 };
-
 
 QT_END_NAMESPACE
 

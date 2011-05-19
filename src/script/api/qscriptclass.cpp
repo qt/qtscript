@@ -249,7 +249,7 @@ v8::Handle<v8::Value> QScriptClassObject::call(const v8::Arguments& args)
     if (!userCallback->supportsExtension(QScriptClass::Callable))
         return handleScope.Close(v8::ThrowException(v8::Exception::TypeError(v8::String::New("QScriptClass for object doesn't support Callable extension"))));
 
-    v8::Handle<v8::Object> thisObject;
+    v8::Local<v8::Object> thisObject;
 
     // v8 doesn't create a new Object to put in This() when the constructor call came from
     // a callback registered with SetCallAsFunctionHandler().

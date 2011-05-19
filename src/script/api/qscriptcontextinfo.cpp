@@ -128,7 +128,7 @@ QScriptContextInfoPrivate::QScriptContextInfoPrivate(const QScriptContext *conte
     QScriptIsolate api(context_p->engine, QScriptIsolate::NotNullEngine);
     v8::HandleScope handleScope;
     if (context_p->isJSFrame()) {
-        v8::Handle<v8::StackFrame> frame = context_p->frame;
+        v8::Handle<v8::StackFrame> frame = context_p->frame.v8Handle();
         scriptId = frame->GetScriptId()->NumberValue();
         columnNumber = frame->GetColumn();
         lineNumber = frame->GetLineNumber();
