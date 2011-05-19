@@ -50,15 +50,22 @@ class QScriptContext;
 class QScriptContextPrivate : public QScriptContext
 {
     Q_DECLARE_PUBLIC(QScriptContext);
+
+protected:
+    enum AllocationType {HeapAllocation, StackAllocation};
+    inline QScriptContextPrivate(const AllocationType type, QScriptEnginePrivate *engine); // the global context (member of QScriptEnginePrivate)
+    inline QScriptContextPrivate(const AllocationType type, QScriptEnginePrivate *engine, const v8::Arguments *args, v8::Handle<v8::Value> callee = v8::Handle<v8::Value>(), v8::Handle<v8::Object> customThisObject = v8::Handle<v8::Object>()); // native function context (on the stack)
+    inline QScriptContextPrivate(const AllocationType type, QScriptEnginePrivate *engine, const v8::AccessorInfo *accessor); // native acessors (on the stack)
+    inline QScriptContextPrivate(const AllocationType type, QScriptEnginePrivate *engine, v8::Handle<v8::Context> context); // from QScriptEngine::pushContext
+    inline QScriptContextPrivate(const AllocationType type, QScriptContextPrivate *parent, v8::Handle<v8::StackFrame> frame); // internal, for js frame (allocated in parentContext())
+
 public:
+    class Stack;
+    class Heap;
+
     static QScriptContextPrivate *get(const QScriptContext *q) { Q_ASSERT(q->d_ptr); return q->d_ptr; }
     static QScriptContext *get(QScriptContextPrivate *d) { return d->q_func(); }
 
-    inline QScriptContextPrivate(QScriptEnginePrivate *engine); // the global context (member of QScriptEnginePrivate)
-    inline QScriptContextPrivate(QScriptEnginePrivate *engine, const v8::Arguments *args, v8::Handle<v8::Value> callee = v8::Handle<v8::Value>(), v8::Handle<v8::Object> customThisObject = v8::Handle<v8::Object>()); // native function context (on the stack)
-    inline QScriptContextPrivate(QScriptEnginePrivate *engine, const v8::AccessorInfo *accessor); // native acessors (on the stack)
-    inline QScriptContextPrivate(QScriptEnginePrivate *engine, v8::Handle<v8::Context> context); // from QScriptEngine::pushContext
-    inline QScriptContextPrivate(QScriptContextPrivate *parent, v8::Handle<v8::StackFrame> frame); // internal, for js frame (allocated in parentContext())
     inline ~QScriptContextPrivate();
 
     inline bool isGlobalContext() const { return !parent; }
@@ -84,6 +91,7 @@ public:
 
     inline v8::Handle<v8::Value> throwError(Error error, const QString &text);
 
+    const AllocationType m_allocation;
     QScriptContext* q_ptr;
     QScriptEnginePrivate *engine;
     const v8::Arguments *arguments;
@@ -104,6 +112,37 @@ public:
 private:
     static v8::Handle<v8::Value> argumentsPropertyGetter(v8::Local<v8::String> , const v8::AccessorInfo &);
     Q_DISABLE_COPY(QScriptContextPrivate)
+};
+
+/**
+  \internal
+  Optimised context that use Local handles instead of persistent
+  \attention this class doesn't manage HandleScope it is left to user of this class
+  */
+class QScriptContextPrivate::Stack : public QScriptContextPrivate
+{
+public:
+    inline Stack(QScriptEnginePrivate *engine); // the global context (member of QScriptEnginePrivate)
+    inline Stack(QScriptEnginePrivate *engine, const v8::Arguments *args, v8::Handle<v8::Value> callee = v8::Handle<v8::Value>(), v8::Handle<v8::Object> customThisObject = v8::Handle<v8::Object>()); // native function context (on the stack)
+    inline Stack(QScriptEnginePrivate *engine, const v8::AccessorInfo *accessor); // native acessors (on the stack)
+    // Only base class is used so destructor here is pointless
+private:
+    // no heap allocation is allowed these operators are not defined
+    inline void *operator new(size_t);
+    inline void *operator new(size_t, void*);
+};
+
+/**
+  \internal
+  Context that use persistent handles, it would work on a heap as on a stack. It is a bit slower then Stack version
+  */
+class QScriptContextPrivate::Heap : public QScriptContextPrivate
+{
+public:
+    inline Heap(QScriptEnginePrivate *engine); // the global context (member of QScriptEnginePrivate)
+    inline Heap(QScriptEnginePrivate *engine, v8::Handle<v8::Context> context); // from QScriptEngine::pushContext
+    inline Heap(QScriptContextPrivate *parent, v8::Handle<v8::StackFrame> frame); // internal, for js frame (allocated in parentContext())
+    // Only base class is used so a destructor here is pointless
 };
 
 

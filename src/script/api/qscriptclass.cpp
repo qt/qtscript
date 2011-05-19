@@ -260,7 +260,7 @@ v8::Handle<v8::Value> QScriptClassObject::call(const v8::Arguments& args)
             thisObject->SetPrototype(proto);
     }
 
-    QScriptContextPrivate qScriptContext(data->engine, &args, args.Holder(), thisObject);
+    QScriptContextPrivate::Stack qScriptContext(data->engine, &args, args.Holder(), thisObject);
     QScriptContext *ctx = &qScriptContext;
     Q_ASSERT(ctx == data->engine->currentContext());
 

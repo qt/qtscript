@@ -832,7 +832,7 @@ static v8::Handle<v8::Value> QtMetaPropertyGetter(v8::Local<v8::String> property
     v8::Local<v8::Object> self = info.Holder();
     QScriptQObjectData *data = QScriptQObjectData::get(self);
     QScriptEnginePrivate *engine = data->engine();
-    QScriptContextPrivate context(engine, &info);
+    QScriptContextPrivate::Stack context(engine, &info);
 
     v8::Local<v8::Value> error;
     QObject *qobject = data->cppObject(&error);
@@ -871,7 +871,7 @@ static void QtMetaPropertySetter(v8::Local<v8::String> /*property*/,
     v8::Local<v8::Object> self = info.Holder(); // This?
     QScriptQObjectData *data = QScriptQObjectData::get(self);
     QScriptEnginePrivate *engine = data->engine();
-    QScriptContextPrivate context(engine, &info);
+    QScriptContextPrivate::Stack context(engine, &info);
 
     QObject *qobject = data->cppObject();
     if (!qobject)
@@ -931,7 +931,7 @@ v8::Handle<v8::Value> QtDynamicPropertyGetter(v8::Local<v8::String> property,
     v8::Local<v8::Object> self = info.Holder(); // This?
     QScriptQObjectData *data = QScriptQObjectData::get(self);
     QScriptEnginePrivate *engine = data->engine();
-    QScriptContextPrivate context(engine, &info);
+    QScriptContextPrivate::Stack context(engine, &info);
 
     v8::Local<v8::Value> error;
     QObject *qobject = data->cppObject(&error);
@@ -962,7 +962,7 @@ void QtDynamicPropertySetter(v8::Local<v8::String> property,
     v8::Local<v8::Object> self = info.Holder(); // This?
     QScriptQObjectData *data = QScriptQObjectData::get(self);
     QScriptEnginePrivate *engine = data->engine();
-    QScriptContextPrivate context(engine, &info);
+    QScriptContextPrivate::Stack context(engine, &info);
 
     QObject *qobject = data->cppObject();
     if (!qobject)
@@ -995,7 +995,7 @@ v8::Handle<v8::Value> QtLazyPropertyGetter(v8::Local<v8::String> property,
         return v8::Handle<v8::Value>(); //the QObject prototype is being used on another object.
     QScriptQObjectData *data = QScriptQObjectData::get(self);
     Q_ASSERT(engine == data->engine());
-    QScriptContextPrivate context(engine, &info);
+    QScriptContextPrivate::Stack context(engine, &info);
 
     v8::Local<v8::Value> error;
     QObject *qobject = data->cppObject(&error);
@@ -1077,7 +1077,7 @@ v8::Handle<v8::Value> QtMetaObjectPropertyGetter(v8::Local<v8::String> property,
     v8::Local<v8::Object> self = info.Holder();
     QtMetaObjectData *data = QtMetaObjectData::get(self);
     QScriptEnginePrivate *engine = data->engine();
-    QScriptContextPrivate context(engine, &info);
+    QScriptContextPrivate::Stack context(engine, &info);
 
     const QMetaObject *meta = data->metaObject();
     QString propertyName = QScriptConverter::toString(property);
@@ -1109,7 +1109,7 @@ v8::Handle<v8::Array> QtMetaObjectEnumerator(const v8::AccessorInfo& info)
     v8::Local<v8::Object> self = info.Holder();
     QtMetaObjectData *data = QtMetaObjectData::get(self);
     QScriptEnginePrivate *engine = data->engine();
-    QScriptContextPrivate context(engine, &info);
+    QScriptContextPrivate::Stack context(engine, &info);
 
     const QMetaObject *meta = data->metaObject();
     v8::Handle<v8::Array> names = v8::Array::New(0);
@@ -1129,7 +1129,7 @@ v8::Handle<v8::Value> QtMetaObjectCallback(const v8::Arguments& args)
     v8::Local<v8::Object> self = args.Holder();
     QtMetaObjectData *data = QtMetaObjectData::get(self);
     QScriptEnginePrivate *engine = data->engine();
-    QScriptContextPrivate context(engine, &args);
+    QScriptContextPrivate::Stack context(engine, &args);
 
 //    const QMetaObject *meta = data->metaObject();
 //    qDebug() << Q_FUNC_INFO << meta->className();
@@ -1304,7 +1304,7 @@ static v8::Handle<v8::Value> findChildCallback(const v8::Arguments& args)
         return v8::Handle<v8::Value>(); //the QObject prototype is being used on another object.
         QScriptQObjectData *data = QScriptQObjectData::get(self);
     Q_ASSERT(engine == data->engine());
-    QScriptContextPrivate context(engine, &args);
+    QScriptContextPrivate::Stack context(engine, &args);
 
     v8::Local<v8::Value> error;
     QObject *qobject = data->cppObject(&error);
@@ -1349,7 +1349,7 @@ static v8::Handle<v8::Value> findChildrenCallback(const v8::Arguments& args)
         return v8::Handle<v8::Value>(); //the QObject prototype is being used on another object.
         QScriptQObjectData *data = QScriptQObjectData::get(self);
     Q_ASSERT(engine == data->engine());
-    QScriptContextPrivate context(engine, &args);
+    QScriptContextPrivate::Stack context(engine, &args);
 
     v8::Local<v8::Value> error;
     QObject *qobject = data->cppObject(&error);

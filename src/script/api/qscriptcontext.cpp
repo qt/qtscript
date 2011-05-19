@@ -299,7 +299,7 @@ QScriptContext *QScriptContext::parentContext() const
         QScriptContextPrivate **tail = &d_ptr->previous;
         for (int i = 0; i < stacktrace->GetFrameCount(); ++i) {
             v8::Local<v8::StackFrame> fr = stacktrace->GetFrame(i);
-            *tail = new QScriptContextPrivate(d_ptr->parent, fr);
+            *tail = new QScriptContextPrivate::Heap(d_ptr->parent, fr);
             tail = &((*tail)->previous);
         }
     }

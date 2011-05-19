@@ -71,7 +71,7 @@ T *getDataPointer(const v8::Arguments& args)
 #define QTSCRIPT_V8OBJECT_DATA_CALLBACK(arg, callback) \
     v8::HandleScope handleScope; \
     T *data = getDataPointer<T>(arg); \
-    QScriptContextPrivate qScriptContext(data->engine, &arg); \
+    QScriptContextPrivate::Stack qScriptContext(data->engine, &arg); \
     return handleScope.Close(callback);
 #endif
 

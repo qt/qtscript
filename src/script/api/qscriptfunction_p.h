@@ -84,7 +84,7 @@ v8::Handle<v8::Value> QtNativeFunctionCallback(const v8::Arguments& arguments)
     T *data = reinterpret_cast<T *>(wrap->Value());
 
     QScriptEnginePrivate *engine = data->engine();
-    QScriptContextPrivate qScriptContext(engine, &arguments);
+    QScriptContextPrivate::Stack qScriptContext(engine, &arguments);
 
     // When 'v' gets out of scope, it'll delete 'result'.
     QScriptValue v = data->call(&qScriptContext);

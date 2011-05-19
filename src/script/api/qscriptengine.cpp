@@ -704,7 +704,7 @@ QScriptEnginePrivate::QScriptEnginePrivate(QScriptEngine::ContextOwnership owner
     qMetaTypeId<QObjectList>();
 
     Q_ASSERT(!m_v8Context.IsEmpty());
-    m_baseQsContext.reset(new QScriptContextPrivate(this));
+    m_baseQsContext.reset(new QScriptContextPrivate::Heap(this));
     m_isolate->Exit();
 }
 
@@ -759,7 +759,7 @@ class QScriptEnginePrivate::ProcessEventTimeoutThread : public QThread {
         QScriptEnginePrivate *engine = static_cast<QScriptEnginePrivate *>(data);
         //executed in the JS thread
         if (engine->isEvaluating()) {
-            QScriptContextPrivate qScriptContext(engine);
+            QScriptContextPrivate::Stack qScriptContext(engine);
             qApp->processEvents();
         }
     }
@@ -866,7 +866,7 @@ QScriptContextPrivate *QScriptEnginePrivate::pushContext()
 {
     if (m_currentAgent)
         m_currentAgent->pushContext();
-    return new QScriptContextPrivate(this, v8::Context::NewFunctionContext());
+    return new QScriptContextPrivate::Heap(this, v8::Context::NewFunctionContext());
 }
 
 void QScriptEnginePrivate::popContext()
@@ -2104,7 +2104,7 @@ v8::Handle<v8::Value> QtTranslateFunctionQsTr(const v8::Arguments& arguments)
     QString context;
     // This engine should be always valid, because this function can be called if and only if the engine is still alive.
     QScriptEnginePrivate *engine = static_cast<QScriptEnginePrivate*>(v8::Handle<v8::Object>::Cast(arguments.Data())->GetPointerFromInternalField(0));
-    QScriptContextPrivate qScriptContext(engine, &arguments);
+    QScriptContextPrivate::Stack qScriptContext(engine, &arguments);
     QScriptContext *ctx = qScriptContext.parentContext();
     while (ctx) {
         QString fn = QScriptContextInfo(ctx).fileName();

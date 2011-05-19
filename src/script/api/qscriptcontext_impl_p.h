@@ -42,15 +42,15 @@
 
 QT_BEGIN_NAMESPACE
 
-inline QScriptContextPrivate::QScriptContextPrivate(QScriptEnginePrivate *engine)
-    : q_ptr(this), engine(engine), arguments(0), accessorInfo(0), parent(engine->setCurrentQSContext(this)),
+inline QScriptContextPrivate::QScriptContextPrivate(const AllocationType type, QScriptEnginePrivate *engine)
+    : m_allocation(type), q_ptr(this), engine(engine), arguments(0), accessorInfo(0), parent(engine->setCurrentQSContext(this)),
       previous(0) , hasArgumentGetter(false)
 {
     Q_ASSERT(engine);
 }
 
-inline QScriptContextPrivate::QScriptContextPrivate(QScriptEnginePrivate *engine, const v8::Arguments *args, v8::Handle<v8::Value> callee, v8::Handle<v8::Object> customThisObject)
-    : q_ptr(this), engine(engine), arguments(args), accessorInfo(0),
+inline QScriptContextPrivate::QScriptContextPrivate(const AllocationType type, QScriptEnginePrivate *engine, const v8::Arguments *args, v8::Handle<v8::Value> callee, v8::Handle<v8::Object> customThisObject)
+    : m_allocation(type), q_ptr(this), engine(engine), arguments(args), accessorInfo(0),
       context(v8::Persistent<v8::Context>::New(v8::Context::NewFunctionContext())),
       inheritedScope(v8::Persistent<v8::Context>::New(v8::Context::GetCallerContext())),
       parent(engine->setCurrentQSContext(this)), previous(0), m_thisObject(v8::Persistent<v8::Object>::New(customThisObject)),
@@ -61,19 +61,19 @@ inline QScriptContextPrivate::QScriptContextPrivate(QScriptEnginePrivate *engine
     context->Enter();
 }
 
-inline QScriptContextPrivate::QScriptContextPrivate(QScriptEnginePrivate *engine, const v8::AccessorInfo *accessor)
-: q_ptr(this), engine(engine), arguments(0), accessorInfo(accessor),
-  context(v8::Persistent<v8::Context>::New(v8::Context::NewFunctionContext())),
-  inheritedScope(v8::Persistent<v8::Context>::New(v8::Context::GetCallerContext())),
-  parent(engine->setCurrentQSContext(this)), previous(0), hasArgumentGetter(false)
+inline QScriptContextPrivate::QScriptContextPrivate(const AllocationType type, QScriptEnginePrivate *engine, const v8::AccessorInfo *accessor)
+    : m_allocation(type), q_ptr(this), engine(engine), arguments(0), accessorInfo(accessor),
+      context(v8::Persistent<v8::Context>::New(v8::Context::NewFunctionContext())),
+      inheritedScope(v8::Persistent<v8::Context>::New(v8::Context::GetCallerContext())),
+      parent(engine->setCurrentQSContext(this)), previous(0), hasArgumentGetter(false)
 {
     Q_ASSERT(engine);
     Q_ASSERT(parent);
     context->Enter();
 }
 
-inline QScriptContextPrivate::QScriptContextPrivate(QScriptEnginePrivate *engine, v8::Handle<v8::Context> context)
-    : q_ptr(this), engine(engine), arguments(0), accessorInfo(0),
+inline QScriptContextPrivate::QScriptContextPrivate(const AllocationType type, QScriptEnginePrivate *engine, v8::Handle<v8::Context> context)
+    : m_allocation(type), q_ptr(this), engine(engine), arguments(0), accessorInfo(0),
       context(v8::Persistent<v8::Context>::New(context)), parent(engine->setCurrentQSContext(this)),
       previous(0), hasArgumentGetter(false)
 {
@@ -82,8 +82,8 @@ inline QScriptContextPrivate::QScriptContextPrivate(QScriptEnginePrivate *engine
     context->Enter();
 }
 
-inline QScriptContextPrivate::QScriptContextPrivate(QScriptContextPrivate *parent, v8::Handle<v8::StackFrame> frame)
-    : q_ptr(this), engine(parent->engine), arguments(0), accessorInfo(0),
+inline QScriptContextPrivate::QScriptContextPrivate(const AllocationType type, QScriptContextPrivate *parent, v8::Handle<v8::StackFrame> frame)
+    : m_allocation(type), q_ptr(this), engine(parent->engine), arguments(0), accessorInfo(0),
       parent(parent), previous(0), frame(v8::Persistent<v8::StackFrame>::New(frame)), hasArgumentGetter(false)
 {
     Q_ASSERT(engine);
@@ -379,6 +379,31 @@ inline v8::Handle<v8::Value> QScriptContextPrivate::throwError(QScriptContext::E
     }
     return engine->throwException(exception);
 }
+
+inline QScriptContextPrivate::Stack::Stack(QScriptEnginePrivate *engine) // the global context (member of QScriptEnginePrivate)
+    : QScriptContextPrivate(StackAllocation, engine)
+{}
+
+inline QScriptContextPrivate::Stack::Stack(QScriptEnginePrivate *engine, const v8::Arguments *args, v8::Handle<v8::Value> callee, v8::Handle<v8::Object> customThisObject) // native function context (on the stack)
+    : QScriptContextPrivate(StackAllocation, engine, args, callee, customThisObject)
+{}
+
+inline QScriptContextPrivate::Stack::Stack(QScriptEnginePrivate *engine, const v8::AccessorInfo *accessor) // native acessors (on the stack)
+    : QScriptContextPrivate(StackAllocation, engine, accessor)
+{}
+
+inline QScriptContextPrivate::Heap::Heap(QScriptEnginePrivate *engine) // the global context (member of QScriptEnginePrivate)
+    : QScriptContextPrivate(HeapAllocation, engine)
+{}
+
+inline QScriptContextPrivate::Heap::Heap(QScriptEnginePrivate *engine, v8::Handle<v8::Context> context) // from QScriptEngine::pushContext
+    : QScriptContextPrivate(HeapAllocation, engine, context)
+{}
+
+inline QScriptContextPrivate::Heap::Heap(QScriptContextPrivate *parent, v8::Handle<v8::StackFrame> frame) // internal, for js frame (allocated in parentContext())
+    : QScriptContextPrivate(HeapAllocation, parent, frame)
+{}
+
 
 
 QT_END_NAMESPACE
