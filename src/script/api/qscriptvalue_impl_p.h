@@ -1075,7 +1075,7 @@ QScriptPassPointer<QScriptValuePrivate> QScriptValuePrivate::call(QScriptValuePr
     QScriptEnginePrivate::EvaluateScope evaluateScope(e);
     v8::TryCatch tryCatch;
 
-    v8::Handle<v8::Value> result = v8::Object::Cast(*m_value)->Call(recv, argc, argv);
+    v8::Handle<v8::Value> result = v8::Object::Cast(*m_value)->CallAsFunction(recv, argc, argv);
 
     if (result.IsEmpty()) {
         result = tryCatch.Exception();
@@ -1101,7 +1101,7 @@ inline QScriptPassPointer<QScriptValuePrivate> QScriptValuePrivate::construct(in
 
     QScriptEnginePrivate::EvaluateScope evaluateScope(e);
     v8::TryCatch tryCatch;
-    v8::Handle<v8::Value> result = v8::Object::Cast(*m_value)->NewInstance(argc, argv);
+    v8::Handle<v8::Value> result = v8::Object::Cast(*m_value)->CallAsConstructor(argc, argv);
 
     if (result.IsEmpty()) {
         result = tryCatch.Exception();

@@ -675,7 +675,7 @@ void QScriptConnection::onSignal(void **argv)
         if (!obj)
             return;
     }*/
-    m_callback->Call(receiver, argc, const_cast<v8::Handle<v8::Value>*>(jsArgv.constData()));
+    m_callback->CallAsFunction(receiver, argc, const_cast<v8::Handle<v8::Value>*>(jsArgv.constData()));
 
     if (tryCatch.HasCaught()) {
         v8::Local<v8::Value> result = tryCatch.Exception();
@@ -1329,7 +1329,7 @@ static v8::Handle<v8::Value> findChildrenWithRegExp(QScriptEnginePrivate *engine
 
     for (int i = 0, resultIndex = 0; i < children.length(); i++) {
         argv[0] = QScriptConverter::toString(children.at(i)->objectName());
-        if (testFunction->Call(regExp, 1, argv)->IsTrue()) {
+        if (testFunction->CallAsFunction(regExp, 1, argv)->IsTrue()) {
             result->Set(resultIndex, engine->newQObject(children.at(i), QScriptEngine::QtOwnership,
                                                           QScriptEngine::PreferExistingWrapperObject));
             resultIndex++;
