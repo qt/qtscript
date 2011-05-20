@@ -1697,10 +1697,7 @@ QScriptPassPointer<QScriptValuePrivate> QScriptEnginePrivate::newArray(uint leng
         length = 12345;
     }
 
-    v8::Persistent<v8::Array> array(v8::Persistent<v8::Array>::New(v8::Array::New(length)));
-    // FIXME: This is a workaround for http://code.google.com/p/v8/issues/detail?id=1256
-    array->Set(v8::String::New("length"), v8::Number::New(length));
-    return new QScriptValuePrivate(this, array);
+    return new QScriptValuePrivate(this, v8::Array::New(length));
 }
 
 QScriptPassPointer<QScriptValuePrivate> QScriptEnginePrivate::newFunction(QScriptEngine::FunctionSignature fun, QScriptValuePrivate *prototype, int length)
