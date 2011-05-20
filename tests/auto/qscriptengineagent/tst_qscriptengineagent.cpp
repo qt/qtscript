@@ -2333,7 +2333,7 @@ class NewSpy :public QScriptEngineAgent
     bool m_result;
 public:
   NewSpy(QScriptEngine* eng) : QScriptEngineAgent(eng), m_result(false) {}
-  void functionExit (qint64, const QScriptValue &scriptValue)
+  void functionExit (qint64, const QScriptValue & /* scriptValue */)
   {
       if (engine()->hasUncaughtException()) m_result = true;
   }
