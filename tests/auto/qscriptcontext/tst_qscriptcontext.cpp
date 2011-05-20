@@ -441,8 +441,8 @@ void tst_QScriptContext::throwError_fromEvaluate()
     engine.globalObject().setProperty("throw_Error", fun);
     QScriptValue result = engine.evaluate("throw_Error()");
     QCOMPARE(engine.hasUncaughtException(), true);
-    QCOMPARE(result.isError(), true);
     QEXPECT_FAIL("ErrorAndReturnString", "v8 seem to forget the exception for some reason", Continue);
+    QCOMPARE(result.isError(), true);
     QCOMPARE(result.toString(), stringRepresentation);
 }
 
@@ -462,8 +462,8 @@ void tst_QScriptContext::throwError_fromCpp()
     engine.globalObject().setProperty("throw_Error", fun);
     QScriptValue result = fun.call();
     QCOMPARE(engine.hasUncaughtException(), true);
-    QCOMPARE(result.isError(), true);
     QEXPECT_FAIL("ErrorAndReturnString", "v8 seem to forget the exception for some reason", Continue);
+    QCOMPARE(result.isError(), true);
     QCOMPARE(result.toString(), stringRepresentation);
 }
 
