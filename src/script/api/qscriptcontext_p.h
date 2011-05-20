@@ -54,14 +54,11 @@ class QScriptContextPrivate : public QScriptContext
 protected:
     enum AllocationType {HeapAllocation, StackAllocation};
     inline QScriptContextPrivate(const AllocationType type, QScriptEnginePrivate *engine); // the global context (member of QScriptEnginePrivate)
-    inline QScriptContextPrivate(const AllocationType type, QScriptEnginePrivate *engine, const v8::Arguments *args, v8::Handle<v8::Value> callee = v8::Handle<v8::Value>(), v8::Handle<v8::Object> customThisObject = v8::Handle<v8::Object>()); // native function context (on the stack)
+    inline QScriptContextPrivate(const AllocationType type, QScriptEnginePrivate *engine, const v8::Arguments *args, v8::Local<v8::Value> callee = v8::Local<v8::Value>(), v8::Local<v8::Object> customThisObject = v8::Local<v8::Object>()); // native function context (on the stack)
     inline QScriptContextPrivate(const AllocationType type, QScriptEnginePrivate *engine, const v8::AccessorInfo *accessor); // native acessors (on the stack)
     inline QScriptContextPrivate(const AllocationType type, QScriptEnginePrivate *engine, v8::Handle<v8::Context> context); // from QScriptEngine::pushContext
     inline QScriptContextPrivate(const AllocationType type, QScriptContextPrivate *parent, v8::Handle<v8::StackFrame> frame); // internal, for js frame (allocated in parentContext())
 
-    inline QScriptContextPrivate(const AllocationType type, QScriptEnginePrivate *engine, const v8::Arguments *args, v8::Local<v8::Value> callee = v8::Local<v8::Value>(), v8::Local<v8::Object> customThisObject = v8::Local<v8::Object>()); // native function context (on the stack)
-    inline QScriptContextPrivate(const AllocationType type, QScriptEnginePrivate *engine, v8::Local<v8::Context> context); // from QScriptEngine::pushContext
-    inline QScriptContextPrivate(const AllocationType type, QScriptContextPrivate *parent, v8::Local<v8::StackFrame> frame); // internal, for js frame (allocated in parentContext())
 public:
     class Stack;
     class Heap;

@@ -49,18 +49,6 @@ inline QScriptContextPrivate::QScriptContextPrivate(const AllocationType type, Q
     Q_ASSERT(engine);
 }
 
-inline QScriptContextPrivate::QScriptContextPrivate(const AllocationType type, QScriptEnginePrivate *engine, const v8::Arguments *args, v8::Handle<v8::Value> callee, v8::Handle<v8::Object> customThisObject)
-    : m_allocation(type), q_ptr(this), engine(engine), arguments(args), accessorInfo(0),
-      context(type, v8::Context::NewFunctionContext()),
-      inheritedScope(type, v8::Context::GetCallerContext()),
-      parent(engine->setCurrentQSContext(this)), previous(0), m_thisObject(type, customThisObject),
-      m_callee(type, callee), hasArgumentGetter(false)
-{
-    Q_ASSERT(engine);
-    Q_ASSERT(parent);
-    context->Enter();
-}
-
 inline QScriptContextPrivate::QScriptContextPrivate(const AllocationType type, QScriptEnginePrivate *engine, const v8::AccessorInfo *accessor)
     : m_allocation(type), q_ptr(this), engine(engine), arguments(0), accessorInfo(accessor),
       context(type, v8::Context::NewFunctionContext()),
@@ -102,27 +90,6 @@ inline QScriptContextPrivate::QScriptContextPrivate(const AllocationType type, Q
     Q_ASSERT(parent);
     context->Enter();
 }
-
-
-inline QScriptContextPrivate::QScriptContextPrivate(const AllocationType type, QScriptEnginePrivate *engine, v8::Local<v8::Context> context)
-    : m_allocation(type), q_ptr(this), engine(engine), arguments(0), accessorInfo(0),
-      context(type, context),
-      parent(engine->setCurrentQSContext(this)),
-      previous(0), hasArgumentGetter(false)
-{
-    Q_ASSERT(engine);
-    Q_ASSERT(parent);
-    context->Enter();
-}
-
-inline QScriptContextPrivate::QScriptContextPrivate(const AllocationType type, QScriptContextPrivate *parent, v8::Local<v8::StackFrame> frame)
-    : m_allocation(type), q_ptr(this), engine(parent->engine), arguments(0), accessorInfo(0),
-      parent(parent), previous(0), frame(type, frame), hasArgumentGetter(false)
-{
-    Q_ASSERT(engine);
-    Q_ASSERT(parent);
-}
-
 
 inline QScriptContextPrivate::~QScriptContextPrivate()
 {
