@@ -5,6 +5,8 @@
 %moduleheaders = ( # restrict the module headers to those found in relative path
 );
 %classnames = (
+    "qtscriptversion.h" => "QtScriptVersion",
+    "qtscripttoolsversion.h" => "QtScriptToolsVersion",
 );
 %mastercontent = (
     "core" => "#include <QtCore/QtCore>\n",

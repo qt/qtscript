@@ -119,6 +119,9 @@ translations/*.qm
 translations/*_untranslated.ts
 qrc_*.cpp
 
+src/script/qtscriptversion.h
+src/scripttools/qtscripttoolsversion.h
+
 # Test generated files
 QObject.log
 tst_*

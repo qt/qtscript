@@ -1,6 +1,6 @@
-QT.scripttools.VERSION = 4.8.0
-QT.scripttools.MAJOR_VERSION = 4
-QT.scripttools.MINOR_VERSION = 8
+QT.scripttools.VERSION = 5.0.0
+QT.scripttools.MAJOR_VERSION = 5
+QT.scripttools.MINOR_VERSION = 0
 QT.scripttools.PATCH_VERSION = 0
 
 QT.scripttools.name = QtScriptTools
