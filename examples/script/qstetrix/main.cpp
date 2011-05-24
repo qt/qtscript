@@ -40,7 +40,10 @@
 
 #include "tetrixboard.h"
 
-#include <QtGui>
+#include <QtWidgets/QPushButton>
+#include <QtWidgets/QApplication>
+#include <QtWidgets/QMainWindow>
+#include <QtWidgets/QAction>
 #include <QtScript>
 #include <QUiLoader>
 

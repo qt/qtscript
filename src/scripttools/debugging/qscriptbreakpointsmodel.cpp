@@ -48,7 +48,7 @@
 
 #include <QtCore/qpair.h>
 #include <QtCore/qcoreapplication.h>
-#include <QtGui/qicon.h>
+#include <QtWidgets/qicon.h>
 #include <QtCore/qdebug.h>
 
 QT_BEGIN_NAMESPACE

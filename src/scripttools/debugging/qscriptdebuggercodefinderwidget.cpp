@@ -42,11 +42,11 @@
 #include "qscriptdebuggercodefinderwidget_p.h"
 #include "qscriptdebuggercodefinderwidgetinterface_p_p.h"
 
-#include <QtGui/qboxlayout.h>
-#include <QtGui/qlineedit.h>
-#include <QtGui/qcheckbox.h>
-#include <QtGui/qlabel.h>
-#include <QtGui/qtoolbutton.h>
+#include <QtWidgets/qboxlayout.h>
+#include <QtWidgets/qlineedit.h>
+#include <QtWidgets/qcheckbox.h>
+#include <QtWidgets/qlabel.h>
+#include <QtWidgets/qtoolbutton.h>
 #include <QtGui/qevent.h>
 #include <QtCore/qdebug.h>
 

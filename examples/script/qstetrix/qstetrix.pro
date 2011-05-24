@@ -1,4 +1,4 @@
-QT += script
+QT += widgets script
 CONFIG += uitools
 
 HEADERS = tetrixboard.h

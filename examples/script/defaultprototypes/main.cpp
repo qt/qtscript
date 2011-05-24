@@ -38,7 +38,8 @@
 **
 ****************************************************************************/
 
-#include <QtGui>
+#include <QtWidgets/QListWidgetItem>
+#include <QtWidgets/QApplication>
 #include <QtScript>
 #include "prototypes.h"
 

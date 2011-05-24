@@ -45,16 +45,16 @@
 #include "qscriptdebuggerscriptsmodel_p.h"
 
 #include <QtCore/qdebug.h>
-#include <QtGui/qaction.h>
-#include <QtGui/qcompleter.h>
-#include <QtGui/qheaderview.h>
-#include <QtGui/qlineedit.h>
-#include <QtGui/qmessagebox.h>
-#include <QtGui/qtoolbar.h>
-#include <QtGui/qtoolbutton.h>
-#include <QtGui/qtreeview.h>
-#include <QtGui/qboxlayout.h>
-#include <QtGui/qstyleditemdelegate.h>
+#include <QtWidgets/qaction.h>
+#include <QtWidgets/qcompleter.h>
+#include <QtWidgets/qheaderview.h>
+#include <QtWidgets/qlineedit.h>
+#include <QtWidgets/qmessagebox.h>
+#include <QtWidgets/qtoolbar.h>
+#include <QtWidgets/qtoolbutton.h>
+#include <QtWidgets/qtreeview.h>
+#include <QtWidgets/qboxlayout.h>
+#include <QtWidgets/qstyleditemdelegate.h>
 #include <QtGui/qevent.h>
 #include <QtScript/qscriptengine.h>
 

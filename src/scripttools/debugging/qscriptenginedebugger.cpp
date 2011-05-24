@@ -46,11 +46,11 @@
 #include <private/qobject_p.h>
 
 #include <QtCore/qsettings.h>
-#include <QtGui/qapplication.h>
-#include <QtGui/qdockwidget.h>
-#include <QtGui/qmainwindow.h>
-#include <QtGui/qmenubar.h>
-#include <QtGui/qboxlayout.h>
+#include <QtWidgets/qapplication.h>
+#include <QtWidgets/qdockwidget.h>
+#include <QtWidgets/qmainwindow.h>
+#include <QtWidgets/qmenubar.h>
+#include <QtWidgets/qboxlayout.h>
 
 // this has to be outside the namespace
 static void initScriptEngineDebuggerResources()

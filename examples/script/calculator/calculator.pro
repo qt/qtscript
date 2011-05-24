@@ -1,4 +1,4 @@
-QT += script
+QT += script widgets
 CONFIG += uitools
 RESOURCES += calculator.qrc
 SOURCES += main.cpp

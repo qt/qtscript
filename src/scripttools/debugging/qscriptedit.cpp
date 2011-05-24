@@ -43,13 +43,13 @@
 #include "qscriptsyntaxhighlighter_p.h"
 
 #include <QtGui/qpainter.h>
-#include <QtGui/qicon.h>
-#include <QtGui/qboxlayout.h>
-#include <QtGui/qlabel.h>
-#include <QtGui/qlineedit.h>
-#include <QtGui/qmenu.h>
-#include <QtGui/qaction.h>
-#include <QtGui/qwidgetaction.h>
+#include <QtWidgets/qicon.h>
+#include <QtWidgets/qboxlayout.h>
+#include <QtWidgets/qlabel.h>
+#include <QtWidgets/qlineedit.h>
+#include <QtWidgets/qmenu.h>
+#include <QtWidgets/qaction.h>
+#include <QtWidgets/qwidgetaction.h>
 #include <QtCore/qdebug.h>
 
 QT_BEGIN_NAMESPACE

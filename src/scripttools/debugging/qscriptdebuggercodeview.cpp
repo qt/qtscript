@@ -44,7 +44,7 @@
 
 #include "qscriptedit_p.h"
 
-#include <QtGui/qboxlayout.h>
+#include <QtWidgets/qboxlayout.h>
 #include <QtGui/qtextobject.h>
 #include <QtCore/qdebug.h>
 

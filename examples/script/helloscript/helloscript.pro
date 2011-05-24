@@ -1,4 +1,4 @@
-QT += script
+QT += widgets script
 RESOURCES += helloscript.qrc
 SOURCES += main.cpp
 
