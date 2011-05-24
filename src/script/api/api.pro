@@ -2,7 +2,9 @@ load(qt_module)
 
 TARGET     = QtScript
 QPRO_PWD   = $$PWD
-QT         = core-private script-private
+QT         = core-private
+MODULE     = script
+MODULE_PRI = ../../../modules/qt_script.pri
 
 DEFINES   += QT_BUILD_SCRIPT_LIB
 DEFINES   += QT_NO_USING_NAMESPACE
