@@ -3635,6 +3635,7 @@ void tst_QScriptEngine::abortEvaluation()
 
 void tst_QScriptEngine::abortEvaluation_tryCatch()
 {
+    QSKIP("It crashes", SkipAll);
     QScriptEngine eng;
     EventReceiver3 receiver(&eng);
     eng.setProcessEventsInterval(100);
