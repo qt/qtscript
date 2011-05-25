@@ -87,10 +87,10 @@ public:
     inline QScriptValueIteratorPrivate(const QScriptValuePrivate* value);
     inline ~QScriptValueIteratorPrivate();
 
-    inline bool hasNext();
+    inline bool hasNext() const;
     inline void next();
 
-    inline bool hasPrevious();
+    inline bool hasPrevious() const;
     inline void previous();
 
     inline QString name() const;
@@ -164,7 +164,7 @@ inline QScriptValueIteratorPrivate::~QScriptValueIteratorPrivate()
     delete m_classIterator;
 }
 
-inline bool QScriptValueIteratorPrivate::hasNext()
+inline bool QScriptValueIteratorPrivate::hasNext() const
 {
     //dump("hasNext()");
     return isValid()
@@ -184,7 +184,7 @@ inline void QScriptValueIteratorPrivate::next()
     }
 }
 
-inline bool QScriptValueIteratorPrivate::hasPrevious()
+inline bool QScriptValueIteratorPrivate::hasPrevious() const
 {
     //dump("hasPrevious()");
     return isValid()
@@ -333,7 +333,9 @@ QScriptValueIterator::~QScriptValueIterator()
 */
 bool QScriptValueIterator::hasNext() const
 {
-    return d_ptr->hasNext();
+    Q_D(const QScriptValueIterator);
+    QScriptIsolate api(d->engine());
+    return d->hasNext();
 }
 
 /*!
@@ -346,7 +348,9 @@ bool QScriptValueIterator::hasNext() const
 */
 void QScriptValueIterator::next()
 {
-    d_ptr->next();
+    Q_D(QScriptValueIterator);
+    QScriptIsolate api(d->engine());
+    d->next();
 }
 
 /*!
@@ -358,7 +362,9 @@ void QScriptValueIterator::next()
 */
 bool QScriptValueIterator::hasPrevious() const
 {
-    return d_ptr->hasPrevious();
+    Q_D(const QScriptValueIterator);
+    QScriptIsolate api(d->engine());
+    return d->hasPrevious();
 }
 
 /*!
@@ -371,7 +377,9 @@ bool QScriptValueIterator::hasPrevious() const
 */
 void QScriptValueIterator::previous()
 {
-    d_ptr->previous();
+    Q_D(QScriptValueIterator);
+    QScriptIsolate api(d->engine());
+    d->previous();
 }
 
 /*!
@@ -382,7 +390,9 @@ void QScriptValueIterator::previous()
 */
 void QScriptValueIterator::toFront()
 {
-    d_ptr->toFront();
+    Q_D(QScriptValueIterator);
+    QScriptIsolate api(d->engine());
+    d->toFront();
 }
 
 /*!
@@ -393,7 +403,9 @@ void QScriptValueIterator::toFront()
 */
 void QScriptValueIterator::toBack()
 {
-    d_ptr->toBack();
+    Q_D(QScriptValueIterator);
+    QScriptIsolate api(d->engine());
+    d->toBack();
 }
 
 /*!
@@ -404,7 +416,8 @@ void QScriptValueIterator::toBack()
 */
 QString QScriptValueIterator::name() const
 {
-    QScriptIsolate api(d_ptr->engine());
+    Q_D(const QScriptValueIterator);
+    QScriptIsolate api(d->engine());
     return d_ptr->name();
 }
 
@@ -414,7 +427,8 @@ QString QScriptValueIterator::name() const
 */
 QScriptString QScriptValueIterator::scriptName() const
 {
-    QScriptIsolate api(d_ptr->engine());
+    Q_D(const QScriptValueIterator);
+    QScriptIsolate api(d->engine());
     return QScriptStringPrivate::get(d_ptr->scriptName());
 }
 
@@ -477,6 +491,8 @@ QScriptValue::PropertyFlags QScriptValueIterator::flags() const
 */
 QScriptValueIterator& QScriptValueIterator::operator=(QScriptValue& object)
 {
+    Q_D(QScriptValueIterator);
+    QScriptIsolate api(d->engine());
     d_ptr.reset(new QScriptValueIteratorPrivate(QScriptValuePrivate::get(object)));
     return *this;
 }
