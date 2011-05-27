@@ -84,7 +84,7 @@ v8::Handle<v8::Value> QScriptClassObject::property(v8::Handle<v8::String> proper
 
     QScriptValue userResult = m_scriptclass->userCallback()->property(that, str, id);
     QScriptValuePrivate* result = QScriptValuePrivate::get(userResult);
-    return handleScope.Close(static_cast<v8::Handle<v8::Value> >(result->asV8Value(m_scriptclass->engine())));
+    return handleScope.Close(v8::Local<v8::Value>::New(result->asV8Value(m_scriptclass->engine())));
 }
 
 v8::Handle<v8::Value> QScriptClassObject::property(uint32_t index)
