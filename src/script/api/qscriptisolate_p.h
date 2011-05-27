@@ -25,7 +25,6 @@
 #define APIPREAMBLE_P_H
 
 #include <v8.h>
-#include <QtCore/qsharedpointer.h>
 #include "qscriptengine_p.h"
 
 QT_BEGIN_NAMESPACE
@@ -47,7 +46,10 @@ public:
         : m_engine(engine)
         , m_mode(mode)
     {
-        init();
+        if (m_mode == NotNullEngine || m_engine) {
+            Q_ASSERT(m_engine);
+            m_engine->enterIsolate();
+        }
     }
 
     inline ~QScriptIsolate()
@@ -58,14 +60,6 @@ public:
     }
 
 private:
-    inline void init() const
-    {
-        if (m_mode == NotNullEngine || m_engine) {
-            Q_ASSERT(m_engine);
-            m_engine->enterIsolate();
-        }
-    }
-
     Q_DISABLE_COPY(QScriptIsolate);
     const QScriptEnginePrivate *m_engine;
     const OperationMode m_mode;
