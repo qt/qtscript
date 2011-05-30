@@ -1,7 +1,7 @@
 load(qt_module)
 
 TARGET  = qtscriptdbus
-include($$QT_SOURCE_TREE/src/plugins/qpluginbase.pri)
+load(qt_plugin)
 QT = core gui script
 CONFIG += qdbus
 
