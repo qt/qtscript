@@ -87,7 +87,7 @@ class QScriptEnginePrivate
     // will be resolved and we can store QScriptEnginePrivate* in v8::Isolate
     class Isolates {
     public:
-        static v8::Isolate *createEnterIsolate(QScriptEnginePrivate *engine);
+        static v8::Isolate *enterIsolate(QScriptEnginePrivate *engine, v8::Isolate *isolate);
         static QScriptEnginePrivate *engine(v8::Isolate *isolate);
     private:
         Q_GLOBAL_STATIC(Isolates, isolates);
@@ -299,6 +299,7 @@ private:
     v8::Handle<v8::FunctionTemplate> metaObjectTemplate();
     v8::Handle<v8::FunctionTemplate> variantTemplate();
 
+    const bool m_hasOwnV8Context;
     v8::Isolate *m_isolate;
     v8::Persistent<v8::Context> m_v8Context;
     Exception m_exception;

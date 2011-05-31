@@ -661,9 +661,8 @@ v8::Handle<v8::Object> QScriptEnginePrivate::newVariant(const QVariant &value)
     return persistent;
 }
 
-v8::Isolate *QScriptEnginePrivate::Isolates::createEnterIsolate(QScriptEnginePrivate *engine)
+v8::Isolate *QScriptEnginePrivate::Isolates::enterIsolate(QScriptEnginePrivate *engine, v8::Isolate *isolate)
 {
-    v8::Isolate *isolate = v8::Isolate::New();
     isolate->Enter();
     {
         Isolates *i = isolates();
@@ -683,9 +682,11 @@ QScriptEnginePrivate *QScriptEnginePrivate::Isolates::engine(v8::Isolate *isolat
 }
 
 QScriptEnginePrivate::QScriptEnginePrivate(QScriptEngine::ContextOwnership ownership)
-    : m_isolate(Isolates::createEnterIsolate(this))
-    , m_v8Context(ownership == QScriptEngine::AdoptCurrentContext ?
-            v8::Persistent<v8::Context>::New(v8::Context::GetCurrent()) : v8::Context::New())
+    : m_hasOwnV8Context(ownership == QScriptEngine::CreateNewContext)
+    , m_isolate(m_hasOwnV8Context ?
+            Isolates::enterIsolate(this, v8::Isolate::New()) : Isolates::enterIsolate(this, v8::Isolate::GetCurrent()))
+    , m_v8Context(m_hasOwnV8Context ?
+            v8::Context::New() : v8::Persistent<v8::Context>::New(v8::Context::GetCurrent()))
     , m_originalGlobalObject(this, m_v8Context)
     , m_reportedAddtionalMemoryCost(-1)
     , m_currentQsContext(0)
@@ -856,7 +857,8 @@ QScriptEnginePrivate::~QScriptEnginePrivate()
     m_v8Context.Dispose();
 
     m_isolate->Exit();
-    m_isolate->Dispose();
+    if (m_hasOwnV8Context)
+        m_isolate->Dispose();
     m_state = Destroyed;
 
     deallocateAdditionalResources();
