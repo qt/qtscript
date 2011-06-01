@@ -227,7 +227,8 @@ v8::Handle<v8::Value> QScriptEnginePrivate::metaTypeToJS(int type, const void *d
     v8::Handle<v8::Value> result;
     TypeInfos::TypeInfo info = m_typeInfos.value(type);
     if (info.marshal) {
-        result = QScriptValuePrivate::get(info.marshal(q, data))->asV8Value(this);
+        QScriptValue userResult(info.marshal(q, data));
+        result = v8::Local<v8::Value>::New(QScriptValuePrivate::get(userResult)->asV8Value(this));
     } else {
         // check if it's one of the types we know
         switch (QMetaType::Type(type)) {
