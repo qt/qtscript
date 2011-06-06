@@ -685,8 +685,7 @@ QScriptEnginePrivate::QScriptEnginePrivate(QScriptEngine::ContextOwnership owner
     : m_hasOwnV8Context(ownership == QScriptEngine::CreateNewContext)
     , m_isolate(m_hasOwnV8Context ?
             Isolates::enterIsolate(this, v8::Isolate::New()) : Isolates::enterIsolate(this, v8::Isolate::GetCurrent()))
-    , m_v8Context(m_hasOwnV8Context ?
-            v8::Context::New() : v8::Persistent<v8::Context>::New(v8::Context::GetCurrent()))
+    , m_v8Context(m_hasOwnV8Context ? v8::Context::New() : getCurrentV8Context())
     , m_originalGlobalObject(this, m_v8Context)
     , m_reportedAddtionalMemoryCost(-1)
     , m_currentQsContext(0)

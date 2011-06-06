@@ -105,6 +105,17 @@ inline v8::Local<v8::Value> QScriptEnginePrivate::getOwnProperty(v8::Handle<v8::
     return getOwnProperty(object, v8::Integer::New(index));
 }
 
+inline v8::Persistent<v8::Context> QScriptEnginePrivate::getCurrentV8Context()
+{
+    v8::Persistent<v8::Context> currentV8Context;
+    {
+        v8::HandleScope scope;
+        currentV8Context = v8::Persistent<v8::Context>::New(v8::Context::GetCurrent());
+    }
+
+    return currentV8Context;
+}
+
 QScriptPassPointer<QScriptValuePrivate> QScriptEnginePrivate::evaluate(const QString& program, const QString& fileName, int lineNumber)
 {
     v8::TryCatch tryCatch;

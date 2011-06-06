@@ -152,6 +152,7 @@ public:
     inline QScriptValue::PropertyFlags getPropertyFlags(v8::Handle<v8::Object> object, v8::Handle<v8::Value> property, const QScriptValue::ResolveFlags& mode);
     inline v8::Local<v8::Value> getOwnProperty(v8::Handle<v8::Object> object, v8::Handle<v8::Value> property) const;
     inline v8::Local<v8::Value> getOwnProperty(v8::Handle<v8::Object> object, uint32_t index) const;
+    inline v8::Persistent<v8::Context> getCurrentV8Context();
 
     QDateTime qtDateTimeFromJS(v8::Handle<v8::Date> jsDate);
     v8::Handle<v8::Value> qtDateTimeToJS(const QDateTime &dt);

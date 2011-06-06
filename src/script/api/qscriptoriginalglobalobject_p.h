@@ -150,6 +150,9 @@ inline void QScriptOriginalGlobalObject::initializeMember(v8::Local<v8::String> 
 */
 inline void QScriptOriginalGlobalObject::destroy()
 {
+    Q_ASSERT_X(m_scope.NumberOfHandles() > 0,
+               Q_FUNC_INFO,
+               "The m_scope is already closed: an outer HandleScope closed earlier than destroy() is called");
     m_scope.Close(v8::Handle<v8::Value>());
     // After this line this instance is unusable.
 }
