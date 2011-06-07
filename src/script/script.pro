@@ -15,7 +15,7 @@ DEFINES   += QLALR_NO_QSCRIPTGRAMMAR_DEBUG_INFO
 
 unix|win32-g++*:QMAKE_PKGCONFIG_REQUIRES = QtCore
 
-include($$QT_SOURCE_TREE/src/qbase.pri)
+load(qt_module_config)
 
 HEADERS += qtscriptversion.h
 
