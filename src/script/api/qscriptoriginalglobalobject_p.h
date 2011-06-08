@@ -60,17 +60,16 @@ public:
     inline bool strictlyEquals(v8::Handle<v8::Object> object);
 private:
     Q_DISABLE_COPY(QScriptOriginalGlobalObject)
-    inline void initializeMember(v8::Local<v8::String> prototypeName, v8::Local<v8::Value> type, v8::Local<v8::Object>& constructor, v8::Local<v8::Value>& prototype);
+    inline void initializeMember(v8::Local<v8::String> prototypeName, v8::Local<v8::Value> type, v8::Persistent<v8::Object>& constructor, v8::Persistent<v8::Value>& prototype);
 
-    v8::HandleScope m_scope;
     // Copy of constructors and prototypes used in isType functions.
-    v8::Local<v8::Object> m_stringConstructor;
-    v8::Local<v8::Value> m_stringPrototype;
-    v8::Local<v8::Function> m_ownPropertyDescriptor;
-    v8::Local<v8::Function> m_ownPropertyNames;
-    v8::Local<v8::Object> m_globalObject;
-    v8::Local<v8::Function> m_defineGetter;
-    v8::Local<v8::Function> m_defineSetter;
+    v8::Persistent<v8::Object> m_stringConstructor;
+    v8::Persistent<v8::Value> m_stringPrototype;
+    v8::Persistent<v8::Function> m_ownPropertyDescriptor;
+    v8::Persistent<v8::Function> m_ownPropertyNames;
+    v8::Persistent<v8::Object> m_globalObject;
+    v8::Persistent<v8::Function> m_defineGetter;
+    v8::Persistent<v8::Function> m_defineSetter;
 };
 
 v8::Handle<v8::Value> functionPrint(const v8::Arguments& args);
@@ -78,12 +77,14 @@ v8::Handle<v8::Value> functionGC(const v8::Arguments& args);
 v8::Handle<v8::Value> functionVersion(const v8::Arguments& args);
 
 QScriptOriginalGlobalObject::QScriptOriginalGlobalObject(const QScriptEnginePrivate *engine, v8::Handle<v8::Context> context)
-    : m_scope()
 {
     // Please notice that engine is not fully initialized at this point.
 
     context->Enter(); // Enter the context. We will exit in the QScriptEnginePrivate destructor.
-    m_globalObject = context->Global();
+
+    v8::HandleScope scope;
+
+    m_globalObject = v8::Persistent<v8::Object>::New(context->Global());
     initializeMember(v8::String::New("prototype"), v8::String::New("String"), m_stringConstructor, m_stringPrototype);
 
     v8::Local<v8::Object> objectConstructor = m_globalObject->Get(v8::String::New("Object"))->ToObject();
@@ -91,24 +92,23 @@ QScriptOriginalGlobalObject::QScriptOriginalGlobalObject(const QScriptEnginePriv
     {   // Initialize m_ownPropertyDescriptor.
         v8::Local<v8::Value> ownPropertyDescriptor = objectConstructor->Get(v8::String::New("getOwnPropertyDescriptor"));
         Q_ASSERT(!ownPropertyDescriptor.IsEmpty());
-        m_ownPropertyDescriptor = v8::Local<v8::Function>::Cast(ownPropertyDescriptor);
+        m_ownPropertyDescriptor = v8::Persistent<v8::Function>::New(v8::Local<v8::Function>::Cast(ownPropertyDescriptor));
     }
     {   // Initialize m_ownPropertyNames.
         v8::Local<v8::Value> ownPropertyNames = objectConstructor->Get(v8::String::New("getOwnPropertyNames"));
         Q_ASSERT(!ownPropertyNames.IsEmpty());
-        m_ownPropertyNames = v8::Local<v8::Function>::Cast(ownPropertyNames);
+        m_ownPropertyNames = v8::Persistent<v8::Function>::New(v8::Local<v8::Function>::Cast(ownPropertyNames));
     }
     {
         //initialize m_defineGetter and m_defineSetter
         v8::Local<v8::Value> defineGetter = objectConstructor->Get(v8::String::New("__defineGetter__"));
         v8::Local<v8::Value> defineSetter = objectConstructor->Get(v8::String::New("__defineSetter__"));
-        m_defineSetter = v8::Local<v8::Function>::Cast(defineSetter);
-        m_defineGetter = v8::Local<v8::Function>::Cast(defineGetter);
+        m_defineSetter = v8::Persistent<v8::Function>::New(v8::Local<v8::Function>::Cast(defineSetter));
+        m_defineGetter = v8::Persistent<v8::Function>::New(v8::Local<v8::Function>::Cast(defineGetter));
     }
 
     // Set our default properties.
     {
-        v8::HandleScope scope;
         v8::Local<v8::Value> eng = v8::External::Wrap(const_cast<QScriptEnginePrivate *>(engine));
         v8::Local<v8::String> nameName = v8::String::New("name");
         v8::Local<v8::String> printName = v8::String::New("print");
@@ -127,17 +127,17 @@ QScriptOriginalGlobalObject::QScriptOriginalGlobalObject(const QScriptEnginePriv
     }
 }
 
-inline void QScriptOriginalGlobalObject::initializeMember(v8::Local<v8::String> prototypeName, v8::Local<v8::Value> type, v8::Local<v8::Object>& constructor, v8::Local<v8::Value>& prototype)
+inline void QScriptOriginalGlobalObject::initializeMember(v8::Local<v8::String> prototypeName, v8::Local<v8::Value> type, v8::Persistent<v8::Object>& constructor, v8::Persistent<v8::Value>& prototype)
 {
     // Save references to the Type constructor and prototype.
     v8::Local<v8::Value> typeConstructor = m_globalObject->Get(type);
     Q_ASSERT(typeConstructor->IsObject());
-    constructor = typeConstructor->ToObject();
+    constructor = v8::Persistent<v8::Object>::New(typeConstructor->ToObject());
 
     // Note that this is not the [[Prototype]] internal property (which we could
     // get via Object::GetPrototype), but the Type.prototype, that will be set
     // as [[Prototype]] of Type instances.
-    prototype = constructor->Get(prototypeName);
+    prototype = v8::Persistent<v8::Value>::New(constructor->Get(prototypeName));
     Q_ASSERT(prototype->IsObject());
 }
 
@@ -150,10 +150,13 @@ inline void QScriptOriginalGlobalObject::initializeMember(v8::Local<v8::String> 
 */
 inline void QScriptOriginalGlobalObject::destroy()
 {
-    Q_ASSERT_X(m_scope.NumberOfHandles() > 0,
-               Q_FUNC_INFO,
-               "The m_scope is already closed: an outer HandleScope closed earlier than destroy() is called");
-    m_scope.Close(v8::Handle<v8::Value>());
+    m_stringConstructor.Dispose();
+    m_stringPrototype.Dispose();
+    m_ownPropertyDescriptor.Dispose();
+    m_ownPropertyNames.Dispose();
+    m_globalObject.Dispose();
+    m_defineGetter.Dispose();
+    m_defineSetter.Dispose();
     // After this line this instance is unusable.
 }
 
@@ -219,7 +222,7 @@ inline v8::Local<v8::Value> QScriptOriginalGlobalObject::getOwnProperty(v8::Hand
 
 inline void QScriptOriginalGlobalObject::installArgFunctionOnOrgStringPrototype(v8::Handle<v8::Function> arg)
 {
-    v8::Local<v8::Object>::Cast(m_stringPrototype)->Set(v8::String::New("arg"), arg);
+    v8::Object::Cast(*m_stringPrototype)->Set(v8::String::New("arg"), arg);
 }
 
 inline v8::Local<v8::Object> QScriptOriginalGlobalObject::getOwnPropertyDescriptor(v8::Handle<v8::Object> object, v8::Handle<v8::Value> property) const
