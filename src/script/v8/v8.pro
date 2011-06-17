@@ -44,7 +44,6 @@ V8SOURCES = \
     $$V8DIR/src/execution.cc \
     $$V8DIR/src/factory.cc \
     $$V8DIR/src/flags.cc \
-    $$V8DIR/src/frame-element.cc \
     $$V8DIR/src/frames.cc \
     $$V8DIR/src/full-codegen.cc \
     $$V8DIR/src/func-name-inferrer.cc \
@@ -63,7 +62,6 @@ V8SOURCES = \
     $$V8DIR/src/interpreter-irregexp.cc \
     $$V8DIR/src/isolate.cc \
     $$V8DIR/src/jsregexp.cc \
-    $$V8DIR/src/jump-target.cc \
     $$V8DIR/src/lithium-allocator.cc \
     $$V8DIR/src/lithium.cc \
     $$V8DIR/src/liveedit.cc \
@@ -83,7 +81,6 @@ V8SOURCES = \
     $$V8DIR/src/regexp-macro-assembler-irregexp.cc \
     $$V8DIR/src/regexp-macro-assembler.cc \
     $$V8DIR/src/regexp-stack.cc \
-    $$V8DIR/src/register-allocator.cc \
     $$V8DIR/src/rewriter.cc \
     $$V8DIR/src/runtime.cc \
     $$V8DIR/src/runtime-profiler.cc \
@@ -100,7 +97,6 @@ V8SOURCES = \
     $$V8DIR/src/strtod.cc \
     $$V8DIR/src/stub-cache.cc \
     $$V8DIR/src/token.cc \
-    $$V8DIR/src/top.cc \
     $$V8DIR/src/type-info.cc \
     $$V8DIR/src/unicode.cc \
     $$V8DIR/src/utils.cc \
@@ -109,7 +105,6 @@ V8SOURCES = \
     $$V8DIR/src/v8threads.cc \
     $$V8DIR/src/variables.cc \
     $$V8DIR/src/version.cc \
-    $$V8DIR/src/virtual-frame.cc \
     $$V8DIR/src/zone.cc \
     $$V8DIR/src/extensions/gc-extension.cc \
     $$V8DIR/src/extensions/externalize-string-extension.cc \
@@ -118,8 +113,6 @@ V8SOURCES = \
 contains(QT_ARCH, arm) {
 DEFINES += V8_TARGET_ARCH_ARM
 V8SOURCES += \
-    $$V8DIR/src/jump-target-light.cc \
-    $$V8DIR/src/virtual-frame-light.cc \
     $$V8DIR/src/arm/builtins-arm.cc \
     $$V8DIR/src/arm/code-stubs-arm.cc \
     $$V8DIR/src/arm/codegen-arm.cc \
@@ -131,15 +124,12 @@ V8SOURCES += \
     $$V8DIR/src/arm/frames-arm.cc \
     $$V8DIR/src/arm/full-codegen-arm.cc \
     $$V8DIR/src/arm/ic-arm.cc \
-    $$V8DIR/src/arm/jump-target-arm.cc \
     $$V8DIR/src/arm/lithium-arm.cc \
     $$V8DIR/src/arm/lithium-codegen-arm.cc \
     $$V8DIR/src/arm/lithium-gap-resolver-arm.cc \
     $$V8DIR/src/arm/macro-assembler-arm.cc \
     $$V8DIR/src/arm/regexp-macro-assembler-arm.cc \
-    $$V8DIR/src/arm/register-allocator-arm.cc \
     $$V8DIR/src/arm/stub-cache-arm.cc \
-    $$V8DIR/src/arm/virtual-frame-arm.cc \
     $$V8DIR/src/arm/assembler-arm.cc \
 
 }
@@ -149,27 +139,25 @@ DEFINES += V8_TARGET_ARCH_MIPS
 V8SOURCES += \
     $$V8DIR/src/mips/assembler-mips.cc \
     $$V8DIR/src/mips/builtins-mips.cc \
+    $$V8DIR/src/mips/code-stubs-mips.cc \
     $$V8DIR/src/mips/codegen-mips.cc \
     $$V8DIR/src/mips/constants-mips.cc \
     $$V8DIR/src/mips/cpu-mips.cc \
     $$V8DIR/src/mips/debug-mips.cc \
+    $$V8DIR/src/mips/deoptimizer-mips.cc \
     $$V8DIR/src/mips/disasm-mips.cc \
-    $$V8DIR/src/mips/full-codegen-mips.cc \
     $$V8DIR/src/mips/frames-mips.cc \
+    $$V8DIR/src/mips/full-codegen-mips.cc \
     $$V8DIR/src/mips/ic-mips.cc \
-    $$V8DIR/src/mips/jump-target-mips.cc \
     $$V8DIR/src/mips/macro-assembler-mips.cc \
-    $$V8DIR/src/mips/register-allocator-mips.cc \
+    $$V8DIR/src/mips/regexp-macro-assembler-mips.cc \
     $$V8DIR/src/mips/stub-cache-mips.cc \
-    $$V8DIR/src/mips/virtual-frame-mips.cc \
 
 }
 
 contains(QT_ARCH, i386) {
 DEFINES += V8_TARGET_ARCH_IA32
 V8SOURCES += \
-    $$V8DIR/src/jump-target-heavy.cc \
-    $$V8DIR/src/virtual-frame-heavy.cc \
     $$V8DIR/src/ia32/assembler-ia32.cc \
     $$V8DIR/src/ia32/builtins-ia32.cc \
     $$V8DIR/src/ia32/code-stubs-ia32.cc \
@@ -181,15 +169,12 @@ V8SOURCES += \
     $$V8DIR/src/ia32/frames-ia32.cc \
     $$V8DIR/src/ia32/full-codegen-ia32.cc \
     $$V8DIR/src/ia32/ic-ia32.cc \
-    $$V8DIR/src/ia32/jump-target-ia32.cc \
     $$V8DIR/src/ia32/lithium-codegen-ia32.cc \
     $$V8DIR/src/ia32/lithium-gap-resolver-ia32.cc \
     $$V8DIR/src/ia32/lithium-ia32.cc \
     $$V8DIR/src/ia32/macro-assembler-ia32.cc \
     $$V8DIR/src/ia32/regexp-macro-assembler-ia32.cc \
-    $$V8DIR/src/ia32/register-allocator-ia32.cc \
     $$V8DIR/src/ia32/stub-cache-ia32.cc \
-    $$V8DIR/src/ia32/virtual-frame-ia32.cc \
 
 }
 
@@ -197,8 +182,6 @@ V8SOURCES += \
 contains(QT_ARCH, x86_64)|contains(CONFIG, x86_64) {
 DEFINES += V8_TARGET_ARCH_X64
 V8SOURCES += \
-    $$V8DIR/src/jump-target-heavy.cc \
-    $$V8DIR/src/virtual-frame-heavy.cc \
     $$V8DIR/src/x64/assembler-x64.cc \
     $$V8DIR/src/x64/builtins-x64.cc \
     $$V8DIR/src/x64/code-stubs-x64.cc \
@@ -210,16 +193,12 @@ V8SOURCES += \
     $$V8DIR/src/x64/frames-x64.cc \
     $$V8DIR/src/x64/full-codegen-x64.cc \
     $$V8DIR/src/x64/ic-x64.cc \
-    $$V8DIR/src/x64/jump-target-x64.cc \
     $$V8DIR/src/x64/lithium-codegen-x64.cc \
     $$V8DIR/src/x64/lithium-gap-resolver-x64.cc \
     $$V8DIR/src/x64/lithium-x64.cc \
     $$V8DIR/src/x64/macro-assembler-x64.cc \
     $$V8DIR/src/x64/regexp-macro-assembler-x64.cc \
-    $$V8DIR/src/x64/register-allocator-x64.cc \
     $$V8DIR/src/x64/stub-cache-x64.cc \
-    $$V8DIR/src/x64/virtual-frame-x64.cc \
-
 }
 
 unix:!symbian:!macx {
@@ -277,14 +256,31 @@ V8_LIBRARY_FILES = \
     $$V8DIR/src/mirror-debugger.js \
     $$V8DIR/src/debug-debugger.js
 
-v8_js2c.commands = python $$V8DIR/tools/js2c.py $$V8_GENERATED_SOURCES_DIR/libraries.cpp $$V8_GENERATED_SOURCES_DIR/libraries-empty.cpp CORE
-v8_js2c.commands += $$V8DIR/src/macros.py ${QMAKE_FILE_IN}
-v8_js2c.output = $$V8_GENERATED_SOURCES_DIR/libraries.cpp
-v8_js2c.input = V8_LIBRARY_FILES
-v8_js2c.variable_out = SOURCES
-v8_js2c.dependency_type = TYPE_C
-v8_js2c.depends = $$V8DIR/tools/js2c.py $$V8DIR/src/macros.py
-v8_js2c.CONFIG += combine
-v8_js2c.name = generating[v8] ${QMAKE_FILE_IN}
-silent:v8_js2c.commands = @echo generating[v8] ${QMAKE_FILE_IN} && $$v8_js2c.commands
-QMAKE_EXTRA_COMPILERS += v8_js2c
+v8_js2c_library.commands = python $$V8DIR/tools/js2c.py $$V8_GENERATED_SOURCES_DIR/libraries.cpp CORE off
+v8_js2c_library.commands += $$V8DIR/src/macros.py ${QMAKE_FILE_IN}
+v8_js2c_library.output = $$V8_GENERATED_SOURCES_DIR/libraries.cpp
+v8_js2c_library.input = V8_LIBRARY_FILES
+v8_js2c_library.variable_out = SOURCES
+v8_js2c_library.dependency_type = TYPE_C
+v8_js2c_library.depends = $$V8DIR/tools/js2c.py $$V8DIR/src/macros.py
+v8_js2c_library.CONFIG += combine
+v8_js2c_library.name = generating[v8] ${QMAKE_FILE_IN}
+silent:v8_js2c_library.commands = @echo generating[v8] ${QMAKE_FILE_IN} && $$v8_js2c_library.commands
+QMAKE_EXTRA_COMPILERS += v8_js2c_library
+
+
+V8_EXPERIMENTAL_LIBRARY_FILES = \
+   $$V8DIR/src/proxy.js
+
+v8_js2c_experimental.commands = python $$V8DIR/tools/js2c.py $$V8_GENERATED_SOURCES_DIR/experimental_libraries.cpp EXPERIMENTAL off
+v8_js2c_experimental.commands += $$V8DIR/src/macros.py ${QMAKE_FILE_IN}
+v8_js2c_experimental.output = $$V8_GENERATED_SOURCES_DIR/experimental_libraries.cpp
+v8_js2c_experimental.input = V8_EXPERIMENTAL_LIBRARY_FILES
+v8_js2c_experimental.variable_out = SOURCES
+v8_js2c_experimental.dependency_type = TYPE_C
+v8_js2c_experimental.depends = $$V8DIR/tools/js2c.py $$V8DIR/src/macros.py
+v8_js2c_experimental.CONFIG += combine
+v8_js2c_experimental.name = generating[v8] ${QMAKE_FILE_IN}
+silent:v8_js2c_experimental.commands = @echo generating[v8] ${QMAKE_FILE_IN} && $$v8_js2c_experimental.commands
+
+QMAKE_EXTRA_COMPILERS += v8_js2c_experimental
