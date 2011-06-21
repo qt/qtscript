@@ -75,7 +75,7 @@ v8::Handle<v8::Value> QScriptClassObject::property(v8::Handle<v8::String> proper
         v8::Handle<v8::String> toStringProp = v8::String::New("toString");
         if (property->Equals(toStringProp)) {
             v8::Handle<v8::Object> proto = v8::Handle<v8::Object>::Cast(engine->currentContext()->thisObject()->GetPrototype());
-            if (engine->getOwnProperty(proto, toStringProp).IsEmpty()) {
+            if (!engine->hasOwnProperty(proto, toStringProp)) {
                 return handleScope.Close(engine->scriptClassToStringTemplate()->GetFunction());
             }
         }

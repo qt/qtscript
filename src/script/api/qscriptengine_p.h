@@ -149,8 +149,8 @@ public:
     inline v8::Handle<v8::Value> makeJSValue(QScriptValue::SpecialValue value);
     inline v8::Handle<v8::Value> makeJSValue(const QString& value);
     inline QScriptValue::PropertyFlags getPropertyFlags(v8::Handle<v8::Object> object, v8::Handle<v8::Value> property, const QScriptValue::ResolveFlags& mode);
-    inline v8::Local<v8::Value> getOwnProperty(v8::Handle<v8::Object> object, v8::Handle<v8::Value> property) const;
-    inline v8::Local<v8::Value> getOwnProperty(v8::Handle<v8::Object> object, uint32_t index) const;
+    inline bool hasOwnProperty(v8::Handle<v8::Object> object, v8::Handle<v8::Value> property) const;
+    inline bool hasOwnProperty(v8::Handle<v8::Object> object, uint32_t index) const;
     inline v8::Persistent<v8::Context> getCurrentV8Context();
 
     QDateTime qtDateTimeFromJS(v8::Handle<v8::Date> jsDate);
@@ -292,7 +292,7 @@ public:
     };
 private:
     Q_DISABLE_COPY(QScriptEnginePrivate)
-    v8::Local<v8::Value> getOwnPropertyFromScriptClassInstance(v8::Handle<v8::Object> object, v8::Handle<v8::Value> property) const;
+    bool hasOwnPropertyInScriptClassInstance(v8::Handle<v8::Object> object, v8::Handle<v8::Value> property) const;
     QScriptValue::PropertyFlags getPropertyFlagsFromScriptClassInstance(v8::Handle<v8::Object> object, v8::Handle<v8::Value> property, const QScriptValue::ResolveFlags& mode);
     v8::Handle<v8::FunctionTemplate> createMetaObjectTemplate();
     v8::Handle<v8::FunctionTemplate> createVariantTemplate();

@@ -2617,11 +2617,11 @@ void QScriptEnginePrivate::emitSignalHandlerException()
 
 /*!
   \internal
-  This method was created only because it couldn't be inlined in getOwnProperty.
+  This method was created only because it couldn't be inlined in hasOwnProperty.
   It shouldn't be used in other places.
   \note that it assume that object has a QScriptClassObject instance associated.
   */
-v8::Local<v8::Value> QScriptEnginePrivate::getOwnPropertyFromScriptClassInstance(v8::Handle<v8::Object> object, v8::Handle<v8::Value> propertyName) const
+bool QScriptEnginePrivate::hasOwnPropertyInScriptClassInstance(v8::Handle<v8::Object> object, v8::Handle<v8::Value> propertyName) const
 {
 #ifndef QT_NO_DEBUG
     Q_ASSERT(object->InternalFieldCount() == 1);
@@ -2630,7 +2630,7 @@ v8::Local<v8::Value> QScriptEnginePrivate::getOwnPropertyFromScriptClassInstance
     delete ptr;
 #endif
     QScriptClassObject *data = QScriptClassObject::get(object);
-    return m_originalGlobalObject.getOwnProperty(data->original(), propertyName);
+    return data->original()->HasOwnProperty(propertyName->ToString());
 }
 
 /*!

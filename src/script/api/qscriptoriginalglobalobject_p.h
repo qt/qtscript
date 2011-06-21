@@ -52,7 +52,6 @@ public:
     inline void destroy();
 
     inline QScriptValue::PropertyFlags getPropertyFlags(v8::Handle<v8::Object> object, v8::Handle<v8::Value> property, const QScriptValue::ResolveFlags& mode);
-    inline v8::Local<v8::Value> getOwnProperty(v8::Handle<v8::Object> object, v8::Handle<v8::Value> property) const;
     inline void installArgFunctionOnOrgStringPrototype(v8::Handle<v8::Function> arg);
     inline void defineGetterOrSetter(v8::Handle< v8::Object > recv, v8::Handle< v8::String > prototypeName, v8::Handle< v8::Value > value, uint attribs) const;
     inline v8::Local<v8::Object> getOwnPropertyDescriptor(v8::Handle<v8::Object> object, v8::Handle<v8::Value> property) const;
@@ -191,18 +190,6 @@ inline QScriptValue::PropertyFlags QScriptOriginalGlobalObject::getPropertyFlags
     }
 
     return QScriptValue::PropertyFlag(flags);
-}
-
-inline v8::Local<v8::Value> QScriptOriginalGlobalObject::getOwnProperty(v8::Handle<v8::Object> object, v8::Handle<v8::Value> property) const
-{
-    Q_ASSERT(object->IsObject());
-    Q_ASSERT(!property.IsEmpty());
-
-    // FIXME potentially it is slow, as we need to create property descriptor just to check if a property exists.
-    v8::Local<v8::Object> descriptor = getOwnPropertyDescriptor(object, property);
-    if (descriptor.IsEmpty())
-        return descriptor;
-    return object->Get(property);
 }
 
 inline void QScriptOriginalGlobalObject::installArgFunctionOnOrgStringPrototype(v8::Handle<v8::Function> arg)

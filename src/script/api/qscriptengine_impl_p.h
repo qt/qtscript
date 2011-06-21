@@ -79,21 +79,26 @@ inline QScriptValue::PropertyFlags QScriptEnginePrivate::getPropertyFlags(v8::Ha
     }
     return flags;
 }
-inline v8::Local<v8::Value> QScriptEnginePrivate::getOwnProperty(v8::Handle<v8::Object> object, v8::Handle<v8::Value> propertyName) const
+inline bool QScriptEnginePrivate::hasOwnProperty(v8::Handle<v8::Object> object, v8::Handle<v8::Value> propertyName) const
 {
-    v8::Local<v8::Value> property = m_originalGlobalObject.getOwnProperty(object, propertyName);
-    if (property.IsEmpty()) {
-        // Check if the object is not an instance of a script class.
-        if (hasInstance(scriptClassTemplate, object)) {
-            property = getOwnPropertyFromScriptClassInstance(object, propertyName);
-        }
+    Q_ASSERT(object->IsObject());
+    Q_ASSERT(!propertyName.IsEmpty());
+
+    if (object->HasOwnProperty(propertyName->ToString())) {
+        return true;
     }
-    return property;
+
+    // Check if the object is not an instance of a script class.
+    if (hasInstance(scriptClassTemplate, object)) {
+        return hasOwnPropertyInScriptClassInstance(object, propertyName);
+    }
+
+    return false;
 }
 
-inline v8::Local<v8::Value> QScriptEnginePrivate::getOwnProperty(v8::Handle<v8::Object> object, uint32_t index) const
+inline bool QScriptEnginePrivate::hasOwnProperty(v8::Handle<v8::Object> object, uint32_t index) const
 {
-    return getOwnProperty(object, v8::Integer::New(index));
+    return hasOwnProperty(object, v8::Integer::New(index));
 }
 
 inline v8::Persistent<v8::Context> QScriptEnginePrivate::getCurrentV8Context()
