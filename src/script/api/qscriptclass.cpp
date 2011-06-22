@@ -207,7 +207,7 @@ v8::Handle<v8::Array> QScriptClassObject::enumerate()
     }
 
     v8::HandleScope handleScope;
-    v8::Handle<v8::Array> originalNames = engine->getOwnPropertyNames(m_original);
+    v8::Handle<v8::Array> originalNames = m_original->GetOwnPropertyNames();
     v8::Handle<v8::Array> names;
     uint32_t idx = 0;
     if (m_scriptclass) {

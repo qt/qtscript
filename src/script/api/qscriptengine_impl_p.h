@@ -68,15 +68,6 @@ inline QScriptEnginePrivate::operator v8::Handle<v8::Context>()
 
 /*!
   \internal
-  returns all property names of an object (same as ECMA getOwnPropertyNames)
-*/
-inline v8::Local<v8::Array> QScriptEnginePrivate::getOwnPropertyNames(v8::Handle<v8::Object> object) const
-{
-    return m_originalGlobalObject.getOwnPropertyNames(object);
-}
-
-/*!
-  \internal
   \note property can be index (v8::Integer) or a property (v8::String) name, according to ECMA script
   property would be converted to a string.
 */

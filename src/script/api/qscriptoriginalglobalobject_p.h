@@ -51,7 +51,6 @@ public:
     inline QScriptOriginalGlobalObject(const QScriptEnginePrivate *engine, v8::Handle<v8::Context> context);
     inline void destroy();
 
-    inline v8::Local<v8::Array> getOwnPropertyNames(v8::Handle<v8::Object> object) const;
     inline QScriptValue::PropertyFlags getPropertyFlags(v8::Handle<v8::Object> object, v8::Handle<v8::Value> property, const QScriptValue::ResolveFlags& mode);
     inline v8::Local<v8::Value> getOwnProperty(v8::Handle<v8::Object> object, v8::Handle<v8::Value> property) const;
     inline void installArgFunctionOnOrgStringPrototype(v8::Handle<v8::Function> arg);
@@ -66,7 +65,6 @@ private:
     v8::Persistent<v8::Object> m_stringConstructor;
     v8::Persistent<v8::Value> m_stringPrototype;
     v8::Persistent<v8::Function> m_ownPropertyDescriptor;
-    v8::Persistent<v8::Function> m_ownPropertyNames;
     v8::Persistent<v8::Object> m_globalObject;
     v8::Persistent<v8::Function> m_defineGetter;
     v8::Persistent<v8::Function> m_defineSetter;
@@ -93,11 +91,6 @@ QScriptOriginalGlobalObject::QScriptOriginalGlobalObject(const QScriptEnginePriv
         v8::Local<v8::Value> ownPropertyDescriptor = objectConstructor->Get(v8::String::New("getOwnPropertyDescriptor"));
         Q_ASSERT(!ownPropertyDescriptor.IsEmpty());
         m_ownPropertyDescriptor = v8::Persistent<v8::Function>::New(v8::Local<v8::Function>::Cast(ownPropertyDescriptor));
-    }
-    {   // Initialize m_ownPropertyNames.
-        v8::Local<v8::Value> ownPropertyNames = objectConstructor->Get(v8::String::New("getOwnPropertyNames"));
-        Q_ASSERT(!ownPropertyNames.IsEmpty());
-        m_ownPropertyNames = v8::Persistent<v8::Function>::New(v8::Local<v8::Function>::Cast(ownPropertyNames));
     }
     {
         //initialize m_defineGetter and m_defineSetter
@@ -153,18 +146,10 @@ inline void QScriptOriginalGlobalObject::destroy()
     m_stringConstructor.Dispose();
     m_stringPrototype.Dispose();
     m_ownPropertyDescriptor.Dispose();
-    m_ownPropertyNames.Dispose();
     m_globalObject.Dispose();
     m_defineGetter.Dispose();
     m_defineSetter.Dispose();
     // After this line this instance is unusable.
-}
-
-inline v8::Local<v8::Array> QScriptOriginalGlobalObject::getOwnPropertyNames(v8::Handle<v8::Object> object) const
-{
-    Q_ASSERT(!object.IsEmpty());
-    v8::Handle<v8::Value> argv[] = {object};
-    return v8::Local<v8::Array>::Cast(m_ownPropertyNames->Call(m_globalObject, /* argc */ 1, argv));
 }
 
 inline QScriptValue::PropertyFlags QScriptOriginalGlobalObject::getPropertyFlags(v8::Handle<v8::Object> object, v8::Handle<v8::Value> property, const QScriptValue::ResolveFlags& mode)

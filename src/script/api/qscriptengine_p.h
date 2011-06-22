@@ -148,7 +148,6 @@ public:
     inline v8::Handle<v8::Value> makeJSValue(qsreal value);
     inline v8::Handle<v8::Value> makeJSValue(QScriptValue::SpecialValue value);
     inline v8::Handle<v8::Value> makeJSValue(const QString& value);
-    inline v8::Local<v8::Array> getOwnPropertyNames(v8::Handle<v8::Object> object) const;
     inline QScriptValue::PropertyFlags getPropertyFlags(v8::Handle<v8::Object> object, v8::Handle<v8::Value> property, const QScriptValue::ResolveFlags& mode);
     inline v8::Local<v8::Value> getOwnProperty(v8::Handle<v8::Object> object, v8::Handle<v8::Value> property) const;
     inline v8::Local<v8::Value> getOwnProperty(v8::Handle<v8::Object> object, uint32_t index) const;

@@ -142,9 +142,9 @@ inline QScriptValueIteratorPrivate::QScriptValueIteratorPrivate(const QScriptVal
             && data->scriptClass()
             && (m_classIterator = data->scriptClass()->userCallback()->newIterator(QScriptValuePrivate::get(value)))) {
             // we need to wrap custom iterator.
-            names = engine->getOwnPropertyNames(data->original());
+            names = data->original()->GetOwnPropertyNames();
         } else
-            names = engine->getOwnPropertyNames(obj);
+            names = obj->GetOwnPropertyNames();
 
         uint32_t count = names->Length();
         Local<String> name;
