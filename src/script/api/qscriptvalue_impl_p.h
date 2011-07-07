@@ -576,22 +576,7 @@ inline bool QScriptValuePrivate::equals(QScriptValuePrivate* other)
         qWarning("QScriptValue::equals: cannot compare to a value created in a different engine");
         return false;
     }
-
-    // The next line does not work because it fails to compare the global object
-    // http://code.google.com/p/v8/issues/detail?id=1078 and http://code.google.com/p/v8/issues/detail?id=1082
-    //return m_value->Equals(other->m_value);
-
-    // FIXME: equal can throw an exception which will be dropped by this code:
-    m_engine->saveException();
-    QScriptSharedDataPointer<QScriptValuePrivate> cmp(m_engine->evaluate(
-        QString::fromLatin1("(function(a,b, global){"
-            "return (a == b) || (a == global && b == this) || (b == global && a == this);})")));
-    Q_ASSERT(cmp->isFunction());
-    v8::Handle<v8::Value> args[3] = { m_value, other->m_value, m_engine->globalObject() };
-    QScriptSharedDataPointer<QScriptValuePrivate> resultValue(cmp->call(0, 3, args));
-    bool result = resultValue->toBool();
-    m_engine->restoreException();
-    return result;
+    return m_value->Equals(other->m_value);
 }
 
 inline bool QScriptValuePrivate::strictlyEquals(QScriptValuePrivate* other)
@@ -607,21 +592,7 @@ inline bool QScriptValuePrivate::strictlyEquals(QScriptValuePrivate* other)
             qWarning("QScriptValue::strictlyEquals: cannot compare to a value created in a different engine");
             return false;
         }
-
-        // The next line does not work because it fails to compare the global object
-        // http://code.google.com/p/v8/issues/detail?id=1078 and http://code.google.com/p/v8/issues/detail?id=1082
-        //return m_value->StrictEquals(other->m_value);
-        v8::HandleScope handleScope;
-        m_engine->saveException();
-        QScriptSharedDataPointer<QScriptValuePrivate> cmp(m_engine->evaluate(
-            QString::fromLatin1("(function(a,b, global){"
-            "return (a === b) || (a === global && b === this) || (b === global && a === this);})")));
-        Q_ASSERT(cmp->isFunction());
-        v8::Handle<v8::Value> args[3] = { m_value, other->m_value, m_engine->globalObject() };
-        QScriptSharedDataPointer<QScriptValuePrivate> resultValue(cmp->call(0, 3, args));
-        bool result = resultValue->toBool();
-        m_engine->restoreException();
-        return result;
+        return m_value->StrictEquals(other->m_value);
     }
     if (isStringBased()) {
         if (other->isStringBased())
