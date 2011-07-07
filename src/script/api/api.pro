@@ -12,7 +12,7 @@ DEFINES   += QT_NO_USING_NAMESPACE
 
 unix:QMAKE_PKGCONFIG_REQUIRES = QtCore
 
-include($$QT_SOURCE_TREE/src/qbase.pri)
+load(qt_module_config)
 
 CONFIG += building-libs
 
