@@ -30,6 +30,7 @@
 #include "../bridge/qscriptqobject_p.h"
 #include <QtCore/qdatastream.h>
 #include <QtCore/qmetaobject.h>
+#include <QtCore/qshareddata.h>
 #include "CodeBlock.h"
 #include "JSFunction.h"
 #if ENABLE(JIT)
@@ -81,7 +82,7 @@ QT_BEGIN_NAMESPACE
     \value NativeFunction The function is a built-in Qt Script function, or it was defined through a call to QScriptEngine::newFunction().
 */
 
-class QScriptContextInfoPrivate
+class QScriptContextInfoPrivate : public QSharedData
 {
     Q_DECLARE_PUBLIC(QScriptContextInfo)
 public:
@@ -102,8 +103,6 @@ public:
     int functionMetaIndex;
 
     QStringList parameterNames;
-
-    QAtomicInt ref;
 
     QScriptContextInfo *q_ptr;
 };

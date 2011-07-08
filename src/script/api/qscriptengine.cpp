@@ -38,6 +38,7 @@
 #include "qdebug.h"
 
 #include <QtCore/qstringlist.h>
+#include <QtCore/qshareddata.h>
 #include <QtCore/qmetaobject.h>
 
 #include <math.h>
@@ -326,7 +327,7 @@ QT_BEGIN_NAMESPACE
     \value SkipMethodsInEnumeration Don't include methods (signals and slots) when enumerating the object's properties.
 */
 
-class QScriptSyntaxCheckResultPrivate
+class QScriptSyntaxCheckResultPrivate : public QSharedData
 {
 public:
     QScriptSyntaxCheckResultPrivate() {}
@@ -336,7 +337,6 @@ public:
     int errorColumnNumber;
     int errorLineNumber;
     QString errorMessage;
-    QAtomicInt ref;
 };
 
 class QScriptTypeInfo

@@ -45,6 +45,7 @@
 #include <QtScript/qscriptengine.h>
 #include <QtCore/qdatastream.h>
 #include <QtCore/qdebug.h>
+#include <QtCore/qshareddata.h>
 
 QT_BEGIN_NAMESPACE
 
@@ -56,7 +57,7 @@ QT_BEGIN_NAMESPACE
   \brief The QScriptDebuggerValue class represents a script value.
 */
 
-class QScriptDebuggerValuePrivate
+class QScriptDebuggerValuePrivate : public QSharedData
 {
 public:
     QScriptDebuggerValuePrivate();
@@ -69,8 +70,6 @@ public:
         double numberValue;
         qint64 objectId;
     };
-
-    QAtomicInt ref;
 };
 
 QScriptDebuggerValuePrivate::QScriptDebuggerValuePrivate()

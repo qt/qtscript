@@ -42,6 +42,7 @@
 #include "qscriptdebuggerconsolecommandgroupdata_p.h"
 
 #include <QtCore/qstring.h>
+#include <QtCore/qshareddata.h>
 
 QT_BEGIN_NAMESPACE
 
@@ -53,7 +54,7 @@ QT_BEGIN_NAMESPACE
   \brief The QScriptDebuggerConsoleCommandGroupData class holds data associated with a console command group.
 */
 
-class QScriptDebuggerConsoleCommandGroupDataPrivate
+class QScriptDebuggerConsoleCommandGroupDataPrivate : public QSharedData
 {
 public:
     QScriptDebuggerConsoleCommandGroupDataPrivate();
@@ -61,8 +62,6 @@ public:
 
     QString shortDescription;
     QString longDescription;
-
-    QAtomicInt ref;
 };
 
 QScriptDebuggerConsoleCommandGroupDataPrivate::QScriptDebuggerConsoleCommandGroupDataPrivate()

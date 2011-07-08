@@ -36,6 +36,7 @@
 //
 
 #include <QtCore/qobjectdefs.h>
+#include <QtCore/qshareddata.h>
 
 #include "RefPtr.h"
 
@@ -49,7 +50,7 @@ QT_BEGIN_NAMESPACE
 
 class QScriptEnginePrivate;
 
-class QScriptProgramPrivate
+class QScriptProgramPrivate : public QSharedData
 {
 public:
     QScriptProgramPrivate(const QString &sourceCode,
@@ -62,8 +63,6 @@ public:
     JSC::EvalExecutable *executable(JSC::ExecState *exec,
                                     QScriptEnginePrivate *engine);
     void detachFromEngine();
-
-    QAtomicInt ref;
 
     QString sourceCode;
     QString fileName;
