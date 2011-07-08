@@ -119,13 +119,12 @@ public:
     QScriptValuePrivate *prev;
     QScriptValuePrivate *next;
 
-    QBasicAtomicInt ref;
+    QAtomicInt ref;
 };
 
 inline QScriptValuePrivate::QScriptValuePrivate(QScriptEnginePrivate *e)
     : engine(e), prev(0), next(0)
 {
-    ref = 0;
 }
 
 inline bool QScriptValuePrivate::isJSC() const

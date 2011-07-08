@@ -70,13 +70,12 @@ public:
         qint64 objectId;
     };
 
-    QBasicAtomicInt ref;
+    QAtomicInt ref;
 };
 
 QScriptDebuggerValuePrivate::QScriptDebuggerValuePrivate()
     : type(QScriptDebuggerValue::NoValue)
 {
-    ref = 0;
 }
 
 QScriptDebuggerValuePrivate::~QScriptDebuggerValuePrivate()

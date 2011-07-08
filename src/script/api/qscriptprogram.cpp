@@ -57,7 +57,6 @@ QScriptProgramPrivate::QScriptProgramPrivate(const QString &src,
     : sourceCode(src), fileName(fn), firstLineNumber(ln),
       engine(0), _executable(0), sourceId(-1), isCompiled(false)
 {
-    ref = 0;
 }
 
 QScriptProgramPrivate::~QScriptProgramPrivate()

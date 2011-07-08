@@ -103,7 +103,7 @@ public:
 
     QStringList parameterNames;
 
-    QBasicAtomicInt ref;
+    QAtomicInt ref;
 
     QScriptContextInfo *q_ptr;
 };

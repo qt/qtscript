@@ -65,12 +65,11 @@ public:
     QString valueAsString;
     QScriptValue::PropertyFlags flags;
 
-    QBasicAtomicInt ref;
+    QAtomicInt ref;
 };
 
 QScriptDebuggerValuePropertyPrivate::QScriptDebuggerValuePropertyPrivate()
 {
-    ref = 0;
 }
 
 QScriptDebuggerValuePropertyPrivate::~QScriptDebuggerValuePropertyPrivate()

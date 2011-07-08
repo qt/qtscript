@@ -56,12 +56,11 @@ public:
     QScriptValue value;
     QScriptValue::PropertyFlags flags;
 
-    QBasicAtomicInt ref;
+    QAtomicInt ref;
 };
 
 QScriptValuePropertyPrivate::QScriptValuePropertyPrivate()
 {
-    ref = 0;
 }
 
 QScriptValuePropertyPrivate::~QScriptValuePropertyPrivate()

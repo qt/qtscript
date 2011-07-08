@@ -61,7 +61,7 @@ public:
 
     static inline bool isValid(const QScriptString &q);
 
-    QBasicAtomicInt ref;
+    QAtomicInt ref;
     QScriptEnginePrivate *engine;
     JSC::Identifier identifier;
     AllocationType type;
@@ -75,7 +75,6 @@ inline QScriptStringPrivate::QScriptStringPrivate(QScriptEnginePrivate *e, const
                                                   AllocationType tp)
     : engine(e), identifier(id), type(tp), prev(0), next(0)
 {
-    ref = 0;
 }
 
 inline QScriptStringPrivate::~QScriptStringPrivate()

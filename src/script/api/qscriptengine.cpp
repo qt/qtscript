@@ -329,14 +329,14 @@ QT_BEGIN_NAMESPACE
 class QScriptSyntaxCheckResultPrivate
 {
 public:
-    QScriptSyntaxCheckResultPrivate() { ref = 0; }
+    QScriptSyntaxCheckResultPrivate() {}
     ~QScriptSyntaxCheckResultPrivate() {}
 
     QScriptSyntaxCheckResult::State state;
     int errorColumnNumber;
     int errorLineNumber;
     QString errorMessage;
-    QBasicAtomicInt ref;
+    QAtomicInt ref;
 };
 
 class QScriptTypeInfo
