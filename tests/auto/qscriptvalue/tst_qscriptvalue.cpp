@@ -2053,7 +2053,7 @@ void tst_QScriptValue::getSetProperty_gettersAndSettersOnGlobalObject()
     {
         QScriptValue ret = eng.evaluate("this.globalGetterSetterProperty()");
         QVERIFY(ret.isError());
-        QCOMPARE(ret.toString(), QString::fromLatin1("TypeError: Property 'globalGetterSetterProperty' of object #<an Object> is not a function"));
+        QCOMPARE(ret.toString(), QString::fromLatin1("TypeError: Property 'globalGetterSetterProperty' of object #<Object> is not a function"));
     }
     {
         QScriptValue ret = eng.evaluate("new this.globalGetterSetterProperty()");
@@ -3760,9 +3760,7 @@ void tst_QScriptValue::prettyPrinter_data()
     QTest::newRow("for") << QString("function() { for (var a; b; c) { } }") << QString("function () { for (var a; b; c) { } }");
     QTest::newRow("for") << QString("function() { for (var a, b, c; d; e) { } }") << QString("function () { for (var a, b, c; d; e) { } }");
     QTest::newRow("continue") << QString("function() { for (; ; ) { continue; } }") << QString("function () { for (; ; ) { continue; } }");
-    QTest::newRow("continue") << QString("function() { for (; ; ) { continue label; } }") << QString("function () { for (; ; ) { continue label; } }");
     QTest::newRow("break") << QString("function() { for (; ; ) { break; } }") << QString("function () { for (; ; ) { break; } }");
-    QTest::newRow("break") << QString("function() { for (; ; ) { break label; } }") << QString("function () { for (; ; ) { break label; } }");
     QTest::newRow("return") << QString("function() { return; }") << QString("function () { return; }");
     QTest::newRow("return") << QString("function() { return 10; }") << QString("function () { return 10; }");
     QTest::newRow("with") << QString("function() { with (a) { b; } }") << QString("function () { with (a) { b; } }");
