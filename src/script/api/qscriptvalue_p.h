@@ -36,6 +36,7 @@
 //
 
 #include <QtCore/qobjectdefs.h>
+#include <QtCore/qshareddata.h>
 
 #include "wtf/Platform.h"
 #include "JSValue.h"
@@ -46,7 +47,7 @@ class QString;
 class QScriptEnginePrivate;
 
 class QScriptValue;
-class QScriptValuePrivate
+class QScriptValuePrivate : public QSharedData
 {
     Q_DISABLE_COPY(QScriptValuePrivate)
 public:
@@ -118,14 +119,11 @@ public:
     // linked list of engine's script values
     QScriptValuePrivate *prev;
     QScriptValuePrivate *next;
-
-    QBasicAtomicInt ref;
 };
 
 inline QScriptValuePrivate::QScriptValuePrivate(QScriptEnginePrivate *e)
     : engine(e), prev(0), next(0)
 {
-    ref = 0;
 }
 
 inline bool QScriptValuePrivate::isJSC() const

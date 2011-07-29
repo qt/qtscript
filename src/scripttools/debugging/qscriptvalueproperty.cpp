@@ -41,12 +41,12 @@
 
 #include "qscriptvalueproperty_p.h"
 
-#include <QtCore/qatomic.h>
+#include <QtCore/qshareddata.h>
 #include <QtCore/qstring.h>
 
 QT_BEGIN_NAMESPACE
 
-class QScriptValuePropertyPrivate
+class QScriptValuePropertyPrivate : public QSharedData
 {
 public:
     QScriptValuePropertyPrivate();
@@ -55,13 +55,10 @@ public:
     QString name;
     QScriptValue value;
     QScriptValue::PropertyFlags flags;
-
-    QBasicAtomicInt ref;
 };
 
 QScriptValuePropertyPrivate::QScriptValuePropertyPrivate()
 {
-    ref = 0;
 }
 
 QScriptValuePropertyPrivate::~QScriptValuePropertyPrivate()

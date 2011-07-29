@@ -44,6 +44,7 @@
 #include <QtCore/qdatastream.h>
 #include <QtCore/qstring.h>
 #include <QtCore/qstringlist.h>
+#include <QtCore/qshareddata.h>
 
 QT_BEGIN_NAMESPACE
 
@@ -55,7 +56,7 @@ QT_BEGIN_NAMESPACE
   \brief The QScriptScriptData class holds data associated with a script.
 */
 
-class QScriptScriptDataPrivate
+class QScriptScriptDataPrivate : public QSharedData
 {
 public:
     QScriptScriptDataPrivate();
@@ -65,13 +66,10 @@ public:
     QString fileName;
     int baseLineNumber;
     QDateTime timeStamp;
-
-    QBasicAtomicInt ref;
 };
 
 QScriptScriptDataPrivate::QScriptScriptDataPrivate()
 {
-    ref = 0;
 }
 
 QScriptScriptDataPrivate::~QScriptScriptDataPrivate()

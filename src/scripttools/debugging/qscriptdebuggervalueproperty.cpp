@@ -43,7 +43,7 @@
 #include "qscriptdebuggervalue_p.h"
 #include "qscriptdebuggerobjectsnapshotdelta_p.h"
 
-#include <QtCore/qatomic.h>
+#include <QtCore/qshareddata.h>
 #include <QtCore/qdatastream.h>
 #include <QtCore/qstring.h>
 
@@ -54,7 +54,7 @@ QT_BEGIN_NAMESPACE
   \class QScriptDebuggerValueProperty
 */
 
-class QScriptDebuggerValuePropertyPrivate
+class QScriptDebuggerValuePropertyPrivate : public QSharedData
 {
 public:
     QScriptDebuggerValuePropertyPrivate();
@@ -64,13 +64,10 @@ public:
     QScriptDebuggerValue value;
     QString valueAsString;
     QScriptValue::PropertyFlags flags;
-
-    QBasicAtomicInt ref;
 };
 
 QScriptDebuggerValuePropertyPrivate::QScriptDebuggerValuePropertyPrivate()
 {
-    ref = 0;
 }
 
 QScriptDebuggerValuePropertyPrivate::~QScriptDebuggerValuePropertyPrivate()

@@ -13,7 +13,7 @@ DEFINES   += QT_NO_USING_NAMESPACE
 
 unix|win32-g++*:QMAKE_PKGCONFIG_REQUIRES = QtCore QtGui QtScript
 
-include($$QT_SOURCE_TREE/src/qbase.pri)
+load(qt_module_config)
 
 HEADERS += qtscripttoolsversion.h
 
