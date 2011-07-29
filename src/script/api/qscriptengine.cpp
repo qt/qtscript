@@ -3398,7 +3398,12 @@ bool QScriptEnginePrivate::hasDemarshalFunction(int type) const
 JSC::UString QScriptEnginePrivate::translationContextFromUrl(const JSC::UString &url)
 {
     if (url != cachedTranslationUrl) {
-        cachedTranslationContext = QFileInfo(url).baseName();
+        const QString &baseName = QFileInfo(url).baseName();
+        if (baseName.startsWith(QLatin1String("qrc:"), Qt::CaseInsensitive))
+            cachedTranslationContext = baseName.mid(4);
+        else
+            cachedTranslationContext = baseName;
+
         cachedTranslationUrl = url;
     }
     return cachedTranslationContext;
