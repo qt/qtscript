@@ -86,13 +86,13 @@
 #include <QtCore/qstringlist.h>
 #include <QtCore/qdebug.h>
 
-#include <QtGui/qaction.h>
+#include <QtWidgets/qaction.h>
 #include <QtGui/qevent.h>
-#include <QtGui/qicon.h>
-#include <QtGui/qinputdialog.h>
-#include <QtGui/qmenu.h>
-#include <QtGui/qtoolbar.h>
-#include <QtGui/qtooltip.h>
+#include <QtWidgets/qicon.h>
+#include <QtWidgets/qinputdialog.h>
+#include <QtWidgets/qmenu.h>
+#include <QtWidgets/qtoolbar.h>
+#include <QtWidgets/qtooltip.h>
 
 QT_BEGIN_NAMESPACE
 typedef QPair<QList<qint64>, QList<qint64> > QScriptScriptsDelta;

@@ -47,8 +47,8 @@
 #include "qscripttooltipproviderinterface_p.h"
 
 #include <QtCore/qdebug.h>
-#include <QtGui/qboxlayout.h>
-#include <QtGui/qstackedwidget.h>
+#include <QtWidgets/qboxlayout.h>
+#include <QtWidgets/qstackedwidget.h>
 
 QT_BEGIN_NAMESPACE
 

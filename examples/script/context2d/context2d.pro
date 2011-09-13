@@ -1,5 +1,5 @@
 TEMPLATE = app
-QT += script
+QT += widgets script
 # Input
 HEADERS += qcontext2dcanvas.h \
 	   context2d.h \

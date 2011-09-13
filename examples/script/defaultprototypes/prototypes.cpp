@@ -39,8 +39,8 @@
 ****************************************************************************/
 
 #include "prototypes.h"
-#include <QtGui/QListWidgetItem>
-#include <QtGui/QListWidget>
+#include <QtWidgets/QListWidgetItem>
+#include <QtWidgets/QListWidget>
 #include <QtScript/QScriptValue>
 #include <QtScript/QScriptEngine>
 #include <QDebug>

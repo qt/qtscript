@@ -43,9 +43,9 @@
 #include "qscriptdebuggerstackwidgetinterface_p_p.h"
 
 #include <QtCore/qdebug.h>
-#include <QtGui/qheaderview.h>
-#include <QtGui/qtreeview.h>
-#include <QtGui/qboxlayout.h>
+#include <QtWidgets/qheaderview.h>
+#include <QtWidgets/qtreeview.h>
+#include <QtWidgets/qboxlayout.h>
 
 QT_BEGIN_NAMESPACE
 

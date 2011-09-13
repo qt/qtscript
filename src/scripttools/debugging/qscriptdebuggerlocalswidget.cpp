@@ -46,16 +46,16 @@
 #include "qscriptcompletiontaskinterface_p.h"
 
 #include <QtCore/qdebug.h>
-#include <QtGui/qheaderview.h>
-#include <QtGui/qcompleter.h>
-#include <QtGui/qstringlistmodel.h>
-#include <QtGui/qtreeview.h>
-#include <QtGui/qboxlayout.h>
-#include <QtGui/qsortfilterproxymodel.h>
-#include <QtGui/qlineedit.h>
-#include <QtGui/qstyleditemdelegate.h>
+#include <QtWidgets/qheaderview.h>
+#include <QtWidgets/qcompleter.h>
+#include <QtWidgets/qstringlistmodel.h>
+#include <QtWidgets/qtreeview.h>
+#include <QtWidgets/qboxlayout.h>
+#include <QtWidgets/qsortfilterproxymodel.h>
+#include <QtWidgets/qlineedit.h>
+#include <QtWidgets/qstyleditemdelegate.h>
 #include <QtGui/qevent.h>
-#include <QtGui/qmessagebox.h>
+#include <QtWidgets/qmessagebox.h>
 #include <QtScript/qscriptengine.h>
 
 QT_BEGIN_NAMESPACE

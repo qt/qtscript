@@ -43,9 +43,9 @@
 #include "qscripterrorlogwidgetinterface_p_p.h"
 
 #include <QtCore/qdatetime.h>
-#include <QtGui/qboxlayout.h>
-#include <QtGui/qtextedit.h>
-#include <QtGui/qscrollbar.h>
+#include <QtWidgets/qboxlayout.h>
+#include <QtWidgets/qtextedit.h>
+#include <QtWidgets/qscrollbar.h>
 #include <QtCore/qdebug.h>
 
 QT_BEGIN_NAMESPACE

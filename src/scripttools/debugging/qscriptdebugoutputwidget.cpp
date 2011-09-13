@@ -43,9 +43,9 @@
 #include "qscriptdebugoutputwidgetinterface_p_p.h"
 
 #include <QtCore/qdebug.h>
-#include <QtGui/qboxlayout.h>
-#include <QtGui/qplaintextedit.h>
-#include <QtGui/qscrollbar.h>
+#include <QtWidgets/qboxlayout.h>
+#include <QtWidgets/qplaintextedit.h>
+#include <QtWidgets/qscrollbar.h>
 
 QT_BEGIN_NAMESPACE
 

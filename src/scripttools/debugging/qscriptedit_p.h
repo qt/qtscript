@@ -53,7 +53,7 @@
 // We mean it.
 //
 
-#include <QtGui/qplaintextedit.h>
+#include <QtWidgets/qplaintextedit.h>
 
 #include <QtCore/qhash.h>
 #include <QtCore/qset.h>
