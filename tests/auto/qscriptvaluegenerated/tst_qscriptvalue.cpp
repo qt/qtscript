@@ -40,7 +40,6 @@
 ****************************************************************************/
 
 #include "tst_qscriptvalue.h"
-#include <QtWidgets/QPushButton>
 
 //TESTED_CLASS=
 //TESTED_FILES=

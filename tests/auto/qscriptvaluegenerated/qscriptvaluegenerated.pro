@@ -1,5 +1,5 @@
 load(qttest_p4)
-QT = core gui script
+QT = core script
 SOURCES  += tst_qscriptvalue.cpp
 HEADERS  += tst_qscriptvalue.h
 
