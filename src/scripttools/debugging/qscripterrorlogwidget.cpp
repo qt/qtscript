@@ -121,7 +121,7 @@ void QScriptErrorLogWidget::message(
     Q_D(QScriptErrorLogWidget);
     QString html;
     html.append(QString::fromLatin1("<b>%0</b> %1<br>")
-                .arg(QDateTime::currentDateTime().toString()).arg(Qt::escape(text)));
+                .arg(QDateTime::currentDateTime().toString()).arg(text.toHtmlEscaped()));
     d->outputEdit->insertHtml(html);
     d->outputEdit->scrollToBottom();
 }
