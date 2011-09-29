@@ -54,10 +54,6 @@
 
 struct CustomType
 {
-#if defined (Q_CC_NOKIAX86)
-    // Compiler crash workaround
-    CustomType() {}
-#endif
     QString string;
 };
 Q_DECLARE_METATYPE(CustomType)
