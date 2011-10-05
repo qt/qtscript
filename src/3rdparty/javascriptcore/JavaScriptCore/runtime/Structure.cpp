@@ -509,7 +509,7 @@ PassRefPtr<Structure> Structure::getterSetterTransition(Structure* structure)
 {
     RefPtr<Structure> transition = create(structure->storedPrototype(), structure->typeInfo());
     transition->m_propertyStorageCapacity = structure->m_propertyStorageCapacity;
-    transition->m_hasGetterSetterProperties = transition->m_hasGetterSetterProperties;
+    transition->m_hasGetterSetterProperties = structure->m_hasGetterSetterProperties;
     transition->m_hasNonEnumerableProperties = structure->m_hasNonEnumerableProperties;
     transition->m_specificFunctionThrashCount = structure->m_specificFunctionThrashCount;
 
