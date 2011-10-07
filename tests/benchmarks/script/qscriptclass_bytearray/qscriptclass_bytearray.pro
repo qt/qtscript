@@ -1,4 +1,4 @@
-load(qttest_p4)
+CONFIG += testcase
 TEMPLATE = app
 TARGET = tst_bench_qscriptclass_bytearray
 
@@ -7,4 +7,4 @@ RESOURCES += qscriptclass_bytearray.qrc
 
 include($$QT_SOURCE_TREE/examples/script/customclass/bytearrayclass.pri)
 
-QT = core script
+QT = core script testlib

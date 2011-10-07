@@ -1,4 +1,4 @@
-load(qttest_p4)
+CONFIG += testcase
 TEMPLATE = app
 TARGET = tst_bench_context2d
 
@@ -19,4 +19,4 @@ SOURCES += $$CONTEXT2D_EXAMPLE_DIR/qcontext2dcanvas.cpp \
 
 RESOURCES += $$CONTEXT2D_EXAMPLE_DIR/context2d.qrc
 
-QT += script
+QT += script testlib

@@ -1,5 +1,6 @@
-load(qttest_p4)
-QT = core script
+TARGET = tst_qscriptengineagent
+CONFIG += testcase
+QT = core script testlib
 SOURCES  += tst_qscriptengineagent.cpp
 
 

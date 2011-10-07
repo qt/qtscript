@@ -1,5 +1,6 @@
-load(qttest_p4)
-QT = core script
+TARGET = tst_qscriptvaluegenerated
+CONFIG += testcase
+QT = core script testlib
 SOURCES  += tst_qscriptvalue.cpp
 HEADERS  += tst_qscriptvalue.h
 

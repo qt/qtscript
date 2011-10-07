@@ -1,5 +1,6 @@
-load(qttest_p4)
-QT = core gui widgets script script-private
+TARGET = tst_qscriptengine
+CONFIG += testcase
+QT = core gui widgets script script-private testlib
 SOURCES += tst_qscriptengine.cpp 
 RESOURCES += qscriptengine.qrc
 

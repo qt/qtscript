@@ -1,7 +1,7 @@
-load(qttest_p4)
+CONFIG += testcase
 TEMPLATE = app
 TARGET = tst_bench_qscriptclass
 
 SOURCES += tst_qscriptclass.cpp
 
-QT += script
+QT += script testlib

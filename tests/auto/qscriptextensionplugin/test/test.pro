@@ -1,6 +1,7 @@
-load(qttest_p4)
+TARGET = tst_test
+CONFIG += testcase
 
-QT = core script
+QT = core script testlib
 SOURCES = ../tst_qscriptextensionplugin.cpp
 CONFIG -= app_bundle
 LIBS += -L../plugins/script -lstaticplugin
