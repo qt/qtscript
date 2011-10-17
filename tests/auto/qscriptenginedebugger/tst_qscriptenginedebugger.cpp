@@ -50,7 +50,6 @@
 #include <qmenu.h>
 #include <qplaintextedit.h>
 #include <qtoolbar.h>
-#include "../../shared/util.h"
 
 //TESTED_CLASS=
 //TESTED_FILES=
