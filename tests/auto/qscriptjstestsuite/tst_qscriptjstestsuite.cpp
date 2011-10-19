@@ -294,7 +294,7 @@ void tst_QScriptJSTestSuite::runTestFunction(int testIndex)
     } else {
         QFETCH(TestRecord, record);
         if ((record.lineNumber == -1) && (record.actual == "QSKIP")) {
-            QTest::qSkip(record.description.toLatin1(), QTest::SkipAll, record.fileName.toLatin1(), -1);
+            QTest::qSkip(record.description.toLatin1(), record.fileName.toLatin1(), -1);
         } else {
             QString msg;
             FailureItem::Action failAct;
@@ -307,8 +307,7 @@ void tst_QScriptJSTestSuite::runTestFunction(int testIndex)
                                        record.lineNumber);
                     break;
                 case FailureItem::Skip:
-                    QTest::qSkip(msg.toLatin1(), QTest::SkipSingle,
-                                 record.fileName.toLatin1(), record.lineNumber);
+                    QTest::qSkip(msg.toLatin1(), record.fileName.toLatin1(), record.lineNumber);
                     break;
                 }
             }

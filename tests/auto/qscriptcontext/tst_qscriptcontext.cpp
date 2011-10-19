@@ -353,7 +353,7 @@ void tst_QScriptContext::thisObject()
 
 void tst_QScriptContext::returnValue()
 {
-    QSKIP("Internal function not implemented in JSC-based back-end", SkipAll);
+    QSKIP("Internal function not implemented in JSC-based back-end");
     QScriptEngine eng;
     eng.evaluate("123");
     QCOMPARE(eng.currentContext()->returnValue().toNumber(), 123.0);

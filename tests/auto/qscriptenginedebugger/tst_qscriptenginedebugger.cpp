@@ -98,7 +98,7 @@ tst_QScriptEngineDebugger::~tst_QScriptEngineDebugger()
 void tst_QScriptEngineDebugger::attachAndDetach()
 {
 #if defined(Q_OS_WINCE) && _WIN32_WCE < 0x600
-    QSKIP("skipped due to high mem usage until task 261062 is fixed", SkipAll);
+    QSKIP("skipped due to high mem usage until task 261062 is fixed");
 #endif
     {
         QScriptEngineDebugger debugger;
@@ -165,7 +165,7 @@ void tst_QScriptEngineDebugger::attachAndDetach()
 void tst_QScriptEngineDebugger::action()
 {
 #if defined(Q_OS_WINCE) && _WIN32_WCE < 0x600
-    QSKIP("skipped due to high mem usage until task 261062 is fixed", SkipAll);
+    QSKIP("skipped due to high mem usage until task 261062 is fixed");
 #endif
 
     QScriptEngine engine;
@@ -203,7 +203,7 @@ void tst_QScriptEngineDebugger::action()
 void tst_QScriptEngineDebugger::widget()
 {
 #if defined(Q_OS_WINCE) && _WIN32_WCE < 0x600
-    QSKIP("skipped due to high mem usage until task 261062 is fixed", SkipAll);
+    QSKIP("skipped due to high mem usage until task 261062 is fixed");
 #endif
 
     QScriptEngine engine;
@@ -235,7 +235,7 @@ void tst_QScriptEngineDebugger::widget()
 void tst_QScriptEngineDebugger::standardObjects()
 {
 #if defined(Q_OS_WINCE) && _WIN32_WCE < 0x600
-    QSKIP("skipped due to high mem usage until task 261062 is fixed", SkipAll);
+    QSKIP("skipped due to high mem usage until task 261062 is fixed");
 #endif
 
     QScriptEngine engine;
@@ -264,7 +264,7 @@ void tst_QScriptEngineDebugger::standardObjects()
 void tst_QScriptEngineDebugger::debuggerSignals()
 {
 #if defined(Q_OS_WINCE) && _WIN32_WCE < 0x600
-    QSKIP("skipped due to high mem usage until task 261062 is fixed", SkipAll);
+    QSKIP("skipped due to high mem usage until task 261062 is fixed");
 #endif
 
     QScriptEngine engine;
@@ -341,7 +341,7 @@ private:
 
 void tst_QScriptEngineDebugger::consoleCommands()
 {
-    QSKIP("This test can hang / misbehave because of timing/event loop issues (task 241300)", SkipAll);
+    QSKIP("This test can hang / misbehave because of timing/event loop issues (task 241300)");
 
     QScriptEngine engine;
     QScriptEngineDebugger debugger;
@@ -753,7 +753,7 @@ private:
 void tst_QScriptEngineDebugger::multithreadedDebugging()
 {
 #ifdef Q_OS_WINCE
-    QSKIP("This tests uses too much memory for Windows CE", SkipAll);
+    QSKIP("This tests uses too much memory for Windows CE");
 #endif
     ScriptEvaluator eval;
     QThread thread;

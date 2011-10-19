@@ -135,7 +135,7 @@ void tst_QScriptV8TestSuite::runTestFunction(int testIndex)
 
     QString excludeMessage;
     if (isExcludedTest(name, &excludeMessage)) {
-        QTest::qSkip(excludeMessage.toLatin1(), QTest::SkipAll, path.toLatin1(), -1);
+        QTest::qSkip(excludeMessage.toLatin1(), path.toLatin1(), -1);
         return;
     }
 

@@ -878,7 +878,7 @@ void tst_QScriptEngineAgent::functionEntryAndExit_builtin_data()
 /** check behaiviour of built-in function */
 void tst_QScriptEngineAgent::functionEntryAndExit_builtin()
 {
-    QSKIP("The test fails on platforms others than Linux. The issue will be fixed with next JSC update", SkipAll);
+    QSKIP("The test fails on platforms others than Linux. The issue will be fixed with next JSC update");
     QFETCH(QString, script);
     QFETCH(QString, result);
     QScriptEngine eng;
