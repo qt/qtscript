@@ -38,11 +38,7 @@ wince* {
     LIBS += -lmmtimer
 }
 
-!qpa:mac {
-    DEFINES += ENABLE_JSC_MULTIPLE_THREADS=0
-    LIBS_PRIVATE += -framework AppKit
-}
-qpa:mac {
+mac {
     DEFINES += ENABLE_JSC_MULTIPLE_THREADS=0
     contains(QT_CONFIG, coreservices) {
       LIBS_PRIVATE += -framework CoreServices
