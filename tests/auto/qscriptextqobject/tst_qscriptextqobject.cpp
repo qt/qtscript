@@ -924,8 +924,7 @@ void tst_QScriptExtQObject::getSetStaticProperty_enum()
     m_engine->evaluate("myObject.enumProperty = 'BarPolicy'");
     QCOMPARE(m_myObject->enumProperty(), MyQObject::BarPolicy);
     m_engine->evaluate("myObject.enumProperty = 'ScoobyDoo'");
-    // ### ouch! Shouldn't QMetaProperty::write() rather not change the value...?
-    QCOMPARE(m_myObject->enumProperty(), (MyQObject::Policy)-1);
+    QCOMPARE(m_myObject->enumProperty(), MyQObject::BarPolicy);
     // enum property with custom conversion
     qScriptRegisterMetaType<MyQObject::Policy>(m_engine, policyToScriptValue, policyFromScriptValue);
     m_engine->evaluate("myObject.enumProperty = 'red'");
@@ -956,8 +955,7 @@ void tst_QScriptExtQObject::getSetStaticProperty_qflags()
     m_engine->evaluate("myObject.flagsProperty = 'BazAbility'");
     QCOMPARE(m_myObject->flagsProperty(),  MyQObject::BazAbility);
     m_engine->evaluate("myObject.flagsProperty = 'ScoobyDoo'");
-    // ### ouch! Shouldn't QMetaProperty::write() rather not change the value...?
-    QCOMPARE(m_myObject->flagsProperty(), (MyQObject::Ability)-1);
+    QCOMPARE(m_myObject->flagsProperty(),  MyQObject::BazAbility);
 }
 
 void tst_QScriptExtQObject::getSetStaticProperty_pointerDeref()
