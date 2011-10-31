@@ -112,7 +112,6 @@ public:
 */
 QScriptContextInfoPrivate::QScriptContextInfoPrivate()
 {
-    ref = 0;
     functionType = QScriptContextInfo::NativeFunction;
     functionMetaIndex = -1;
     functionStartLineNumber = -1;
@@ -128,7 +127,6 @@ QScriptContextInfoPrivate::QScriptContextInfoPrivate()
 QScriptContextInfoPrivate::QScriptContextInfoPrivate(const QScriptContext *context)
 {
     Q_ASSERT(context);
-    ref = 0;
     functionType = QScriptContextInfo::NativeFunction;
     functionMetaIndex = -1;
     functionStartLineNumber = -1;
