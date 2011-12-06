@@ -49,9 +49,6 @@
 # define SRCDIR "."
 #endif
 
-//TESTED_CLASS=
-//TESTED_FILES=
-
 struct TestRecord
 {
     TestRecord() : lineNumber(-1) { }

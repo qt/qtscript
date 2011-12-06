@@ -42,8 +42,6 @@
 #include <qtest.h>
 #include <QtScript>
 
-//TESTED_FILES=
-
 class tst_QScriptValueIterator : public QObject
 {
     Q_OBJECT

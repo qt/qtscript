@@ -45,9 +45,6 @@
 #include <QtScript/qscriptengine.h>
 #include <QtScript/qscriptstring.h>
 
-//TESTED_CLASS=
-//TESTED_FILES=
-
 class tst_QScriptString : public QObject
 {
     Q_OBJECT

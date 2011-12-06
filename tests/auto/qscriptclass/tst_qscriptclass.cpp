@@ -52,9 +52,6 @@ Q_DECLARE_METATYPE(QScriptContext*)
 Q_DECLARE_METATYPE(QScriptValueList)
 Q_DECLARE_METATYPE(QScriptValue)
 
-//TESTED_CLASS=
-//TESTED_FILES=script/qscriptclass.h script/qscriptclass.cpp script/qscriptclasspropertyiterator.h script/qscriptclasspropertyiterator.cpp
-
 class tst_QScriptClass : public QObject
 {
     Q_OBJECT

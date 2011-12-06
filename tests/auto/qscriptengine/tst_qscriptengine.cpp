@@ -57,9 +57,6 @@ Q_DECLARE_METATYPE(QList<int>)
 Q_DECLARE_METATYPE(QObjectList)
 Q_DECLARE_METATYPE(QScriptProgram)
 
-//TESTED_CLASS=
-//TESTED_FILES=
-
 #if defined(Q_OS_SYMBIAN)
 # define STRINGIFY(x) #x
 # define TOSTRING(x) STRINGIFY(x)

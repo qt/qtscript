@@ -46,8 +46,6 @@
 #include <QtScript/qscriptengine.h>
 #include <QtScript/qscriptvalue.h>
 
-//TESTED_FILES=
-
 static QString readFile(const QString &filename)
 {
     QFile file(filename);

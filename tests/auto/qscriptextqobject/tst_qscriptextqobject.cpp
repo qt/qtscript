@@ -49,9 +49,6 @@
 #include <qpushbutton.h>
 #include <qlineedit.h>
 
-//TESTED_CLASS=
-//TESTED_FILES=script/qscriptextqobject_p.h script/qscriptextqobject.cpp
-
 struct CustomType
 {
     QString string;

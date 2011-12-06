@@ -44,9 +44,6 @@
 #include <qsharedmemory.h>
 #include <QtCore/QFile>
 
-//TESTED_CLASS=
-//TESTED_FILES=
-
 #define EXISTING_SHARE "existing"
 #define EXISTING_SIZE 1024
 

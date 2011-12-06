@@ -46,9 +46,6 @@
 #include <QtScript/qscriptengine.h>
 #include <QtScript/qscriptable.h>
 
-//TESTED_CLASS=
-//TESTED_FILES=
-
 class MyScriptable : public QObject, public QScriptable
 {
     Q_OBJECT

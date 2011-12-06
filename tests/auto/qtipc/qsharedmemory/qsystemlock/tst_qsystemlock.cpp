@@ -43,9 +43,6 @@
 #include <QtTest/QtTest>
 #include <qsystemlock.h>
 
-//TESTED_CLASS=
-//TESTED_FILES=
-
 #define EXISTING_SHARE "existing"
 
 class tst_QSystemLock : public QObject

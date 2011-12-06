@@ -44,9 +44,6 @@
 
 #include <QtScript/qscriptengine.h>
 
-//TESTED_CLASS=
-//TESTED_FILES=
-
 class tst_QScriptExtensionPlugin : public QObject
 {
     Q_OBJECT

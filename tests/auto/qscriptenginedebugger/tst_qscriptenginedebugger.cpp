@@ -51,9 +51,6 @@
 #include <qplaintextedit.h>
 #include <qtoolbar.h>
 
-//TESTED_CLASS=
-//TESTED_FILES=
-
 // Can't use QTest::qWait() because it causes event loop to hang on some platforms
 static void qsWait(int ms)
 {

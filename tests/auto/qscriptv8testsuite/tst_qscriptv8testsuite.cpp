@@ -44,9 +44,6 @@
 #include <QtTest/QtTest>
 #include <QtScript>
 
-//TESTED_CLASS=
-//TESTED_FILES=
-
 class tst_QScriptV8TestSuite : public AbstractTestSuite
 {
 public:

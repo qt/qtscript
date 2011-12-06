@@ -52,9 +52,6 @@ Q_DECLARE_METATYPE(QScriptValue)
 Q_DECLARE_METATYPE(QScriptContextInfo)
 Q_DECLARE_METATYPE(QList<QScriptContextInfo>)
 
-//TESTED_CLASS=
-//TESTED_FILES=
-
 class tst_QScriptContextInfo : public QObject, public QScriptable
 {
     Q_OBJECT

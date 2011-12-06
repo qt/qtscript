@@ -45,9 +45,6 @@
 #include <QtScript/qscriptengine.h>
 #include <QtScript/qscriptvalueiterator.h>
 
-//TESTED_CLASS=
-//TESTED_FILES=
-
 Q_DECLARE_METATYPE(QScriptValue);
 
 class tst_QScriptValueIterator : public QObject

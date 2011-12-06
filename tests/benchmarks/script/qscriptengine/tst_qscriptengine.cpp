@@ -46,8 +46,6 @@
 
 Q_DECLARE_METATYPE(QScriptValue)
 
-//TESTED_FILES=
-
 class tst_QScriptEngine : public QObject
 {
     Q_OBJECT

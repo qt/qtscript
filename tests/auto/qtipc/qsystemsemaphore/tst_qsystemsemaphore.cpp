@@ -42,8 +42,6 @@
 
 #include <QtTest/QtTest>
 #include <qsystemsemaphore.h>
-//TESTED_CLASS=
-//TESTED_FILES=
 
 #define EXISTING_SHARE "existing"
 #ifdef Q_OS_WINCE

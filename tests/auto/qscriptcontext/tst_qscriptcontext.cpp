@@ -46,9 +46,6 @@
 #include <QtScript/qscriptengine.h>
 #include <QtScript/qscriptvalueiterator.h>
 
-//TESTED_CLASS=
-//TESTED_FILES=
-
 Q_DECLARE_METATYPE(QScriptValueList)
 Q_DECLARE_METATYPE(QScriptContext::Error)
 
