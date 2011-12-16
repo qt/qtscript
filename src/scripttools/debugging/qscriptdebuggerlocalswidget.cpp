@@ -48,10 +48,10 @@
 #include <QtCore/qdebug.h>
 #include <QtWidgets/qheaderview.h>
 #include <QtWidgets/qcompleter.h>
-#include <QtWidgets/qstringlistmodel.h>
+#include <QtCore/qstringlistmodel.h>
 #include <QtWidgets/qtreeview.h>
 #include <QtWidgets/qboxlayout.h>
-#include <QtWidgets/qsortfilterproxymodel.h>
+#include <QtCore/qsortfilterproxymodel.h>
 #include <QtWidgets/qlineedit.h>
 #include <QtWidgets/qstyleditemdelegate.h>
 #include <QtGui/qevent.h>

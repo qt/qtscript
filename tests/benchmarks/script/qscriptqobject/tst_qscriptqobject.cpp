@@ -40,7 +40,7 @@
 ****************************************************************************/
 
 #include <qtest.h>
-#include <QtGui>
+#include <QtWidgets>
 #include <QtScript>
 
 #define ITERATION_COUNT 1e4

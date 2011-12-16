@@ -40,7 +40,7 @@
 
 #include "tetrixboard.h"
 
-#include <QtGui>
+#include <QtWidgets>
 
 Q_DECLARE_METATYPE(QPainter*)
 
