@@ -2871,8 +2871,10 @@ void tst_QScriptExtQObject::enumerate_data()
             << "p1" << "p2" << "p4" << "p6"
             // dynamic properties
             << "dp1" << "dp2" << "dp3"
-            // inherited slots
+            // inherited signals
             << "destroyed(QObject*)" << "destroyed()"
+            << "objectNameChanged(QString)"
+            // inherited slots
             << "deleteLater()"
             // not included because it's private:
             // << "_q_reregisterTimers(void*)"
@@ -2889,8 +2891,10 @@ void tst_QScriptExtQObject::enumerate_data()
             << "p1" << "p2" << "p4" << "p6"
             // dynamic properties
             << "dp1" << "dp2" << "dp3"
-            // inherited slots
+            // inherited signals
             << "destroyed(QObject*)" << "destroyed()"
+            << "objectNameChanged(QString)"
+            // inherited slots
             << "deleteLater()"
             // not included because it's private:
             // << "_q_reregisterTimers(void*)"
@@ -2970,8 +2974,9 @@ void tst_QScriptExtQObject::enumerate_data()
             << "p1" << "p2" << "p4" << "p6"
             // dynamic properties
             << "dp1" << "dp2" << "dp3"
-            // inherited slots
+            // inherited signals
             << "destroyed(QObject*)" << "destroyed()"
+            << "objectNameChanged(QString)"
             // not included because it's private:
             // << "_q_reregisterTimers(void*)"
             // signals
@@ -2991,6 +2996,7 @@ void tst_QScriptExtQObject::enumerate_data()
             << "dp1" << "dp2" << "dp3"
             // inherited signals
             << "destroyed(QObject*)" << "destroyed()"
+            << "objectNameChanged(QString)"
             // signals
             << "mySignal()");
 }
