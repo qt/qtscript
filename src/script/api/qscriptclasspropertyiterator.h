@@ -33,7 +33,6 @@ QT_BEGIN_HEADER
 
 QT_BEGIN_NAMESPACE
 
-QT_MODULE(Script)
 
 class QScriptClassPropertyIteratorPrivate;
 class Q_SCRIPT_EXPORT QScriptClassPropertyIterator
