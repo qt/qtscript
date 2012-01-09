@@ -39,27 +39,25 @@
 **
 ****************************************************************************/
 
+#include "../../lackey/lackeytest.h"
 
 #include <QtTest/QtTest>
-#include <qsystemsemaphore.h>
+#include <QtCore/QSystemSemaphore>
+#include <QtCore/QVector>
+#include <QtCore/QTemporaryDir>
 
 #define EXISTING_SHARE "existing"
-#ifdef Q_OS_WINCE
-#define LACKEYLOC "."
-#else
-#define LACKEYLOC "../lackey"
-#endif
 #define LACKYWAITTIME 10000
 
-class tst_QSystemSemaphore : public QObject
+class tst_QSystemSemaphore : public QObject, LackeyTest
 {
     Q_OBJECT
 
 public:
     tst_QSystemSemaphore();
-    virtual ~tst_QSystemSemaphore();
 
 public Q_SLOTS:
+    void initTestCase();
     void init();
     void cleanup();
 
@@ -83,43 +81,70 @@ private slots:
 private:
     QSystemSemaphore *existingLock;
 
-    QString makeFile(const QString &resource)
-    {
-        QFile memory(resource);
-        if (!memory.open(QIODevice::ReadOnly)) {
-            qDebug() << "error reading resource" << resource;
-            return QString();
-        }
-        QTemporaryFile *file = new QTemporaryFile;
-        file->open();
-        file->write(memory.readAll());
-        tempFiles.append(file);
-        file->flush();
-#ifdef Q_OS_WINCE
-        // flush does not flush to disk on Windows CE. It flushes it into its application
-        // cache. Thus we need to close the file to be able that other processes(lackey) can read it
-        QString fileName = file->fileName();
-        file->close();
-        return fileName;
-#endif
-        return file->fileName();
-    }
+    QTemporaryDir m_temporaryDir;
 
-    QString acquire_js() { return makeFile(":/systemsemaphore_acquire.js"); }
-    QString release_js() { return makeFile(":/systemsemaphore_release.js"); }
-    QString acquirerelease_js() { return makeFile(":/systemsemaphore_acquirerelease.js"); }
-    QList<QTemporaryFile*> tempFiles;
+    QString m_acquireJs;
+    QString m_releaseJs;
+    QString m_acquirereleaseJs;
 };
 
-tst_QSystemSemaphore::tst_QSystemSemaphore()
+static inline QString tempDirPattern()
 {
-    if (!QFile::exists(LACKEYLOC "/lackey"))
-        qWarning() << "lackey executable doesn't exists!";
+    QString result = QDir::tempPath();
+    if (!result.endsWith(QLatin1Char('/')))
+        result += QLatin1Char('/');
+    result += QStringLiteral("tst_qsystemsemaphoreXXXXXX");
+    return result;
 }
 
-tst_QSystemSemaphore::~tst_QSystemSemaphore()
+tst_QSystemSemaphore::tst_QSystemSemaphore() : m_temporaryDir(tempDirPattern())
 {
-    qDeleteAll(tempFiles);
+    m_temporaryDir.setAutoRemove(true);
+}
+
+static bool createFile(const QString &resource,
+                       const QString &target,
+                       QByteArray *errorMessage)
+{
+    QFile memory(resource);
+    if (!memory.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        *errorMessage = "Error reading resource '"
+                + resource.toLocal8Bit() + "': "
+                + memory.errorString().toLocal8Bit();
+        return false;
+    }
+    QFile file(target);
+    if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+        *errorMessage = "Error writing '"
+                + target.toLocal8Bit() +  "': "
+                + file.errorString().toLocal8Bit();
+        return false;
+    }
+    file.write(memory.readAll());
+    file.close();
+    return true;
+}
+
+void tst_QSystemSemaphore::initTestCase()
+{
+    QByteArray errorMessage;
+    QVERIFY2(isValid(&errorMessage), errorMessage.constData());
+    QVERIFY(m_temporaryDir.isValid());
+    // Write out files from resources to temporary folder
+    const QString acquireJs = QStringLiteral("systemsemaphore_acquire.js");
+    m_acquireJs = m_temporaryDir.path() + QLatin1Char('/') + acquireJs;
+    QVERIFY2(createFile(QStringLiteral(":/") + acquireJs, m_acquireJs, &errorMessage),
+             errorMessage.constData());
+
+    const QString releaseJs = QStringLiteral("systemsemaphore_release.js");
+    m_releaseJs = m_temporaryDir.path() + QLatin1Char('/') + releaseJs;
+    QVERIFY2(createFile(QStringLiteral(":/") + releaseJs, m_releaseJs, &errorMessage),
+             errorMessage.constData());
+
+    const QString acquireReleaseJs = QStringLiteral("systemsemaphore_acquirerelease.js");
+    m_acquirereleaseJs = m_temporaryDir.path() + QLatin1Char('/') + acquireReleaseJs;
+    QVERIFY2(createFile(QStringLiteral(":/") + acquireReleaseJs, m_acquirereleaseJs, &errorMessage),
+             errorMessage.constData());
 }
 
 void tst_QSystemSemaphore::init()
@@ -190,19 +215,21 @@ void tst_QSystemSemaphore::basicProcesses()
 {
     QSystemSemaphore sem("store", 0, QSystemSemaphore::Create);
 
-    QStringList acquireArguments = QStringList() << acquire_js();
-    QStringList releaseArguments = QStringList() << release_js();
+    QStringList acquireArguments = QStringList(m_acquireJs);
+    QStringList releaseArguments = QStringList(m_releaseJs);
     QProcess acquire;
     acquire.setProcessChannelMode(QProcess::ForwardedChannels);
 
     QProcess release;
     release.setProcessChannelMode(QProcess::ForwardedChannels);
 
-    acquire.start(LACKEYLOC "/lackey", acquireArguments);
+    acquire.start(lackeyBinary(), acquireArguments);
+    QVERIFY2(acquire.waitForStarted(), msgCannotStartLackey(acquire.errorString()).constData());
     acquire.waitForFinished(LACKYWAITTIME);
     QVERIFY(acquire.state() == QProcess::Running);
     acquire.kill();
-    release.start(LACKEYLOC "/lackey", releaseArguments);
+    release.start(lackeyBinary(), releaseArguments);
+    QVERIFY2(release.waitForStarted(), msgCannotStartLackey(release.errorString()).constData());
     acquire.waitForFinished(LACKYWAITTIME);
     release.waitForFinished(LACKYWAITTIME);
     QVERIFY(acquire.state() == QProcess::NotRunning);
@@ -223,30 +250,14 @@ void tst_QSystemSemaphore::processes()
     QSystemSemaphore sem("store", 1, QSystemSemaphore::Create);
 
     QFETCH(int, processes);
-    QStringList scripts;
-    for (int i = 0; i < processes; ++i)
-        scripts.append(acquirerelease_js());
+    QVector<QString> scripts(processes, m_acquirereleaseJs);
 
     QList<QProcess*> consumers;
     for (int i = 0; i < scripts.count(); ++i) {
-        QStringList arguments = QStringList() << scripts.at(i);
         QProcess *p = new QProcess;
         p->setProcessChannelMode(QProcess::ForwardedChannels);
         consumers.append(p);
-#ifdef Q_OS_WINCE
-        // We can't start the same executable twice on Windows CE.
-        // Create a copy instead.
-        QString lackeyCopy = QLatin1String(LACKEYLOC "/lackey");
-        if (i > 0) {
-            lackeyCopy.append(QString::number(i));
-            lackeyCopy.append(QLatin1String(".exe"));
-            if (!QFile::exists(lackeyCopy))
-                QVERIFY(QFile::copy(LACKEYLOC "/lackey.exe", lackeyCopy));
-        }
-        p->start(lackeyCopy, arguments);
-#else
-        p->start(LACKEYLOC "/lackey", arguments);
-#endif
+        p->start(lackeyBinary(), QStringList(scripts.at(i)));
     }
 
     while (!consumers.isEmpty()) {
@@ -263,16 +274,18 @@ void tst_QSystemSemaphore::undo()
 {
     QSystemSemaphore sem("store", 1, QSystemSemaphore::Create);
 
-    QStringList acquireArguments = QStringList() << acquire_js();
+    QStringList acquireArguments = QStringList(m_acquireJs);
     QProcess acquire;
     acquire.setProcessChannelMode(QProcess::ForwardedChannels);
-    acquire.start(LACKEYLOC "/lackey", acquireArguments);
+    acquire.start(lackeyBinary(), acquireArguments);
+    QVERIFY2(acquire.waitForStarted(), msgCannotStartLackey(acquire.errorString()).constData());
     acquire.waitForFinished(LACKYWAITTIME);
     QVERIFY(acquire.state()== QProcess::NotRunning);
 
     // At process exit the kernel should auto undo
 
-    acquire.start(LACKEYLOC "/lackey", acquireArguments);
+    acquire.start(lackeyBinary(), acquireArguments);
+    QVERIFY2(acquire.waitForStarted(), msgCannotStartLackey(acquire.errorString()).constData());
     acquire.waitForFinished(LACKYWAITTIME);
     QVERIFY(acquire.state()== QProcess::NotRunning);
 }
@@ -282,24 +295,27 @@ void tst_QSystemSemaphore::initialValue()
 {
     QSystemSemaphore sem("store", 1, QSystemSemaphore::Create);
 
-    QStringList acquireArguments = QStringList() << acquire_js();
-    QStringList releaseArguments = QStringList() << release_js();
+    QStringList acquireArguments = QStringList(m_acquireJs);
+    QStringList releaseArguments = QStringList(m_releaseJs);
     QProcess acquire;
     acquire.setProcessChannelMode(QProcess::ForwardedChannels);
 
     QProcess release;
     release.setProcessChannelMode(QProcess::ForwardedChannels);
 
-    acquire.start(LACKEYLOC "/lackey", acquireArguments);
+    acquire.start(lackeyBinary(), acquireArguments);
+    QVERIFY2(acquire.waitForStarted(), msgCannotStartLackey(acquire.errorString()).constData());
     acquire.waitForFinished(LACKYWAITTIME);
     QVERIFY(acquire.state()== QProcess::NotRunning);
 
-    acquire.start(LACKEYLOC "/lackey", acquireArguments << "2");
+    acquire.start(lackeyBinary(), acquireArguments << QLatin1String("2"));
+    QVERIFY2(acquire.waitForStarted(), msgCannotStartLackey(acquire.errorString()).constData());
     acquire.waitForFinished(LACKYWAITTIME);
     QVERIFY(acquire.state()== QProcess::Running);
     acquire.kill();
 
-    release.start(LACKEYLOC "/lackey", releaseArguments);
+    release.start(lackeyBinary(), releaseArguments);
+    QVERIFY2(release.waitForStarted(), msgCannotStartLackey(release.errorString()).constData());
     acquire.waitForFinished(LACKYWAITTIME);
     release.waitForFinished(LACKYWAITTIME);
     QVERIFY(acquire.state()== QProcess::NotRunning);

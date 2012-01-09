@@ -1,17 +1,11 @@
 CONFIG += testcase
-QT += gui-private testlib
+QT = core testlib
 
 include(../src/src.pri)
 win32: CONFIG += console
 mac:CONFIG -= app_bundle
 
-wince* {
-    DEFINES	+= SRCDIR=\\\"\\\"
-} else {
-    DEFINES	+= SRCDIR=\\\"$$PWD\\\"
-}
-
-DESTDIR = ./
+DEFINES += SRCDIR=\\\"$$PWD\\\"
 
 DEFINES	+= QSHAREDMEMORY_DEBUG
 DEFINES	+= QSYSTEMSEMAPHORE_DEBUG

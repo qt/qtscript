@@ -42,21 +42,19 @@
 
 #include <QtTest/QtTest>
 #include <qsharedmemory.h>
+#include "../lackey/lackeytest.h"
+
 #include <QtCore/QFile>
+#include <QtCore/QFileInfo>
+#include <QtCore/QDir>
 
 #define EXISTING_SHARE "existing"
 #define EXISTING_SIZE 1024
 
-#if defined(Q_OS_WINCE)
-#define LACKEYDIR SRCDIR
-#else
-#define LACKEYDIR "../lackey"
-#endif
-
 Q_DECLARE_METATYPE(QSharedMemory::SharedMemoryError)
 Q_DECLARE_METATYPE(QSharedMemory::AccessMode)
 
-class tst_QSharedMemory : public QObject
+class tst_QSharedMemory : public QObject, public LackeyTest
 {
     Q_OBJECT
 
@@ -66,7 +64,9 @@ public:
 
 public Q_SLOTS:
     void init();
+    void initTestCase();
     void cleanup();
+
 
 private slots:
     // basics
@@ -130,14 +130,23 @@ protected:
     QStringList keys;
     QList<QSharedMemory*> jail;
     QSharedMemory *existingSharedMemory;
+    const QString m_lackeyScriptsDirectory;
+    const QString m_lackeyBinary;
 };
 
-tst_QSharedMemory::tst_QSharedMemory() : existingSharedMemory(0)
+tst_QSharedMemory::tst_QSharedMemory() :
+    LackeyTest(2, 2), existingSharedMemory(0)
 {
 }
 
 tst_QSharedMemory::~tst_QSharedMemory()
 {
+}
+
+void tst_QSharedMemory::initTestCase()
+{
+    QByteArray errorMessage;
+    QVERIFY2(isValid(&errorMessage), errorMessage.constData());
 }
 
 void tst_QSharedMemory::init()
@@ -435,14 +444,10 @@ void tst_QSharedMemory::emptyMemory()
 #ifndef Q_OS_WIN
 void tst_QSharedMemory::readOnly()
 {
-    QString program = LACKEYDIR "/lackey";
-    QStringList arguments;
     rememberKey("readonly_segfault");
-    arguments << SRCDIR "../lackey/scripts/readonly_segfault.js";
-
     // ### on windows disable the popup somehow
     QProcess p;
-    p.start(program, arguments);
+    p.start(lackeyBinary(), scriptArguments("readonly_segfault.js"));
     p.setProcessChannelMode(QProcess::ForwardedChannels);
     p.waitForFinished();
     QCOMPARE(p.error(), QProcess::Crashed);
@@ -729,32 +734,18 @@ void tst_QSharedMemory::simpleProcessProducerConsumer()
 
     rememberKey("market");
 
-    QStringList arguments = QStringList() << SRCDIR "../lackey/scripts/producer.js";
     QProcess producer;
     producer.setProcessChannelMode(QProcess::ForwardedChannels);
-    producer.start( LACKEYDIR "/lackey", arguments);
-    producer.waitForStarted();
-    QVERIFY(producer.error() != QProcess::FailedToStart);
+    producer.start(lackeyBinary(), scriptArguments("producer.js"));
+    QVERIFY2(producer.waitForStarted(), msgCannotStartLackey(producer.errorString()).constData());
 
     QList<QProcess*> consumers;
     unsigned int failedProcesses = 0;
+    const QStringList consumerArguments = scriptArguments("consumer.js");
     for (int i = 0; i < processes; ++i) {
-        QStringList arguments = QStringList() << SRCDIR  "../lackey/scripts/consumer.js";
         QProcess *p = new QProcess;
         p->setProcessChannelMode(QProcess::ForwardedChannels);
-#ifdef Q_OS_WINCE
-        // We can't start the same executable twice on Windows CE.
-        // Create a copy instead.
-        QString lackeyCopy = QLatin1String(LACKEYDIR "/lackey");
-        lackeyCopy.append(QString::number(i));
-        lackeyCopy.append(QLatin1String(".exe"));
-        if (!QFile::exists(lackeyCopy))
-            QVERIFY(QFile::copy(LACKEYDIR "/lackey.exe", lackeyCopy));
-        p->start(lackeyCopy, arguments);
-#else
-        p->start(LACKEYDIR "/lackey", arguments);
-#endif
-
+        p->start(lackeyBinary(), consumerArguments);
         if (p->waitForStarted(2000))
             consumers.append(p);
         else

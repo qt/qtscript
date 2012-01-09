@@ -46,7 +46,7 @@
 #ifndef QT_NO_SYSTEMLOCK
 
 #include "qsystemlock.h"
-#include "private/qsharedmemory_p.h"
+#include <private/qsharedmemory_p.h>
 #ifndef Q_OS_WINCE
 #include <sys/types.h>
 #endif

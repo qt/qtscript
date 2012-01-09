@@ -39,13 +39,15 @@
 **
 ****************************************************************************/
 
+#include "../../lackey/lackeytest.h"
 
 #include <QtTest/QtTest>
+#include <QtCore/QVector>
 #include <qsystemlock.h>
 
 #define EXISTING_SHARE "existing"
 
-class tst_QSystemLock : public QObject
+class tst_QSystemLock : public QObject, LackeyTest
 {
     Q_OBJECT
 
@@ -54,6 +56,7 @@ public:
     virtual ~tst_QSystemLock();
 
 public Q_SLOTS:
+    void initTestCase();
     void init();
     void cleanup();
 
@@ -73,12 +76,18 @@ private:
 
 };
 
-tst_QSystemLock::tst_QSystemLock()
+tst_QSystemLock::tst_QSystemLock() : LackeyTest(2, 2)
 {
 }
 
 tst_QSystemLock::~tst_QSystemLock()
 {
+}
+
+void tst_QSystemLock::initTestCase()
+{
+    QByteArray errorMessage;
+    QVERIFY2(isValid(&errorMessage), errorMessage.constData());
 }
 
 void tst_QSystemLock::init()
@@ -188,24 +197,20 @@ void tst_QSystemLock::processes_data()
 void tst_QSystemLock::processes()
 {
     QSKIP("This test takes about 15 minutes and needs to be trimmed down before we can re-enable it");
+
     QFETCH(int, readOnly);
     QFETCH(int, readWrite);
 
-    QStringList scripts;
-    for (int i = 0; i < readOnly; ++i)
-        scripts.append(QFileInfo(SRCDIR "/../lackey/scripts/systemlock_read.js").absoluteFilePath() );
-    for (int i = 0; i < readWrite; ++i)
-        scripts.append(QFileInfo(SRCDIR "/../lackey/scripts/systemlock_readwrite.js").absoluteFilePath());
+    QVector<QString> scripts = QVector<QString>(readOnly, scriptPath("systemlock_read.js"));
+    scripts += QVector<QString>(readWrite, scriptPath("systemlock_readwrite.js"));
 
     QList<QProcess*> consumers;
     unsigned int failedProcesses = 0;
     for (int i = 0; i < scripts.count(); ++i) {
-
-        QStringList arguments = QStringList() << scripts.at(i);
         QProcess *p = new QProcess;
         p->setProcessChannelMode(QProcess::ForwardedChannels);
 
-        p->start("../lackey/lackey", arguments);
+        p->start(lackeyBinary(), QStringList(scripts.at(i)));
         // test, if the process could be started.
 
         if (p->waitForStarted(2000))
