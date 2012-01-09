@@ -151,9 +151,7 @@ private:
 
 static bool hasMethodAccess(const QMetaMethod &method, int index, const QScriptEngine::QObjectWrapOptions &opt)
 {
-    // FIXME: this is fragile and may break if signals/slots are added to/removed from QObject.
-    // See QTBUG-23502
-    const int deleteLaterIndex = 3;
+    static const int deleteLaterIndex = QObject::staticMetaObject.indexOfMethod("deleteLater()");
     return (method.access() != QMetaMethod::Private)
         && ((index != deleteLaterIndex) || !(opt & QScriptEngine::ExcludeDeleteLater))
         && (!(opt & QScriptEngine::ExcludeSlots) || (method.methodType() != QMetaMethod::Slot));
