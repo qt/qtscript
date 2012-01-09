@@ -1041,11 +1041,11 @@ QScriptEnginePrivate::~QScriptEnginePrivate()
 
 QVariant QScriptEnginePrivate::jscValueToVariant(JSC::ExecState *exec, JSC::JSValue value, int targetType)
 {
+    if (targetType == QMetaType::QVariant || uint(targetType) == QVariant::LastType)
+        return toVariant(exec, value);
     QVariant v(targetType, (void *)0);
     if (convertValue(exec, value, targetType, v.data()))
         return v;
-    if (uint(targetType) == QVariant::LastType)
-        return toVariant(exec, value);
     if (isVariant(value)) {
         v = variantValue(value);
         if (v.canConvert(QVariant::Type(targetType))) {

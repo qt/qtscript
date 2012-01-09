@@ -204,29 +204,6 @@ static inline bool methodNameEquals(const QMetaMethod &method,
         && (otherSignature[nameLength] == '(');
 }
 
-static QVariant variantFromValue(JSC::ExecState *exec, int targetType, JSC::JSValue value)
-{
-    QVariant v(targetType, (void *)0);
-    if (QScriptEnginePrivate::convertValue(exec, value, targetType, v.data()))
-        return v;
-    if (uint(targetType) == QVariant::LastType)
-        return QScriptEnginePrivate::toVariant(exec, value);
-    if (QScriptEnginePrivate::isVariant(value)) {
-        v = QScriptEnginePrivate::variantValue(value);
-        if (v.canConvert(QVariant::Type(targetType))) {
-            v.convert(QVariant::Type(targetType));
-            return v;
-        }
-        QByteArray typeName = v.typeName();
-        if (typeName.endsWith('*')
-            && (QMetaType::type(typeName.left(typeName.size()-1)) == targetType)) {
-            return QVariant(targetType, *reinterpret_cast<void* *>(v.data()));
-        }
-    }
-
-    return QVariant();
-}
-
 static const bool GeneratePropertyFunctions = true;
 
 static unsigned flagsForMetaProperty(const QMetaProperty &prop)
@@ -1119,7 +1096,7 @@ JSC::JSValue QtPropertyFunction::execute(JSC::ExecState *exec,
             // string to enum value
             v = (QString)arg.toString(exec);
         } else {
-            v = variantFromValue(exec, prop.userType(), arg);
+            v = QScriptEnginePrivate::jscValueToVariant(exec, arg, prop.userType());
         }
 
         QScriptable *scriptable = scriptableFromQObject(qobject);
