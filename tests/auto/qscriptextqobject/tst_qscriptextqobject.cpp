@@ -46,6 +46,7 @@
 #include <qscriptcontext.h>
 #include <qscriptvalueiterator.h>
 #include <qwidget.h>
+#include <qtextstream.h>
 #include <qpushbutton.h>
 #include <qlineedit.h>
 
@@ -3001,6 +3002,30 @@ void tst_QScriptExtQObject::enumerate_data()
             << "mySignal()");
 }
 
+// Message for easily identifying mismatches in string list.
+static QByteArray msgEnumerationFail(const QStringList &actual, const QStringList &expected)
+{
+    QString result;
+    QTextStream str(&result);
+    str << "\nActual " << actual.size() << ":\n";
+    for (int i = 0; i < actual.size(); ++i) {
+        const int index = expected.indexOf(actual.at(i));
+        if (index < 0)
+            str << "*** ";
+        str << "    #" << i << " '"<< actual.at(i)
+            << "'\tin expected at: " << index << '\n';
+    }
+    str << "Expected " << expected.size() << ":\n";
+    for (int i = 0; i < expected.size(); ++i) {
+        const int index = actual.indexOf(expected.at(i));
+        if (index < 0)
+            str << "*** ";
+        str << "    #" << i << " '"<< expected.at(i)
+            << "'\t  in actual at: " << index << '\n';
+    }
+    return result.toLocal8Bit();
+}
+
 void tst_QScriptExtQObject::enumerate()
 {
     QFETCH( int, wrapOptions );
@@ -3021,9 +3046,7 @@ void tst_QScriptExtQObject::enumerate()
         eng.evaluate("var enumeratedProperties = []");
         eng.evaluate("for (var p in myEnumObject) { enumeratedProperties.push(p); }");
         QStringList result = qscriptvalue_cast<QStringList>(eng.evaluate("enumeratedProperties"));
-        QCOMPARE(result.size(), expectedNames.size());
-        for (int i = 0; i < expectedNames.size(); ++i)
-            QCOMPARE(result.at(i), expectedNames.at(i));
+        QVERIFY2(result == expectedNames, msgEnumerationFail(result, expectedNames).constData());
     }
     // enumerate in C++
     {
@@ -3034,9 +3057,7 @@ void tst_QScriptExtQObject::enumerate()
             QCOMPARE(it.flags(), obj.propertyFlags(it.name()));
             result.append(it.name());
         }
-        QCOMPARE(result.size(), expectedNames.size());
-        for (int i = 0; i < expectedNames.size(); ++i)
-            QCOMPARE(result.at(i), expectedNames.at(i));
+        QVERIFY2(result == expectedNames, msgEnumerationFail(result, expectedNames).constData());
     }
 }
 
