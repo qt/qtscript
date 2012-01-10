@@ -964,6 +964,9 @@ void tst_QScriptContext::backtrace_data()
 
 void tst_QScriptContext::backtrace()
 {
+#if defined(UBUNTU_ONEIRIC) && defined(__x86_64__)
+    QSKIP("Fails on this platform - QTBUG-23463");
+#endif
     QFETCH(QString, code);
     QFETCH(QStringList, expectedbacktrace);
 
