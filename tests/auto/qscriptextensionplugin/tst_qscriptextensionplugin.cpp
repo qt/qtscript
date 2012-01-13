@@ -50,25 +50,31 @@ class tst_QScriptExtensionPlugin : public QObject
 
 public:
     tst_QScriptExtensionPlugin();
-    virtual ~tst_QScriptExtensionPlugin();
 
 private slots:
+    void initTestCase();
     void importSimplePlugin();
     void importStaticPlugin();
+
+private:
+    const QString m_pluginsDirectory;
+
 };
 
-tst_QScriptExtensionPlugin::tst_QScriptExtensionPlugin()
+tst_QScriptExtensionPlugin::tst_QScriptExtensionPlugin() :
+    m_pluginsDirectory(QFINDTESTDATA("plugins"))
 {
 }
 
-tst_QScriptExtensionPlugin::~tst_QScriptExtensionPlugin()
+void tst_QScriptExtensionPlugin::initTestCase()
 {
+    QVERIFY2(!m_pluginsDirectory.isEmpty(), "'plugins' directory not found");
 }
 
 void tst_QScriptExtensionPlugin::importSimplePlugin()
 {
     QScriptEngine eng;
-    QCoreApplication::addLibraryPath("plugins");
+    QCoreApplication::addLibraryPath(m_pluginsDirectory);
 
     QVERIFY(eng.importedExtensions().isEmpty());
 
