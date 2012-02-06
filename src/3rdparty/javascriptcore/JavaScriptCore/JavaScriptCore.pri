@@ -45,6 +45,8 @@ INCLUDEPATH = \
 DEFINES += BUILDING_QT__ BUILDING_JavaScriptCore BUILDING_WTF
 
 win32-* {
+#   Prevent definition of min, max macros in windows.h
+    DEFINES+=NOMINMAX
     LIBS += -lwinmm
 }
 contains(JAVASCRIPTCORE_JIT,yes) {
