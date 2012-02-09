@@ -45,8 +45,13 @@
 #include <QtScript/QScriptClass>
 #include <QtScript/QScriptString>
 
+QT_BEGIN_NAMESPACE
+class QScriptContext;
+QT_END_NAMESPACE
+
 class ByteArrayClass : public QObject, public QScriptClass
 {
+    Q_OBJECT
 public:
     ByteArrayClass(QScriptEngine *engine);
     ~ByteArrayClass();
