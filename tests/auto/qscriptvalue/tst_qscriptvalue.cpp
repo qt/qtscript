@@ -1417,8 +1417,8 @@ void tst_QScriptValue::toQObject()
 
     QScriptValue variant3 = eng.newVariant(qVariantFromValue(&button));
     QCOMPARE(variant3.toQObject(), (QObject*)0);
-    QCOMPARE(qscriptvalue_cast<QObject*>(variant3), (QObject*)0);
-    QCOMPARE(qscriptvalue_cast<QWidget*>(variant3), (QWidget*)0);
+    QCOMPARE(qscriptvalue_cast<QObject*>(variant3), (QObject*)&button);
+    QCOMPARE(qscriptvalue_cast<QWidget*>(variant3), (QWidget*)&button);
     QCOMPARE(qscriptvalue_cast<QPushButton*>(variant3), &button);
 }
 
