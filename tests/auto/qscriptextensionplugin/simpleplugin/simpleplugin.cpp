@@ -45,6 +45,10 @@
 
 class SimplePlugin : public QScriptExtensionPlugin
 {
+    Q_OBJECT
+    Q_PLUGIN_METADATA(IID "org.qt-project.Qt.org.qt-project.Qt.QScriptExtensionInterface" FILE "simpleplugin.json")
+    Q_INTERFACES(QScriptExtensionInterface)
+
 public:
     SimplePlugin(QObject *parent = 0);
     ~SimplePlugin();
@@ -76,4 +80,4 @@ void SimplePlugin::initialize(const QString &key, QScriptEngine *engine)
     engine->globalObject().setProperty("package", package);
 }
 
-Q_EXPORT_PLUGIN2(simpleplugin, SimplePlugin)
+#include "simpleplugin.moc"

@@ -41,8 +41,9 @@ struct Q_SCRIPT_EXPORT QScriptExtensionInterface
     virtual void initialize(const QString &key, QScriptEngine *engine) = 0;
 };
 
-Q_DECLARE_INTERFACE(QScriptExtensionInterface,
-    "com.trolltech.Qt.QScriptExtensionInterface/1.0")
+#define QScriptExtensionInterface_iid "org.qt-project.Qt.QScriptExtensionInterface"
+
+Q_DECLARE_INTERFACE(QScriptExtensionInterface, QScriptExtensionInterface_iid)
 
 QT_END_NAMESPACE
 
