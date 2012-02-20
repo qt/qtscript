@@ -43,6 +43,7 @@
 #include <QtTest/QtTest>
 #include <QtCore/qset.h>
 #include <QtCore/qtextstream.h>
+#include <private/qmetaobjectbuilder_p.h>
 
 /*!
    AbstractTestSuite provides a way of building QtTest test objects
@@ -103,97 +104,6 @@
    so you can see the name of each test before it's run, and can add a
    skip entry if appropriate.
 */
-
-// Helper class for constructing the test class's QMetaObject contents
-// at runtime.
-class TestMetaObjectBuilder
-{
-public:
-    TestMetaObjectBuilder(const QByteArray &className,
-                      const QMetaObject *superClass);
-
-    void appendPrivateVoidSlot(const char *signature);
-    void appendPrivateVoidSlot(const QString &signature)
-    { appendPrivateVoidSlot(signature.toLatin1().constData()); }
-
-    void assignContents(QMetaObject &);
-
-private:
-    void appendString(const char *);
-    void finalize();
-
-    const QByteArray m_className;
-    const QMetaObject *m_superClass;
-    QVector<uint> m_data;
-    QVector<char> m_stringdata;
-    int m_emptyStringOffset;
-    bool m_finalized;
-};
-
-TestMetaObjectBuilder::TestMetaObjectBuilder(
-    const QByteArray &className,
-    const QMetaObject *superClass)
-    : m_className(className), m_superClass(superClass),
-      m_finalized(false)
-{
-    // header
-    m_data << 1 // revision
-          << 0 // classname
-          << 0 << 0 // classinfo
-          << 0 << 10 // methods (backpatched later)
-          << 0 << 0 // properties
-          << 0 << 0 // enums/sets
-        ;
-
-    appendString(className.constData());
-    m_emptyStringOffset = m_stringdata.size();
-    appendString("");
-}
-
-void TestMetaObjectBuilder::appendString(const char *s)
-{
-    char c;
-    do {
-        c = *(s++);
-        m_stringdata << c;
-    } while (c != '\0');
-}
-
-void TestMetaObjectBuilder::appendPrivateVoidSlot(const char *signature)
-{
-    static const int methodCountOffset = 4;
-    // signature, parameters, type, tag, flags
-    m_data << m_stringdata.size()
-           << m_emptyStringOffset
-           << m_emptyStringOffset
-           << m_emptyStringOffset
-           << 0x08;
-    appendString(signature);
-    ++m_data[methodCountOffset];
-}
-
-void TestMetaObjectBuilder::finalize()
-{
-    if (m_finalized)
-        return;
-    m_data << 0; // eod
-    m_finalized = true;
-}
-
-/**
-  Assigns this builder's contents to the meta-object \a mo.  It's up
-  to the caller to ensure that this builder (and hence, its data)
-  stays alive as long as needed.
-*/
-void TestMetaObjectBuilder::assignContents(QMetaObject &mo)
-{
-    finalize();
-    mo.d.superdata = m_superClass;
-    mo.d.stringdata = m_stringdata.constData();
-    mo.d.data = m_data.constData();
-    mo.d.extradata = 0;
-}
-
 
 class TestConfigClientInterface;
 // For parsing information about skipped tests and expected failures.
@@ -323,19 +233,36 @@ bool TestConfigParser::isDefined(const QString &symbol)
 }
 
 
-QMetaObject AbstractTestSuite::staticMetaObject;
-
 const QMetaObject *AbstractTestSuite::metaObject() const
 {
-    return &staticMetaObject;
+    return dynamicMetaObject;
 }
 
 void *AbstractTestSuite::qt_metacast(const char *_clname)
 {
     if (!_clname) return 0;
-    if (!strcmp(_clname, staticMetaObject.d.stringdata))
+    if (!strcmp(_clname, dynamicMetaObject->className()))
         return static_cast<void*>(const_cast<AbstractTestSuite*>(this));
     return QObject::qt_metacast(_clname);
+}
+
+void AbstractTestSuite::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
+{
+    Q_UNUSED(_a);
+    if (_c == QMetaObject::InvokeMetaMethod) {
+        AbstractTestSuite *_t = static_cast<AbstractTestSuite *>(_o);
+        switch (_id) {
+        case 0:
+            _t->initTestCase();
+            break;
+        case 1:
+            _t->cleanupTestCase();
+            break;
+        default:
+            // If another method is added above, this offset must be adjusted.
+            _t->runTestFunction(_id - 2);
+        }
+    }
 }
 
 int AbstractTestSuite::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
@@ -344,28 +271,32 @@ int AbstractTestSuite::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        switch (_id) {
-        case 0:
-            initTestCase();
-            break;
-        case 1:
-            cleanupTestCase();
-            break;
-        default:
-            // If another method is added above, this offset must be adjusted.
-            runTestFunction(_id - 2);
-        }
-        _id -= staticMetaObject.methodCount() - staticMetaObject.methodOffset();
+        Q_ASSERT(dynamicMetaObject->cast(this));
+        int ownMethodCount = dynamicMetaObject->methodCount() - dynamicMetaObject->methodOffset();
+        if (_id < ownMethodCount)
+            qt_static_metacall(this, _c, _id, _a);
+        _id -= ownMethodCount;
     }
     return _id;
+}
+
+void AbstractTestSuite::addPrivateSlot(const QByteArray &signature)
+{
+    QMetaMethodBuilder slot = metaBuilder->addSlot(signature);
+    slot.setAccess(QMetaMethod::Private);
 }
 
 AbstractTestSuite::AbstractTestSuite(const QByteArray &className,
                                      const QString &defaultTestsPath,
                                      const QString &defaultConfigPath)
     : shouldGenerateExpectedFailures(false),
-      metaBuilder(new TestMetaObjectBuilder(className, &QObject::staticMetaObject))
+      dynamicMetaObject(0),
+      metaBuilder(new QMetaObjectBuilder)
 {
+    metaBuilder->setSuperClass(&QObject::staticMetaObject);
+    metaBuilder->setClassName(className);
+    metaBuilder->setStaticMetacallFunction(qt_static_metacall);
+
     QString testConfigPath = qgetenv("QTSCRIPT_TEST_CONFIG_DIR");
     if (testConfigPath.isEmpty())
         testConfigPath = defaultConfigPath;
@@ -389,7 +320,7 @@ AbstractTestSuite::AbstractTestSuite(const QByteArray &className,
 
 AbstractTestSuite::~AbstractTestSuite()
 {
-    delete metaBuilder;
+    qFree(dynamicMetaObject);
 }
 
 void AbstractTestSuite::addTestFunction(const QString &name,
@@ -397,15 +328,15 @@ void AbstractTestSuite::addTestFunction(const QString &name,
 {
     if (dfc == CreateDataFunction) {
         QString dataSignature = QString::fromLatin1("%0_data()").arg(name);
-        metaBuilder->appendPrivateVoidSlot(dataSignature);
+        addPrivateSlot(dataSignature.toLatin1());
     }
     QString signature = QString::fromLatin1("%0()").arg(name);
-    metaBuilder->appendPrivateVoidSlot(signature);
+    addPrivateSlot(signature.toLatin1());
 }
 
 void AbstractTestSuite::finalizeMetaObject()
 {
-    metaBuilder->assignContents(staticMetaObject);
+    dynamicMetaObject = metaBuilder->toMetaObject();
 }
 
 void AbstractTestSuite::initTestCase()

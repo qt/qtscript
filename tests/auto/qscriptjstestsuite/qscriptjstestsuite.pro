@@ -1,6 +1,6 @@
 TARGET = tst_qscriptjstestsuite
 CONFIG += testcase
-QT = core script testlib
+QT = core-private script testlib
 SOURCES  += tst_qscriptjstestsuite.cpp
 RESOURCES += qscriptjstestsuite.qrc
 include(../qscriptv8testsuite/abstracttestsuite.pri)

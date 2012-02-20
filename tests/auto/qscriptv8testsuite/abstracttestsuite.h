@@ -46,12 +46,13 @@
 
 #include <QtCore/qbytearray.h>
 #include <QtCore/qdir.h>
+#include <QtCore/qscopedpointer.h>
 #include <QtCore/qstring.h>
 #include <QtCore/qstringlist.h>
 #include <QtCore/qvector.h>
 #include <QtCore/qtextstream.h>
 
-class TestMetaObjectBuilder;
+QT_FORWARD_DECLARE_CLASS(QMetaObjectBuilder)
 
 namespace TestConfig {
 enum Mode {
@@ -82,7 +83,6 @@ public:
                       const QString &defaultConfigPath);
     virtual ~AbstractTestSuite();
 
-    static QMetaObject staticMetaObject;
     virtual const QMetaObject *metaObject() const;
     virtual void *qt_metacast(const char *);
     virtual int qt_metacall(QMetaObject::Call, int, void **argv);
@@ -114,7 +114,12 @@ protected:
     bool shouldGenerateExpectedFailures;
 
 private:
-    TestMetaObjectBuilder *metaBuilder;
+    static void qt_static_metacall(QObject *, QMetaObject::Call, int, void **);
+
+    void addPrivateSlot(const QByteArray &signature);
+
+    QMetaObject *dynamicMetaObject;
+    QScopedPointer<QMetaObjectBuilder> metaBuilder;
     QString skipConfigPath, expectFailConfigPath;
 
 private:
