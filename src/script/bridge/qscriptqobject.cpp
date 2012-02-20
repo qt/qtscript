@@ -121,6 +121,7 @@ public:
 
 class QObjectConnectionManager: public QObject
 {
+    Q_OBJECT_FAKE
 public:
     QObjectConnectionManager(QScriptEnginePrivate *engine);
     ~QObjectConnectionManager();
@@ -133,11 +134,6 @@ public:
     bool removeSignalHandler(QObject *sender, int signalIndex,
                              JSC::JSValue receiver,
                              JSC::JSValue slot);
-
-    static const QMetaObject staticMetaObject;
-    virtual const QMetaObject *metaObject() const;
-    virtual void *qt_metacast(const char *);
-    virtual int qt_metacall(QMetaObject::Call, int, void **argv);
 
     void execute(int slotIndex, void **argv);
 
@@ -1997,15 +1993,19 @@ QMetaObjectPrototype::QMetaObjectPrototype(
     putDirectFunction(exec, new (exec) JSC::NativeFunctionWrapper(exec, prototypeFunctionStructure, /*length=*/0, JSC::Identifier(exec, "className"), qmetaobjectProtoFuncClassName), JSC::DontEnum);
 }
 
+// Begin moc-generated code -- modify with care! Check "HAND EDIT" parts
 static const uint qt_meta_data_QObjectConnectionManager[] = {
 
  // content:
-       1,       // revision
+       6,       // revision
        0,       // classname
        0,    0, // classinfo
-       1,   10, // methods
+       1,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
+       0,    0, // constructors
+       0,       // flags
+       0,       // signalCount
 
  // slots: signature, parameters, type, tag, flags
       35,   34,   34,   34, 0x0a,
@@ -2014,12 +2014,27 @@ static const uint qt_meta_data_QObjectConnectionManager[] = {
 };
 
 static const char qt_meta_stringdata_QObjectConnectionManager[] = {
-    "QScript::QObjectConnectionManager\0\0execute()\0"
+    "QScript::QObjectConnectionManager\0\0"
+    "execute()\0"
+};
+
+void QObjectConnectionManager::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
+{
+    if (_c == QMetaObject::InvokeMetaMethod) {
+        Q_ASSERT(staticMetaObject.cast(_o));
+        QObjectConnectionManager *_t = static_cast<QObjectConnectionManager *>(_o);
+        // HAND EDIT: remove switch (_id), add the _id and _a parameters
+        _t->execute(_id, _a);
+    }
+}
+
+const QMetaObjectExtraData QObjectConnectionManager::staticMetaObjectExtraData = {
+    0,  qt_static_metacall
 };
 
 const QMetaObject QObjectConnectionManager::staticMetaObject = {
     { &QObject::staticMetaObject, qt_meta_stringdata_QObjectConnectionManager,
-      qt_meta_data_QObjectConnectionManager, 0 }
+      qt_meta_data_QObjectConnectionManager, &staticMetaObjectExtraData }
 };
 
 const QMetaObject *QObjectConnectionManager::metaObject() const
@@ -2041,11 +2056,13 @@ int QObjectConnectionManager::qt_metacall(QMetaObject::Call _c, int _id, void **
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        execute(_id, _a);
-        _id -= slotCounter;
+        if (_id < slotCounter) // HAND EDIT
+            qt_static_metacall(this, _c, _id, _a);
+        _id -= slotCounter; // HAND EDIT
     }
     return _id;
 }
+// End moc-generated code
 
 void QObjectConnectionManager::execute(int slotIndex, void **argv)
 {
