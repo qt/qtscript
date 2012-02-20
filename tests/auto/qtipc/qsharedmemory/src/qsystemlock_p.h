@@ -53,6 +53,9 @@
 
 #define MAX_LOCKS 64
 
+#ifdef Q_OS_WIN
+# include <qt_windows.h>
+#endif
 class QSystemLockPrivate
 {
 
