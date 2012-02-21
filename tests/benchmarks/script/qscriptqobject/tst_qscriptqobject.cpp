@@ -407,7 +407,7 @@ void tst_QScriptQObject::readMethodByName_dataHelper(const QMetaObject *mo)
         QMetaMethod method = mo->method(i);
         if (method.access() == QMetaMethod::Private)
             continue;
-        QByteArray signature = method.signature();
+        QByteArray signature = method.methodSignature();
         QByteArray name = signature.left(signature.indexOf('('));
         if (uniqueNames.contains(name))
             continue;
@@ -424,7 +424,7 @@ void tst_QScriptQObject::readMethodBySignature_dataHelper(const QMetaObject *mo)
         QMetaMethod method = mo->method(i);
         if (method.access() == QMetaMethod::Private)
             continue;
-        QTest::newRow(method.signature()) << QString::fromLatin1(method.signature());
+        QTest::newRow(method.methodSignature().constData()) << QString::fromLatin1(method.methodSignature().constData());
     }
 }
 

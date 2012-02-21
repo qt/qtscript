@@ -621,7 +621,7 @@ JSC::JSValue JSC_HOST_CALL functionDisconnect(JSC::ExecState *exec, JSC::JSObjec
     if (sig.methodType() != QMetaMethod::Signal) {
         QString message = QString::fromLatin1("Function.prototype.disconnect: %0::%1 is not a signal")
                           .arg(QLatin1String(qtSignal->metaObject()->className()))
-                          .arg(QLatin1String(sig.signature()));
+                          .arg(QLatin1String(sig.methodSignature().constData()));
         return JSC::throwError(exec, JSC::TypeError, message);
     }
 
@@ -652,7 +652,7 @@ JSC::JSValue JSC_HOST_CALL functionDisconnect(JSC::ExecState *exec, JSC::JSObjec
     if (!ok) {
         QString message = QString::fromLatin1("Function.prototype.disconnect: failed to disconnect from %0::%1")
                           .arg(QLatin1String(qtSignal->metaObject()->className()))
-                          .arg(QLatin1String(sig.signature()));
+                          .arg(QLatin1String(sig.methodSignature().constData()));
         return JSC::throwError(exec, JSC::GeneralError, message);
     }
     return JSC::jsUndefined();
@@ -685,7 +685,7 @@ JSC::JSValue JSC_HOST_CALL functionConnect(JSC::ExecState *exec, JSC::JSObject *
     if (sig.methodType() != QMetaMethod::Signal) {
         QString message = QString::fromLatin1("Function.prototype.connect: %0::%1 is not a signal")
                           .arg(QLatin1String(qtSignal->metaObject()->className()))
-                          .arg(QLatin1String(sig.signature()));
+                          .arg(QLatin1String(sig.methodSignature().constData()));
         return JSC::throwError(exec, JSC::TypeError, message);
     }
 
@@ -693,13 +693,13 @@ JSC::JSValue JSC_HOST_CALL functionConnect(JSC::ExecState *exec, JSC::JSObject *
         QList<int> overloads = qtSignal->overloadedIndexes();
         if (!overloads.isEmpty()) {
             overloads.append(qtSignal->initialIndex());
-            QByteArray signature = sig.signature();
+            QByteArray signature = sig.methodSignature();
             QString message = QString::fromLatin1("Function.prototype.connect: ambiguous connect to %0::%1(); candidates are\n")
                               .arg(QLatin1String(qtSignal->metaObject()->className()))
                               .arg(QLatin1String(signature.left(signature.indexOf('('))));
             for (int i = 0; i < overloads.size(); ++i) {
                 QMetaMethod mtd = meta->method(overloads.at(i));
-                message.append(QString::fromLatin1("    %0\n").arg(QString::fromLatin1(mtd.signature())));
+                message.append(QString::fromLatin1("    %0\n").arg(QString::fromLatin1(mtd.methodSignature().constData())));
             }
             message.append(QString::fromLatin1("Use e.g. object['%0'].connect() to connect to a particular overload")
                            .arg(QLatin1String(signature)));
@@ -734,7 +734,7 @@ JSC::JSValue JSC_HOST_CALL functionConnect(JSC::ExecState *exec, JSC::JSObject *
     if (!ok) {
         QString message = QString::fromLatin1("Function.prototype.connect: failed to connect to %0::%1")
                           .arg(QLatin1String(qtSignal->metaObject()->className()))
-                          .arg(QLatin1String(sig.signature()));
+                          .arg(QLatin1String(sig.methodSignature().constData()));
         return JSC::throwError(exec, JSC::GeneralError, message);
     }
     return JSC::jsUndefined();

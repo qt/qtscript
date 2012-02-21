@@ -108,7 +108,7 @@ static QScriptValue setupDBusInterface(QScriptEngine *engine, QDBusAbstractInter
         const QMetaObject *mo = iface->metaObject();
         for (int i = 0; i < mo->methodCount(); ++i) {
             const QMetaMethod method = mo->method(i);
-            const QByteArray signature = method.signature();
+            const QByteArray signature = method.methodSignature();
             //qDebug() << "signature" << signature;
             int parenIndex = signature.indexOf('(');
             if (parenIndex == -1)
