@@ -97,7 +97,7 @@ public:
     QScriptValue(QScriptEngine *engine, qsreal val);
     QScriptValue(QScriptEngine *engine, const QString &val);
 #ifndef QT_NO_CAST_FROM_ASCII
-    QT_ASCII_CAST_WARN_CONSTRUCTOR QScriptValue(QScriptEngine *engine, const char *val);
+    QT_ASCII_CAST_WARN QScriptValue(QScriptEngine *engine, const char *val);
 #endif
 
     QScriptValue(SpecialValue value);
@@ -108,7 +108,7 @@ public:
     QScriptValue(const QString &value);
     QScriptValue(const QLatin1String &value);
 #ifndef QT_NO_CAST_FROM_ASCII
-    QT_ASCII_CAST_WARN_CONSTRUCTOR QScriptValue(const char *value);
+    QT_ASCII_CAST_WARN QScriptValue(const char *value);
 #endif
 
     QScriptValue &operator=(const QScriptValue &other);
