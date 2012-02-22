@@ -1994,10 +1994,30 @@ QMetaObjectPrototype::QMetaObjectPrototype(
 }
 
 // Begin moc-generated code -- modify with care! Check "HAND EDIT" parts
+struct qt_meta_stringdata_QObjectConnectionManager_t {
+    QByteArrayData data[3];
+    char stringdata[44];
+};
+#define QT_MOC_LITERAL(idx, ofs, len) { \
+    Q_REFCOUNT_INITIALIZE_STATIC, len, 0, 0, \
+        offsetof(qt_meta_stringdata_QObjectConnectionManager_t, stringdata) + ofs \
+        - idx * sizeof(QByteArrayData) \
+    }
+static const qt_meta_stringdata_QObjectConnectionManager_t qt_meta_stringdata_QObjectConnectionManager = {
+    {
+QT_MOC_LITERAL(0, 0, 33),
+QT_MOC_LITERAL(1, 34, 7),
+QT_MOC_LITERAL(2, 42, 0)
+    },
+    "QScript::QObjectConnectionManager\0"
+    "execute\0\0"
+};
+#undef QT_MOC_LITERAL
+
 static const uint qt_meta_data_QObjectConnectionManager[] = {
 
  // content:
-       6,       // revision
+       7,       // revision
        0,       // classname
        0,    0, // classinfo
        1,   14, // methods
@@ -2007,15 +2027,13 @@ static const uint qt_meta_data_QObjectConnectionManager[] = {
        0,       // flags
        0,       // signalCount
 
- // slots: signature, parameters, type, tag, flags
-      35,   34,   34,   34, 0x0a,
+ // slots: name, argc, parameters, tag, flags
+       1,    0,   19,    2, 0x0a,
+
+ // slots: parameters
+    QMetaType::Void,
 
        0        // eod
-};
-
-static const char qt_meta_stringdata_QObjectConnectionManager[] = {
-    "QScript::QObjectConnectionManager\0\0"
-    "execute()\0"
 };
 
 void QObjectConnectionManager::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
@@ -2033,7 +2051,7 @@ const QMetaObjectExtraData QObjectConnectionManager::staticMetaObjectExtraData =
 };
 
 const QMetaObject QObjectConnectionManager::staticMetaObject = {
-    { &QObject::staticMetaObject, qt_meta_stringdata_QObjectConnectionManager,
+    { &QObject::staticMetaObject, qt_meta_stringdata_QObjectConnectionManager.data,
       qt_meta_data_QObjectConnectionManager, &staticMetaObjectExtraData }
 };
 
@@ -2045,7 +2063,7 @@ const QMetaObject *QObjectConnectionManager::metaObject() const
 void *QObjectConnectionManager::qt_metacast(const char *_clname)
 {
     if (!_clname) return 0;
-    if (!strcmp(_clname, qt_meta_stringdata_QObjectConnectionManager))
+    if (!strcmp(_clname, qt_meta_stringdata_QObjectConnectionManager.stringdata))
         return static_cast<void*>(const_cast<QObjectConnectionManager*>(this));
     return QObject::qt_metacast(_clname);
 }
