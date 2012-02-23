@@ -45,6 +45,9 @@
 
 class StaticPlugin : public QScriptExtensionPlugin
 {
+    Q_OBJECT
+    Q_PLUGIN_METADATA(IID "org.qt-project.Qt.QScriptExtensionInterface" FILE "staticplugin.json")
+
 public:
     StaticPlugin(QObject *parent = 0);
     ~StaticPlugin();
@@ -72,4 +75,4 @@ void StaticPlugin::initialize(const QString &key, QScriptEngine *engine)
     engine->globalObject().setProperty("pluginKey", key);
 }
 
-Q_EXPORT_PLUGIN2(staticplugin, StaticPlugin)
+#include "staticplugin.moc"

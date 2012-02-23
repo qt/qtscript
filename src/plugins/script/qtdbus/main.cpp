@@ -351,6 +351,9 @@ Q_DECLARE_METATYPE(QDBusError)
 
 class QtDBusScriptPlugin : public QScriptExtensionPlugin
 {
+    Q_OBJECT
+    Q_PLUGIN_METADATA(IID "org.qt-project.Qt.QScriptExtensionInterface" FILE "qtdbusscriptplugin.json")
+
 public:
     QStringList keys() const;
     void initialize(const QString &key, QScriptEngine *engine);
@@ -393,8 +396,6 @@ void QtDBusScriptPlugin::initialize(const QString &key, QScriptEngine *engine)
     (void)new QScriptDBusMessageConstructor(engine, extensionObject);
 }
 
-
-Q_EXPORT_STATIC_PLUGIN(QtDBusScriptPlugin)
-Q_EXPORT_PLUGIN2(qtscriptdbus, QtDBusScriptPlugin)
+#include "main.moc"
 
 #endif // QT_NO_DBUS

@@ -164,7 +164,7 @@ void tst_QScriptExtensionPlugin::importStaticPlugin()
     QVERIFY(!eng.globalObject().property("pluginKey").isValid());
 }
 
-Q_IMPORT_PLUGIN(staticplugin)
+Q_IMPORT_PLUGIN(StaticPlugin)
 
 QTEST_MAIN(tst_QScriptExtensionPlugin)
 #include "tst_qscriptextensionplugin.moc"
