@@ -41,50 +41,50 @@
     \section2 Value Properties
 
     \list
-    \o NaN
-    \o Infinity
-    \o undefined
+    \li NaN
+    \li Infinity
+    \li undefined
     \endlist
 
     \section2 Function Properties
 
     \list
-    \o eval(x)
-    \o parseInt(string, radix)
-    \o parseFloat(string)
-    \o isNaN(number)
-    \o isFinite(number)
-    \o decodeURI(encodedURI)
-    \o decodeURIComponent(encodedURIComponent)
-    \o encodeURI(uri)
-    \o encodeURIComponent(uriComponent)
+    \li eval(x)
+    \li parseInt(string, radix)
+    \li parseFloat(string)
+    \li isNaN(number)
+    \li isFinite(number)
+    \li decodeURI(encodedURI)
+    \li decodeURIComponent(encodedURIComponent)
+    \li encodeURI(uri)
+    \li encodeURIComponent(uriComponent)
     \endlist
 
     \section2 Constructor Properties
 
     \list
-    \o Object
-    \o Function
-    \o Array
-    \o String
-    \o Boolean
-    \o Number
-    \o Date
-    \o RegExp
-    \o Error
-    \o EvalError
-    \o RangeError
-    \o ReferenceError
-    \o SyntaxError
-    \o TypeError
-    \o URIError
+    \li Object
+    \li Function
+    \li Array
+    \li String
+    \li Boolean
+    \li Number
+    \li Date
+    \li RegExp
+    \li Error
+    \li EvalError
+    \li RangeError
+    \li ReferenceError
+    \li SyntaxError
+    \li TypeError
+    \li URIError
     \endlist
 
     \section2 Other Properties
 
     \list
-    \o Math
-    \o JSON
+    \li Math
+    \li JSON
     \endlist
 
     \section1 Object Objects
@@ -94,13 +94,13 @@
     \section3 Function Properties
 
     \list
-    \o getPrototypeOf(O)
-    \o getOwnPropertyDescriptor(O, P)
-    \o getOwnPropertyNames(O)
-    \o create(O [, Properties])
-    \o defineProperty(O, P, Attributes)
-    \o defineProperties(O, Properties)
-    \o keys(O)
+    \li getPrototypeOf(O)
+    \li getOwnPropertyDescriptor(O, P)
+    \li getOwnPropertyNames(O)
+    \li create(O [, Properties])
+    \li defineProperty(O, P, Attributes)
+    \li defineProperties(O, Properties)
+    \li keys(O)
     \endlist
 
     \section2 Object Prototype Object
@@ -108,12 +108,12 @@
     \section3 Function Properties
 
     \list
-    \o toString()
-    \o toLocaleString()
-    \o valueOf()
-    \o hasOwnProperty(V)
-    \o isPrototypeOf(V)
-    \o propertyIsEnumerable(V)
+    \li toString()
+    \li toLocaleString()
+    \li valueOf()
+    \li hasOwnProperty(V)
+    \li isPrototypeOf(V)
+    \li propertyIsEnumerable(V)
     \endlist
 
     \section1 Function Objects
@@ -123,9 +123,9 @@
     \section3 Function Properties
 
     \list
-    \o toString()
-    \o apply(thisArg, argArray)
-    \o call(thisArg [, arg1 [, arg2, ...]])
+    \li toString()
+    \li apply(thisArg, argArray)
+    \li call(thisArg [, arg1 [, arg2, ...]])
     \endlist
 
     \section1 Array Objects
@@ -135,27 +135,27 @@
     \section3 Function Properties
 
     \list
-    \o toString()
-    \o toLocaleString()
-    \o concat([item1 [, item2 [, ...]]])
-    \o join(separator)
-    \o pop()
-    \o push([item1 [, item2 [, ...]]])
-    \o reverse()
-    \o shift()
-    \o slice(start, end)
-    \o sort(comparefn)
-    \o splice(start, deleteCount[, item1 [, item2 [, ...]]])
-    \o unshift([item1 [, item2 [, ...]]])
-    \o indexOf(searchElement [, fromIndex])
-    \o lastIndexOf(searchElement [, fromIndex])
-    \o every(callbackfn [, thisArg])
-    \o some(callbackfn [, thisArg])
-    \o forEach(callbackfn [, thisArg])
-    \o map(callbackfn [, thisArg])
-    \o filter(callbackfn [, thisArg])
-    \o reduce(callbackfn [, initialValue])
-    \o reduceRight(callbackfn [, initialValue])
+    \li toString()
+    \li toLocaleString()
+    \li concat([item1 [, item2 [, ...]]])
+    \li join(separator)
+    \li pop()
+    \li push([item1 [, item2 [, ...]]])
+    \li reverse()
+    \li shift()
+    \li slice(start, end)
+    \li sort(comparefn)
+    \li splice(start, deleteCount[, item1 [, item2 [, ...]]])
+    \li unshift([item1 [, item2 [, ...]]])
+    \li indexOf(searchElement [, fromIndex])
+    \li lastIndexOf(searchElement [, fromIndex])
+    \li every(callbackfn [, thisArg])
+    \li some(callbackfn [, thisArg])
+    \li forEach(callbackfn [, thisArg])
+    \li map(callbackfn [, thisArg])
+    \li filter(callbackfn [, thisArg])
+    \li reduce(callbackfn [, initialValue])
+    \li reduceRight(callbackfn [, initialValue])
     \endlist
 
     \section1 String Objects
@@ -165,25 +165,25 @@
     \section3 Function Properties
 
     \list
-    \o toString()
-    \o valueOf()
-    \o charAt(pos)
-    \o charCodeAt(pos)
-    \o concat([string1 [, string2 [, ...]]])
-    \o indexOf(searchString ,position)
-    \o lastIndexOf(searchString, position)
-    \o localeCompare(that)
-    \o match(regexp)
-    \o replace(searchValue, replaceValue)
-    \o search(regexp)
-    \o slice(start, end)
-    \o split(separator, limit)
-    \o substring(start, end)
-    \o toLowerCase()
-    \o toLocaleLowerCase()
-    \o toUpperCase()
-    \o toLocaleUpperCase()
-    \o trim()
+    \li toString()
+    \li valueOf()
+    \li charAt(pos)
+    \li charCodeAt(pos)
+    \li concat([string1 [, string2 [, ...]]])
+    \li indexOf(searchString ,position)
+    \li lastIndexOf(searchString, position)
+    \li localeCompare(that)
+    \li match(regexp)
+    \li replace(searchValue, replaceValue)
+    \li search(regexp)
+    \li slice(start, end)
+    \li split(separator, limit)
+    \li substring(start, end)
+    \li toLowerCase()
+    \li toLocaleLowerCase()
+    \li toUpperCase()
+    \li toLocaleUpperCase()
+    \li trim()
     \endlist
 
     \section1 Boolean Objects
@@ -193,8 +193,8 @@
     \section3 Function Properties
 
     \list
-    \o toString()
-    \o valueOf()
+    \li toString()
+    \li valueOf()
     \endlist
 
     \section1 Number Objects
@@ -204,11 +204,11 @@
     \section3 Function Properties
 
     \list
-    \o toString(radix)
-    \o toLocaleString()
-    \o toFixed(fractionDigits)
-    \o toExponential(fractionDigits)
-    \o toPrecision(precision)
+    \li toString(radix)
+    \li toLocaleString()
+    \li toFixed(fractionDigits)
+    \li toExponential(fractionDigits)
+    \li toPrecision(precision)
     \endlist
 
     \section1 The Math Object
@@ -216,37 +216,37 @@
     \section2 Value Properties
 
     \list
-    \o E
-    \o LN10
-    \o LN2
-    \o LOG2E
-    \o LOG10E
-    \o PI
-    \o SQRT1_2
-    \o SQRT2
+    \li E
+    \li LN10
+    \li LN2
+    \li LOG2E
+    \li LOG10E
+    \li PI
+    \li SQRT1_2
+    \li SQRT2
     \endlist
 
     \section2 Function Properties
 
     \list
-    \o abs(x)
-    \o acos(x)
-    \o asin(x)
-    \o atan(x)
-    \o atan2(y, x)
-    \o ceil(x)
-    \o cos(x)
-    \o exp(x)
-    \o floor(x)
-    \o log(x)
-    \o max([value1 [, value2 [, ...]]])
-    \o min([value1 [, value2 [, ...]]])
-    \o pow(x, y)
-    \o random()
-    \o round(x)
-    \o sin(x)
-    \o sqrt(x)
-    \o tan(x)
+    \li abs(x)
+    \li acos(x)
+    \li asin(x)
+    \li atan(x)
+    \li atan2(y, x)
+    \li ceil(x)
+    \li cos(x)
+    \li exp(x)
+    \li floor(x)
+    \li log(x)
+    \li max([value1 [, value2 [, ...]]])
+    \li min([value1 [, value2 [, ...]]])
+    \li pow(x, y)
+    \li random()
+    \li round(x)
+    \li sin(x)
+    \li sqrt(x)
+    \li tan(x)
     \endlist
 
     \section1 Date Objects
@@ -256,49 +256,49 @@
     \section3 Function Properties
 
     \list
-    \o toString()
-    \o toDateString()
-    \o toTimeString()
-    \o toLocaleString()
-    \o toLocaleDateString()
-    \o toLocaleTimeString()
-    \o valueOf()
-    \o getTime()
-    \o getFullYear()
-    \o getUTCFullYear()
-    \o getMonth()
-    \o getUTCMonth()
-    \o getDate()
-    \o getUTCDate()
-    \o getDay()
-    \o getUTCDay()
-    \o getHours()
-    \o getUTCHours()
-    \o getMinutes()
-    \o getUTCMinutes()
-    \o getSeconds()
-    \o getUTCSeconds()
-    \o getMilliseconds()
-    \o getUTCMilliseconds()
-    \o getTimeZoneOffset()
-    \o setTime(time)
-    \o setMilliseconds(ms)
-    \o setUTCMilliseconds(ms)
-    \o setSeconds(sec [, ms])
-    \o setUTCSeconds(sec [, ms])
-    \o setMinutes(min [, sec [, ms]])
-    \o setUTCMinutes(min [, sec [, ms]])
-    \o setHours(hour [, min [, sec [, ms]]])
-    \o setUTCHours(hour [, min [, sec [, ms]]])
-    \o setDate(date)
-    \o setUTCDate(date)
-    \o setMonth(month [, date])
-    \o setUTCMonth(month [, date])
-    \o setFullYear(year [, month [, date]])
-    \o setUTCFullYear(year [, month [, date]])
-    \o toUTCString()
-    \o toISOString()
-    \o toJSON()
+    \li toString()
+    \li toDateString()
+    \li toTimeString()
+    \li toLocaleString()
+    \li toLocaleDateString()
+    \li toLocaleTimeString()
+    \li valueOf()
+    \li getTime()
+    \li getFullYear()
+    \li getUTCFullYear()
+    \li getMonth()
+    \li getUTCMonth()
+    \li getDate()
+    \li getUTCDate()
+    \li getDay()
+    \li getUTCDay()
+    \li getHours()
+    \li getUTCHours()
+    \li getMinutes()
+    \li getUTCMinutes()
+    \li getSeconds()
+    \li getUTCSeconds()
+    \li getMilliseconds()
+    \li getUTCMilliseconds()
+    \li getTimeZoneOffset()
+    \li setTime(time)
+    \li setMilliseconds(ms)
+    \li setUTCMilliseconds(ms)
+    \li setSeconds(sec [, ms])
+    \li setUTCSeconds(sec [, ms])
+    \li setMinutes(min [, sec [, ms]])
+    \li setUTCMinutes(min [, sec [, ms]])
+    \li setHours(hour [, min [, sec [, ms]]])
+    \li setUTCHours(hour [, min [, sec [, ms]]])
+    \li setDate(date)
+    \li setUTCDate(date)
+    \li setMonth(month [, date])
+    \li setUTCMonth(month [, date])
+    \li setFullYear(year [, month [, date]])
+    \li setUTCFullYear(year [, month [, date]])
+    \li toUTCString()
+    \li toISOString()
+    \li toJSON()
     \endlist
 
     \section1 RegExp Objects
@@ -308,9 +308,9 @@
     \section3 Function Properties
 
     \list
-    \o exec(string)
-    \o test(string)
-    \o toString()
+    \li exec(string)
+    \li test(string)
+    \li toString()
     \endlist
 
     \section1 Error Objects
@@ -320,14 +320,14 @@
     \section3 Value Properties
 
     \list
-    \o name
-    \o message
+    \li name
+    \li message
     \endlist
 
     \section3 Function Properties
 
     \list
-    \o toString()
+    \li toString()
     \endlist
 
     \section1 The JSON Object
@@ -335,8 +335,8 @@
     \section2 Function Properties
 
     \list
-    \o parse(text [, reviver])
-    \o stringify(value [, replacer [, space]])
+    \li parse(text [, reviver])
+    \li stringify(value [, replacer [, space]])
     \endlist
 
 */

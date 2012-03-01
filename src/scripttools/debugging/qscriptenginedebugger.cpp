@@ -145,7 +145,7 @@ public:
   When the Qt Script debugger is running, the C++ application itself
   is not "frozen". This means that it is possible that more scripts
   are evaluated, even though the debugger has suspended evaluation of
-  the \bold{current} script evaluation. For example, a C++ timer might
+  the \b{current} script evaluation. For example, a C++ timer might
   trigger that causes a script function to be called, or the user
   might click on a button in the main application user interface whose
   clicked() signal is connected to a script function. This kind of

@@ -117,7 +117,7 @@
   with Qt Script:
 
   \list
-  \i \bold{Hybrid C++/script}: C++ application code connects a
+  \li \b{Hybrid C++/script}: C++ application code connects a
   signal to a script function. The script function can, for example, be
   a function that the user has typed in, or one that you have read from a
   file. This approach is useful if you have a QObject but don't want
@@ -126,13 +126,13 @@
   to, and leave it up to the C++ side of your application to establish
   the connection.
 
-  \i \bold{Hybrid script/C++}: A script can connect signals and slots
+  \li \b{Hybrid script/C++}: A script can connect signals and slots
   to establish connections between pre-defined objects that the
   application exposes to the scripting environment. In this scenario,
   the slots themselves are still written in C++, but the definition of
   the connections is fully dynamic (script-defined).
 
-  \i \bold{Purely script-defined}: A script can both define signal
+  \li \b{Purely script-defined}: A script can both define signal
   handler functions (effectively "slots written in Qt Script"),
   \e{and} set up the connections that utilize those handlers. For
   example, a script can define a function that will handle the
@@ -468,49 +468,49 @@
   QScriptValue to a C++ type.
 
     \table 80%
-    \header \o C++ Type \o Default Conversion
-    \row    \o bool \o QScriptValue::toBool()
-    \row    \o int \o QScriptValue::toInt32()
-    \row    \o uint \o QScriptValue::toUInt32()
-    \row    \o float \o float(QScriptValue::toNumber())
-    \row    \o double \o QScriptValue::toNumber()
-    \row    \o short \o short(QScriptValue::toInt32())
-    \row    \o ushort \o QScriptValue::toUInt16()
-    \row    \o char \o char(QScriptValue::toInt32())
-    \row    \o uchar \o unsigned char(QScriptValue::toInt32())
-    \row    \o qlonglong \o qlonglong(QScriptValue::toInteger())
-    \row    \o qulonglong \o qulonglong(QScriptValue::toInteger())
-    \row    \o QString \o An empty string if the QScriptValue is null
+    \header \li C++ Type \li Default Conversion
+    \row    \li bool \li QScriptValue::toBool()
+    \row    \li int \li QScriptValue::toInt32()
+    \row    \li uint \li QScriptValue::toUInt32()
+    \row    \li float \li float(QScriptValue::toNumber())
+    \row    \li double \li QScriptValue::toNumber()
+    \row    \li short \li short(QScriptValue::toInt32())
+    \row    \li ushort \li QScriptValue::toUInt16()
+    \row    \li char \li char(QScriptValue::toInt32())
+    \row    \li uchar \li unsigned char(QScriptValue::toInt32())
+    \row    \li qlonglong \li qlonglong(QScriptValue::toInteger())
+    \row    \li qulonglong \li qulonglong(QScriptValue::toInteger())
+    \row    \li QString \li An empty string if the QScriptValue is null
                or undefined; QScriptValue::toString() otherwise.
-    \row    \o QDateTime \o QScriptValue::toDateTime()
-    \row    \o QDate \o QScriptValue::toDateTime().date()
-    \row    \o QRegExp \o QScriptValue::toRegExp()
-    \row    \o QObject* \o QScriptValue::toQObject()
-    \row    \o QWidget* \o QScriptValue::toQObject()
-    \row    \o QVariant \o QScriptValue::toVariant()
-    \row    \o QChar \o If the QScriptValue is a string, the result
+    \row    \li QDateTime \li QScriptValue::toDateTime()
+    \row    \li QDate \li QScriptValue::toDateTime().date()
+    \row    \li QRegExp \li QScriptValue::toRegExp()
+    \row    \li QObject* \li QScriptValue::toQObject()
+    \row    \li QWidget* \li QScriptValue::toQObject()
+    \row    \li QVariant \li QScriptValue::toVariant()
+    \row    \li QChar \li If the QScriptValue is a string, the result
                is the first character of the string, or a null QChar
                if the string is empty; otherwise, the result is a QChar
                constructed from the unicode obtained by converting the
                QScriptValue to a \c{ushort}.
-    \row    \o QStringList \o If the QScriptValue is an array, the
+    \row    \li QStringList \li If the QScriptValue is an array, the
                result is a QStringList constructed from the result of
                QScriptValue::toString() for each array element; otherwise,
                the result is an empty QStringList.
-    \row    \o QVariantList \o If the QScriptValue is an array, the result
+    \row    \li QVariantList \li If the QScriptValue is an array, the result
                is a QVariantList constructed from the result of
                QScriptValue::toVariant() for each array element; otherwise,
                the result is an empty QVariantList.
-    \row    \o QVariantMap \o If the QScriptValue is an object, the result
+    \row    \li QVariantMap \li If the QScriptValue is an object, the result
                is a QVariantMap with a (key, value) pair of the form
                (propertyName, propertyValue.toVariant()) for each property,
                using QScriptValueIterator to iterate over the object's
                properties.
-    \row    \o QObjectList \o If the QScriptValue is an array, the result
+    \row    \li QObjectList \li If the QScriptValue is an array, the result
                is a QObjectList constructed from the result of
                QScriptValue::toQObject() for each array element; otherwise,
                the result is an empty QObjectList.
-    \row    \o QList<int> \o If the QScriptValue is an array, the result is
+    \row    \li QList<int> \li If the QScriptValue is an array, the result is
                a QList<int> constructed from the result of
                QScriptValue::toInt32() for each array element; otherwise,
                the result is an empty QList<int>.
@@ -519,14 +519,14 @@
   Additionally, QtScript will handle the following cases:
 
   \list
-  \i If the QScriptValue is a QObject and the target type name ends with
+  \li If the QScriptValue is a QObject and the target type name ends with
      \c * (i.e., it is a pointer), the QObject pointer will be cast to the
      target type with qobject_cast().
-  \i If the QScriptValue is a QVariant and the target type name ends with
+  \li If the QScriptValue is a QVariant and the target type name ends with
      \c * (i.e., it is a pointer), and the \l{QVariant::userType()}{userType()}
      of the QVariant is the type that the target type points to, the result
      is a pointer to the QVariant's data.
-  \i If the QScriptValue is a QVariant and it can be converted to the
+  \li If the QScriptValue is a QVariant and it can be converted to the
      target type (according to QVariant::canConvert()), the QVariant will
      be cast to the target type with qvariant_cast().
   \endlist
@@ -537,46 +537,46 @@
   constructed from a C++ type:
 
     \table 80%
-    \header \o C++ Type \o Default Construction
-    \row    \o void \o QScriptEngine::undefinedValue()
-    \row    \o bool \o QScriptValue(engine, value)
-    \row    \o int \o QScriptValue(engine, value)
-    \row    \o uint \o QScriptValue(engine, value)
-    \row    \o float \o QScriptValue(engine, value)
-    \row    \o double \o QScriptValue(engine, value)
-    \row    \o short \o QScriptValue(engine, value)
-    \row    \o ushort \o QScriptValue(engine, value)
-    \row    \o char \o QScriptValue(engine, value)
-    \row    \o uchar \o QScriptValue(engine, value)
-    \row    \o QString \o QScriptValue(engine, value)
-    \row    \o qlonglong \o QScriptValue(engine, qsreal(value)). Note that
+    \header \li C++ Type \li Default Construction
+    \row    \li void \li QScriptEngine::undefinedValue()
+    \row    \li bool \li QScriptValue(engine, value)
+    \row    \li int \li QScriptValue(engine, value)
+    \row    \li uint \li QScriptValue(engine, value)
+    \row    \li float \li QScriptValue(engine, value)
+    \row    \li double \li QScriptValue(engine, value)
+    \row    \li short \li QScriptValue(engine, value)
+    \row    \li ushort \li QScriptValue(engine, value)
+    \row    \li char \li QScriptValue(engine, value)
+    \row    \li uchar \li QScriptValue(engine, value)
+    \row    \li QString \li QScriptValue(engine, value)
+    \row    \li qlonglong \li QScriptValue(engine, qsreal(value)). Note that
                the conversion may lead to loss of precision, since not all
                64-bit integers can be represented using the qsreal type.
-    \row    \o qulonglong \o QScriptValue(engine, qsreal(value)). Note that
+    \row    \li qulonglong \li QScriptValue(engine, qsreal(value)). Note that
                the conversion may lead to loss of precision, since not all
                64-bit unsigned integers can be represented using the qsreal
                type.
-    \row    \o QChar \o QScriptValue(this, value.unicode())
-    \row    \o QDateTime \o \l{QScriptEngine::newDate()}{QScriptEngine::newDate}(value)
-    \row    \o QDate \o \l{QScriptEngine::newDate()}{QScriptEngine::newDate}(value)
-    \row    \o QRegExp \o \l{QScriptEngine::newRegExp()}{QScriptEngine::newRegExp}(value)
-    \row    \o QObject* \o \l{QScriptEngine::newQObject()}{QScriptEngine::newQObject}(value)
-    \row    \o QWidget* \o \l{QScriptEngine::newQObject()}{QScriptEngine::newQObject}(value)
-    \row    \o QVariant \o \l{QScriptEngine::newVariant()}{QScriptEngine::newVariant}(value)
-    \row    \o QStringList \o A new script array (created with
+    \row    \li QChar \li QScriptValue(this, value.unicode())
+    \row    \li QDateTime \li \l{QScriptEngine::newDate()}{QScriptEngine::newDate}(value)
+    \row    \li QDate \li \l{QScriptEngine::newDate()}{QScriptEngine::newDate}(value)
+    \row    \li QRegExp \li \l{QScriptEngine::newRegExp()}{QScriptEngine::newRegExp}(value)
+    \row    \li QObject* \li \l{QScriptEngine::newQObject()}{QScriptEngine::newQObject}(value)
+    \row    \li QWidget* \li \l{QScriptEngine::newQObject()}{QScriptEngine::newQObject}(value)
+    \row    \li QVariant \li \l{QScriptEngine::newVariant()}{QScriptEngine::newVariant}(value)
+    \row    \li QStringList \li A new script array (created with
                QScriptEngine::newArray()), whose elements are created using
                the QScriptValue(QScriptEngine *, QString) constructor for
                each element of the list.
-    \row    \o QVariantList \o A new script array (created with
+    \row    \li QVariantList \li A new script array (created with
                QScriptEngine::newArray()), whose elements are created using
                QScriptEngine::newVariant() for each element of the list.
-    \row    \o QVariantMap \o A new script object (created with
+    \row    \li QVariantMap \li A new script object (created with
                QScriptEngine::newObject()), whose properties are initialized
                according to the (key, value) pairs of the map.
-    \row    \o QObjectList \o A new script array (created with
+    \row    \li QObjectList \li A new script array (created with
                QScriptEngine::newArray()), whose elements are created using
                QScriptEngine::newQObject() for each element of the list.
-    \row    \o QList<int> \o A new script array (created with
+    \row    \li QList<int> \li A new script array (created with
                QScriptEngine::newArray()), whose elements are created using
                the QScriptValue(QScriptEngine *, int) constructor for each
                element of the list.
@@ -872,13 +872,13 @@
   A QScriptContext holds all the state associated with a particular
   invocation of your function. Through the QScriptContext, you can:
   \list
-  \i Get the arguments that were passed to the function.
-  \i Get the \c this object.
-  \i Find out whether the function was called with the \c new operator
+  \li Get the arguments that were passed to the function.
+  \li Get the \c this object.
+  \li Find out whether the function was called with the \c new operator
      (the significance of this will be explained later).
-  \i Throw a script error.
-  \i Get the function object that's being invoked.
-  \i Get the activation object (the object used to hold local variables).
+  \li Throw a script error.
+  \li Get the function object that's being invoked.
+  \li Get the activation object (the object used to hold local variables).
   \endlist
 
   The following sections explain how to make use of this
@@ -889,12 +889,12 @@
   Two things are worth noting about function arguments:
 
   \list 1
-  \o Any script function \mdash including native functions \mdash can
+  \li Any script function \mdash including native functions \mdash can
   be invoked with any number of arguments. This means that it is up to
   the function itself to check the argument count if necessary, and act
   accordingly (e.g., throw an error if the number of arguments is
   too large, or prepare a default value if the number is too small).
-  \o A value of any type can be supplied as an argument to any
+  \li A value of any type can be supplied as an argument to any
   function. This means that it is up to you to check the type of the
   arguments if necessary, and act accordingly (e.g., throw an error
   if an argument is not an object of a certain type).
@@ -1045,7 +1045,7 @@
   applications:
 
   \list
-  \o The \c arguments object can be used to easily forward a function
+  \li The \c arguments object can be used to easily forward a function
      call to another function. In script code, this is what it
      typically looks like:
 
@@ -1062,12 +1062,12 @@
 
      \snippet doc/src/snippets/code/doc_src_qtscript.cpp 69
 
-  \o The arguments object can serve as input to a QScriptValueIterator,
+  \li The arguments object can serve as input to a QScriptValueIterator,
      providing a generic way to iterate over the arguments. A debugger
      might use this to display the arguments object in a general purpose
      "Qt Script Object Explorer", for example.
 
-  \o The arguments object can be serialized (e.g., with JSON) and transferred
+  \li The arguments object can be serialized (e.g., with JSON) and transferred
      to another entity (e.g., a script engine running in another thread),
      where the object can be deserialized and passed as argument to
      another script function.
@@ -1097,7 +1097,7 @@
   \c{new} expression), this has two important implications:
 
   \list
-  \i The \c this object, QScriptContext::thisObject(), contains
+  \li The \c this object, QScriptContext::thisObject(), contains
      the new object to be initialized; the engine creates this
      new object automatically before invoking your function. This means
      that your native constructor function normally doesn't have to (and
@@ -1105,7 +1105,7 @@
      constructor, since the engine has already prepared a new
      object. Instead your function should operate on the supplied
      \c this object.
-  \i The constructor function should return an undefined value,
+  \li The constructor function should return an undefined value,
      QScriptEngine::undefinedValue(), to tell the engine that the
      \c this object should be the final result of the \c new
      operator. Alternatively, the function can return the \c this
@@ -1200,11 +1200,11 @@
   activation object:
 
   \list
-  \i The activation object provides a standard way to traverse the
+  \li The activation object provides a standard way to traverse the
   variables associated with a function call, by using it as the input
   to QScriptValueIterator. This is useful for debugging purposes.
 
-  \i The activation object can be used to prepare local variables
+  \li The activation object can be used to prepare local variables
   that should be available when a script is evaluated inline; this
   can be viewed as a way of passing arguments to the script
   itself. This technique is typically used in conjunction with
@@ -1368,8 +1368,8 @@
   \c{class} keyword. Instead, you define a new class in two steps:
 
   \list 1
-  \i Define a \e{constructor function} that will initialize new objects.
-  \i Set up a \e{prototype object} that defines the class interface, and
+  \li Define a \e{constructor function} that will initialize new objects.
+  \li Set up a \e{prototype object} that defines the class interface, and
      assign this object to the public \c{prototype} property of the
      constructor function.
   \endlist
@@ -1730,17 +1730,17 @@
 
     \list 1
 
-    \o Run \c lupdate to extract translatable text from the script source code
+    \li Run \c lupdate to extract translatable text from the script source code
     of the Qt application, resulting in a message file for translators (a TS
     file). The utility recognizes qsTr(), qsTranslate() and the
     \c{QT_TR*_NOOP()} functions described above and produces TS files
     (usually one per language).
 
-    \o Provide translations for the source texts in the TS file, using
+    \li Provide translations for the source texts in the TS file, using
     \e{Qt Linguist}. Since TS files are in XML format, you can also
     edit them by hand.
 
-    \o Run \c lrelease to obtain a light-weight message file (a QM
+    \li Run \c lrelease to obtain a light-weight message file (a QM
     file) from the TS file, suitable only for end use. Think of the TS
      files as "source files", and QM files as "object files". The
     translator edits the TS files, but the users of your application
@@ -1804,7 +1804,7 @@
   \section1 QtScript Extensions to ECMAScript
 
   \list
-  \i \c{__proto__} \br
+  \li \c{__proto__} \br
     The prototype of an object (QScriptValue::prototype())
     can be accessed through its \c{__proto__} property in script code.
     This property has the QScriptValue::Undeletable flag set.
@@ -1812,7 +1812,7 @@
 
   \snippet doc/src/snippets/code/doc_src_qtscript.js 40
 
-  \i \c{Object.prototype.__defineGetter__} \br
+  \li \c{Object.prototype.__defineGetter__} \br
     This function installs a
     getter function for a property of an object. The first argument is
     the property name, and the second is the function to call to get
@@ -1822,7 +1822,7 @@
 
   \snippet doc/src/snippets/code/doc_src_qtscript.js 41
 
-  \i \c{Object.prototype.__defineSetter__} \br
+  \li \c{Object.prototype.__defineSetter__} \br
     This function installs a
     setter function for a property of an object. The first argument is
     the property name, and the second is the function to call to set
@@ -1832,43 +1832,43 @@
 
   \snippet doc/src/snippets/code/doc_src_qtscript.js 42
 
-  \i \c{Function.prototype.connect} \br
+  \li \c{Function.prototype.connect} \br
     This function connects
     a signal to a slot. Usage of this function is described in
     the section \l{Using Signals and Slots}.
 
-  \i \c{Function.prototype.disconnect} \br
+  \li \c{Function.prototype.disconnect} \br
     This function disconnects
     a signal from a slot. Usage of this function is described in
     the section \l{Using Signals and Slots}.
 
-  \i \c{QObject.prototype.findChild} \br
+  \li \c{QObject.prototype.findChild} \br
     This function is semantically equivalent to QObject::findChild().
 
-  \i \c{QObject.prototype.findChildren} \br
+  \li \c{QObject.prototype.findChildren} \br
     This function is semantically equivalent to QObject::findChildren().
 
-  \i \c{QObject.prototype.toString} \br
+  \li \c{QObject.prototype.toString} \br
     This function returns a default string representation of a QObject.
 
-  \i \c{gc} \br
+  \li \c{gc} \br
     This function invokes the garbage collector.
 
-  \i \c{Error.prototype.backtrace} \br
+  \li \c{Error.prototype.backtrace} \br
     This function returns a human-readable backtrace, in the form of
     an array of strings.
 
-  \i Error objects have the following additional properties:
+  \li Error objects have the following additional properties:
     \list
-    \i \c{lineNumber}: The line number where the error occurred.
-    \i \c{fileName}: The file name where the error occurred (if a file name
+    \li \c{lineNumber}: The line number where the error occurred.
+    \li \c{fileName}: The file name where the error occurred (if a file name
     was passed to QScriptEngine::evaluate()).
-    \i \c{stack}: An array of objects describing the stack. Each object has
+    \li \c{stack}: An array of objects describing the stack. Each object has
       the following properties:
       \list
-      \i \c{functionName}: The function name, if available.
-      \i \c{fileName}: The file name, if available.
-      \i \c{lineNumber}: The line number, if available.
+      \li \c{functionName}: The function name, if available.
+      \li \c{fileName}: The file name, if available.
+      \li \c{lineNumber}: The line number, if available.
       \endlist
     \endlist
 

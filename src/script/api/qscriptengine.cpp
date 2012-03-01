@@ -130,7 +130,7 @@ QT_BEGIN_NAMESPACE
 
   \section1 Engine Configuration
 
-  The globalObject() function returns the \bold {Global Object}
+  The globalObject() function returns the \b {Global Object}
   associated with the script engine. Properties of the Global Object
   are accessible from any script code (i.e. they are global
   variables). Typically, before evaluating "user" scripts, you will
@@ -3473,13 +3473,13 @@ void QScriptEngine::registerCustomType(int type, MarshalFunction mf,
   functions is described in the following table:
 
     \table
-    \header \o Script Function \o Corresponding C++ Function
-    \row    \o qsTr()       \o QObject::tr()
-    \row    \o QT_TR_NOOP() \o QT_TR_NOOP()
-    \row    \o qsTranslate() \o QCoreApplication::translate()
-    \row    \o QT_TRANSLATE_NOOP() \o QT_TRANSLATE_NOOP()
-    \row    \o qsTrId() (since 4.7) \o qtTrId()
-    \row    \o QT_TRID_NOOP() (since 4.7) \o QT_TRID_NOOP()
+    \header \li Script Function \li Corresponding C++ Function
+    \row    \li qsTr()       \li QObject::tr()
+    \row    \li QT_TR_NOOP() \li QT_TR_NOOP()
+    \row    \li qsTranslate() \li QCoreApplication::translate()
+    \row    \li QT_TRANSLATE_NOOP() \li QT_TRANSLATE_NOOP()
+    \row    \li qsTrId() (since 4.7) \li qtTrId()
+    \row    \li QT_TRID_NOOP() (since 4.7) \li QT_TRID_NOOP()
     \endtable
 
   \sa {Internationalization with Qt}
@@ -4287,13 +4287,13 @@ QScriptString QScriptEngine::toStringHandle(const QString &str)
   is performed according to the following table:
 
     \table
-    \header \o Input Type \o Result
-    \row    \o Undefined  \o An invalid QScriptValue.
-    \row    \o Null       \o An invalid QScriptValue.
-    \row    \o Boolean    \o A new Boolean object whose internal value is set to the value of the boolean.
-    \row    \o Number     \o A new Number object whose internal value is set to the value of the number.
-    \row    \o String     \o A new String object whose internal value is set to the value of the string.
-    \row    \o Object     \o The result is the object itself (no conversion).
+    \header \li Input Type \li Result
+    \row    \li Undefined  \li An invalid QScriptValue.
+    \row    \li Null       \li An invalid QScriptValue.
+    \row    \li Boolean    \li A new Boolean object whose internal value is set to the value of the boolean.
+    \row    \li Number     \li A new Number object whose internal value is set to the value of the number.
+    \row    \li String     \li A new String object whose internal value is set to the value of the string.
+    \row    \li Object     \li The result is the object itself (no conversion).
     \endtable
 
     \sa newObject()

@@ -37,9 +37,9 @@
     There are three ways to create an extension:
 
     \list
-    \o Subclass QScriptExtensionPlugin and implement the desired functionality.
-    \o Implement the functionality in a script file.
-    \o Use a hybrid approach, where part of the functionality is implemented in a
+    \li Subclass QScriptExtensionPlugin and implement the desired functionality.
+    \li Implement the functionality in a script file.
+    \li Use a hybrid approach, where part of the functionality is implemented in a
        QScriptExtensionPlugin, and part is implemented in a script file.
     \endlist
 
@@ -61,9 +61,9 @@
     to the script:
 
     \list
-    \o \bold{__extension__}: The name of the extension (e.g. \c{"foo.bar.baz"}).
-    \o \bold{__setupPackage__}: A convenience function for setting up a "namespace" in the script environment. A typical application is to call \c{__setupPackage__()} with \c{__extension__} as argument; e.g. \c{__setupPackage__("foo.bar.baz")} would ensure that the object chain represented by the expression \c{foo.bar.baz} exists in the script environment. (This function is semantically equivalent to QScriptExtensionPlugin::setupPackage().)
-    \o \bold{__postInit__}: By default, this variable is undefined. If you assign a function to it, that function will be called \bold{after} the C++ plugin's initialize() function has been called. You can use this to perform further initialization that depends on e.g. native functions that the C++ plugin registers.
+    \li \b{__extension__}: The name of the extension (e.g. \c{"foo.bar.baz"}).
+    \li \b{__setupPackage__}: A convenience function for setting up a "namespace" in the script environment. A typical application is to call \c{__setupPackage__()} with \c{__extension__} as argument; e.g. \c{__setupPackage__("foo.bar.baz")} would ensure that the object chain represented by the expression \c{foo.bar.baz} exists in the script environment. (This function is semantically equivalent to QScriptExtensionPlugin::setupPackage().)
+    \li \b{__postInit__}: By default, this variable is undefined. If you assign a function to it, that function will be called \b{after} the C++ plugin's initialize() function has been called. You can use this to perform further initialization that depends on e.g. native functions that the C++ plugin registers.
     \endlist
 
     An example of a simple \c{__init__.js}:
@@ -73,19 +73,19 @@
     QScriptEngine will look for a QScriptExtensionPlugin that provides
     the relevant extension by querying each plugin for its keys()
     until a match is found. The plugin's initialize() function will be
-    called \bold{after} the relevant \c{__init__.js} (if any) has been
+    called \b{after} the relevant \c{__init__.js} (if any) has been
     evaluated.
 
     Continuining with the example of our imaginary extension \c{"foo.bar.baz"},
     the following steps will be performed by QScriptEngine::importExtension():
 
     \list
-    \o If it exists, \c{foo/__init__.js} is evaluated.
-    \o If a plugin with \c{"foo"} in its list of keys is found, its initialize() function is called with \c{"foo"} as key.
-    \o If it exists, \c{foo/bar/__init__.js} is evaluated.
-    \o If a plugin with \c{"foo.bar"} in its list of keys is found, its initialize() function is called with \c{"foo.bar"} as key.
-    \o If it exists, \c{foo/bar/baz/__init__.js} is evaluated.
-    \o If a plugin with "foo.bar.baz" in its list of keys is found, its initialize() function is called with \c{"foo.bar.baz"} as key.
+    \li If it exists, \c{foo/__init__.js} is evaluated.
+    \li If a plugin with \c{"foo"} in its list of keys is found, its initialize() function is called with \c{"foo"} as key.
+    \li If it exists, \c{foo/bar/__init__.js} is evaluated.
+    \li If a plugin with \c{"foo.bar"} in its list of keys is found, its initialize() function is called with \c{"foo.bar"} as key.
+    \li If it exists, \c{foo/bar/baz/__init__.js} is evaluated.
+    \li If a plugin with "foo.bar.baz" in its list of keys is found, its initialize() function is called with \c{"foo.bar.baz"} as key.
     \endlist
 
     \section1 Static Extensions

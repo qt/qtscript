@@ -56,7 +56,7 @@
 
   Reimplement queryProperty() to specify which properties are handled
   in a custom way by your script class (i.e. should be
-  \bold{delegated} to the QScriptClass), and which properties should
+  \b{delegated} to the QScriptClass), and which properties should
   be handled just like normal Qt Script object properties.
 
   Reimplement property() and setProperty() to perform the actual

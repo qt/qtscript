@@ -90,11 +90,11 @@
 
     Our "Context2D-browser" is set up through the following steps:
     \list
-    \o Create an Environment.
-    \o Create a Context2D, and a QContext2DCanvas widget to render it.
-    \o Add the canvas object to the environment; this will enable
+    \li Create an Environment.
+    \li Create a Context2D, and a QContext2DCanvas widget to render it.
+    \li Add the canvas object to the environment; this will enable
        scripts to obtain a reference to it.
-    \o Evaluate scripts in the environment.
+    \li Evaluate scripts in the environment.
     \endlist
 
     Once a script has been evaluated, the application handles any
