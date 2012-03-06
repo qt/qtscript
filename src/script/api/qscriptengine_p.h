@@ -948,12 +948,22 @@ inline bool QScriptEnginePrivate::isQObject(JSC::JSValue value)
         return false;
     QScriptObject *object = static_cast<QScriptObject*>(JSC::asObject(value));
     QScriptObjectDelegate *delegate = object->delegate();
-    return (delegate && (delegate->type() == QScriptObjectDelegate::QtObject ||
-                         (delegate->type() == QScriptObjectDelegate::DeclarativeClassObject &&
-                          static_cast<QScript::DeclarativeObjectDelegate*>(delegate)->scriptClass()->isQObject())));
-#else
-    return false;
+
+    if (delegate) {
+        if (delegate->type() == QScriptObjectDelegate::QtObject
+            || (delegate->type() == QScriptObjectDelegate::DeclarativeClassObject
+            && static_cast<QScript::DeclarativeObjectDelegate*>(delegate)->scriptClass()->isQObject()))
+            return true;
+
+        if (delegate->type() == QScriptObjectDelegate::Variant) {
+            QVariant var = variantValue(value);
+            int type = var.userType();
+            if ((QMetaType::typeFlags(type) & QMetaType::PointerToQObject))
+                return true;
+        }
+    }
 #endif
+    return false;
 }
 
 inline bool QScriptEnginePrivate::isQMetaObject(JSC::JSValue value)
@@ -1055,7 +1065,7 @@ inline QObject *QScriptEnginePrivate::toQObject(JSC::ExecState *exec, JSC::JSVal
         if (delegate->type() == QScriptObjectDelegate::Variant) {
             QVariant var = variantValue(value);
             int type = var.userType();
-            if ((type == QMetaType::QObjectStar) || (type == QMetaType::QWidgetStar))
+            if (QMetaType::typeFlags(type) & QMetaType::PointerToQObject)
                 return *reinterpret_cast<QObject* const *>(var.constData());
         }
     }
