@@ -814,7 +814,7 @@ JSC::JSValue JSC_HOST_CALL functionQsTranslate(JSC::ExecState *exec, JSC::JSObje
     if (args.size() > 3) {
         JSC::UString encStr = args.at(3).toString(exec);
         if (encStr == "CodecForTr")
-            encoding = QCoreApplication::CodecForTr;
+            encoding = QCoreApplication::DefaultCodec;
         else if (encStr == "UnicodeUTF8")
             encoding = QCoreApplication::UnicodeUTF8;
         else
