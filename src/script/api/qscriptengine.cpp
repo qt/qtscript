@@ -3013,6 +3013,7 @@ JSC::JSValue QScriptEnginePrivate::create(JSC::ExecState *exec, int type, const 
     } else {
         // check if it's one of the types we know
         switch (QMetaType::Type(type)) {
+        case QMetaType::UnknownType:
         case QMetaType::Void:
             return JSC::jsUndefined();
         case QMetaType::Bool:
