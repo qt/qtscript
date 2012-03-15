@@ -5,7 +5,6 @@ SUBDIRS=\
            qscriptcontext \
            qscriptcontextinfo \
            qscriptengine \
-           qscriptengineagent \
            qscriptenginedebugger \
            qscriptextensionplugin \
            qscriptextqobject \
@@ -20,5 +19,6 @@ SUBDIRS=\
 !contains(QT_CONFIG, private_tests):SUBDIRS -= \
            qscriptcontext \
            qtipc \
+           qscriptengineagent
 
 !cross_compile:                             SUBDIRS += host.pro
