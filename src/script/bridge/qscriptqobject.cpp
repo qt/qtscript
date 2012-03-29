@@ -394,8 +394,8 @@ private:
 int QScriptMetaType::typeId() const
 {
     if (isVariant())
-        return QMetaType::type("QVariant");
-    return isMetaEnum() ? 2/*int*/ : m_typeId;
+        return QMetaType::QVariant;
+    return isMetaEnum() ? QMetaType::Int : m_typeId;
 }
 
 QByteArray QScriptMetaType::name() const
@@ -520,8 +520,8 @@ static JSC::JSValue callQtMethod(JSC::ExecState *exec, QMetaMethod::MethodType c
         QScriptMetaType *typesData = types.data();
         // resolve return type
         QByteArray returnTypeName = method.typeName();
-        int rtype = QMetaType::type(returnTypeName);
-        if ((rtype == 0) && !returnTypeName.isEmpty()) {
+        int rtype = method.returnType();
+        if ((rtype == QMetaType::UnknownType) && !returnTypeName.isEmpty()) {
             int enumIndex = indexOfMetaEnum(meta, returnTypeName);
             if (enumIndex != -1)
                 typesData[0] = QScriptMetaType::metaEnum(enumIndex, returnTypeName);
@@ -540,7 +540,7 @@ static JSC::JSValue callQtMethod(JSC::ExecState *exec, QMetaMethod::MethodType c
         for (int i = 0; i < parameterTypeNames.count(); ++i) {
             QByteArray argTypeName = parameterTypeNames.at(i);
             int atype = QMetaType::type(argTypeName);
-            if (atype == 0) {
+            if (atype == QMetaType::UnknownType) {
                 int enumIndex = indexOfMetaEnum(meta, argTypeName);
                 if (enumIndex != -1)
                     typesData[1 + i] = QScriptMetaType::metaEnum(enumIndex, argTypeName);
@@ -571,8 +571,10 @@ static JSC::JSValue callQtMethod(JSC::ExecState *exec, QMetaMethod::MethodType c
         if (args.count() != mtd.count())
             args.resize(mtd.count());
 
-        QScriptMetaType retType = mtd.returnType();
-        args[0] = QVariant(retType.typeId(), (void *)0); // the result
+        if (rtype != QMetaType::Void) {
+            // initialize the result
+            args[0] = QVariant(rtype, (void *)0);
+        }
 
         // try to convert arguments
         bool converted = true;
@@ -943,7 +945,7 @@ static JSC::JSValue callQtMethod(JSC::ExecState *exec, QMetaMethod::MethodType c
                 QScriptMetaType retType = chosenMethod.returnType();
                 if (retType.isVariant()) {
                     result = QScriptEnginePrivate::jscValueFromVariant(exec, *(QVariant *)params[0]);
-                } else if (retType.typeId() != 0) {
+                } else if (retType.typeId() != QMetaType::Void) {
                     result = QScriptEnginePrivate::create(exec, retType.typeId(), params[0]);
                     if (!result)
                         result = engine->newVariant(QVariant(retType.typeId(), params[0]));
