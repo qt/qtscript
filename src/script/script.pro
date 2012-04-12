@@ -1,22 +1,14 @@
-load(qt_module)
+load(qt_build_config)
 
 TARGET     = QtScript
-QPRO_PWD   = $$PWD
 QT         = core-private
 
-CONFIG += module
-
 DEFINES   += JSC=QTJSC jscyyparse=qtjscyyparse jscyylex=qtjscyylex jscyyerror=qtjscyyerror WTF=QTWTF
-DEFINES   += QT_BUILD_SCRIPT_LIB
 DEFINES   += QT_NO_USING_NAMESPACE
 DEFINES   += QLALR_NO_QSCRIPTGRAMMAR_DEBUG_INFO
 #win32-msvc*|win32-icc:QMAKE_LFLAGS += /BASE:0x66000000       ### FIXME
 
-unix|win32-g++*:QMAKE_PKGCONFIG_REQUIRES = QtCore
-
 load(qt_module_config)
-
-HEADERS += qtscriptversion.h
 
 CONFIG += building-libs
 

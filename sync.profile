@@ -4,15 +4,6 @@
 );
 %moduleheaders = ( # restrict the module headers to those found in relative path
 );
-%classnames = (
-    "qtscriptversion.h" => "QtScriptVersion",
-    "qtscripttoolsversion.h" => "QtScriptToolsVersion",
-);
-%mastercontent = (
-    "core" => "#include <QtCore/QtCore>\n",
-    "gui" => "#include <QtGui/QtGui>\n",
-    "script" => "#include <QtScript/QtScript>\n",
-);
 # Module dependencies.
 # Every module that is required to build this module should have one entry.
 # Each of the module version specifiers can take one of the following values:

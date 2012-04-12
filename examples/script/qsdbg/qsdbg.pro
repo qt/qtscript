@@ -1,6 +1,3 @@
-TEMPLATE = app
-DEPENDPATH += .
-INCLUDEPATH += .
 QT += script
 win32: CONFIG += console
 mac: CONFIG -= app_bundle
