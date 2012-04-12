@@ -13,10 +13,6 @@
     "gui" => "#include <QtGui/QtGui>\n",
     "script" => "#include <QtScript/QtScript>\n",
 );
-%modulepris = (
-    "QtScript" => "$basedir/modules/qt_script.pri",
-    "QtScriptTools" => "$basedir/modules/qt_scripttools.pri",
-);
 # Module dependencies.
 # Every module that is required to build this module should have one entry.
 # Each of the module version specifiers can take one of the following values:

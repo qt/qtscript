@@ -2,10 +2,9 @@ load(qt_module)
 
 TARGET     = QtScriptTools
 QPRO_PWD   = $$PWD
-QT         = core-private gui widgets widgets-private script
+QT         = core-private
 
 CONFIG += module
-MODULE_PRI = ../../modules/qt_scripttools.pri
 
 DEFINES   += QT_BUILD_SCRIPTTOOLS_LIB
 DEFINES   += QT_NO_USING_NAMESPACE
@@ -16,6 +15,9 @@ unix|win32-g++*:QMAKE_PKGCONFIG_REQUIRES = QtCore QtGui QtScript
 load(qt_module_config)
 
 HEADERS += qtscripttoolsversion.h
+
+# private dependencies
+QT += gui widgets-private script
 
 include(debugging/debugging.pri)
 

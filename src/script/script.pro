@@ -5,7 +5,6 @@ QPRO_PWD   = $$PWD
 QT         = core-private
 
 CONFIG += module
-MODULE_PRI = ../../modules/qt_script.pri
 
 DEFINES   += JSC=QTJSC jscyyparse=qtjscyyparse jscyylex=qtjscyylex jscyyerror=qtjscyyerror WTF=QTWTF
 DEFINES   += QT_BUILD_SCRIPT_LIB
