@@ -2048,13 +2048,9 @@ void QObjectConnectionManager::qt_static_metacall(QObject *_o, QMetaObject::Call
     }
 }
 
-const QMetaObjectExtraData QObjectConnectionManager::staticMetaObjectExtraData = {
-    0,  qt_static_metacall
-};
-
 const QMetaObject QObjectConnectionManager::staticMetaObject = {
     { &QObject::staticMetaObject, qt_meta_stringdata_QObjectConnectionManager.data,
-      qt_meta_data_QObjectConnectionManager, &staticMetaObjectExtraData }
+      qt_meta_data_QObjectConnectionManager, qt_static_metacall, 0 }
 };
 
 const QMetaObject *QObjectConnectionManager::metaObject() const
