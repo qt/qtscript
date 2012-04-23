@@ -413,7 +413,8 @@ bool tst_QScriptJSTestSuite::isExpectedFailure(const QString &fileName, const QS
                                   QString *message, FailureItem::Action *action) const
 {
     for (int i = 0; i < expectedFailures.size(); ++i) {
-        if (expectedFailures.at(i).pathRegExp.indexIn(fileName) != -1) {
+        QRegExp pathRegExp = expectedFailures.at(i).pathRegExp;
+        if (pathRegExp.indexIn(fileName) != -1) {
             if (description == expectedFailures.at(i).description) {
                 if (message)
                     *message = expectedFailures.at(i).message;
@@ -439,7 +440,8 @@ void tst_QScriptJSTestSuite::addFileExclusion(const QRegExp &rx, const QString &
 bool tst_QScriptJSTestSuite::isExcludedFile(const QString &fileName, QString *message) const
 {
     for (int i = 0; i < fileExclusions.size(); ++i) {
-        if (fileExclusions.at(i).first.indexIn(fileName) != -1) {
+        QRegExp copy = fileExclusions.at(i).first;
+        if (copy.indexIn(fileName) != -1) {
             if (message)
                 *message = fileExclusions.at(i).second;
             return true;
