@@ -12,5 +12,3 @@ testFiles.files = tests
 testFiles.path = .
 DEPLOYMENT += testFiles
 }
-
-win32:CONFIG += insignificant_test # QTBUG-24426
