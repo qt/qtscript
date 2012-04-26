@@ -110,15 +110,6 @@ struct QObjectConnection
     }
 };
 
-class QObjectNotifyCaller : public QObject
-{
-public:
-    void callConnectNotify(const char *signal)
-        { connectNotify(signal); }
-    void callDisconnectNotify(const char *signal)
-        { disconnectNotify(signal); }
-};
-
 class QObjectConnectionManager: public QObject
 {
     Q_OBJECT_FAKE
@@ -2207,14 +2198,8 @@ bool QObjectConnectionManager::addSignalHandler(
     QVector<QObjectConnection> &cs = connections[signalIndex];
     int absSlotIndex = slotCounter + metaObject()->methodOffset();
     bool ok = QMetaObject::connect(sender, signalIndex, this, absSlotIndex, type);
-    if (ok) {
+    if (ok)
         cs.append(QObjectConnection(slotCounter++, receiver, function, senderWrapper));
-        QMetaMethod signal = sender->metaObject()->method(signalIndex);
-        QByteArray signalString;
-        signalString.append('2'); // signal code
-        signalString.append(signal.methodSignature());
-        static_cast<QObjectNotifyCaller*>(sender)->callConnectNotify(signalString);
-    }
     return ok;
 }
 
@@ -2230,14 +2215,8 @@ bool QObjectConnectionManager::removeSignalHandler(
         if (c.hasTarget(receiver, slot)) {
             int absSlotIndex = c.slotIndex + metaObject()->methodOffset();
             bool ok = QMetaObject::disconnect(sender, signalIndex, this, absSlotIndex);
-            if (ok) {
+            if (ok)
                 cs.remove(i);
-                QMetaMethod signal = sender->metaObject()->method(signalIndex);
-                QByteArray signalString;
-                signalString.append('2'); // signal code
-                signalString.append(signal.methodSignature());
-                static_cast<QScript::QObjectNotifyCaller*>(sender)->callDisconnectNotify(signalString);
-            }
             return ok;
         }
     }

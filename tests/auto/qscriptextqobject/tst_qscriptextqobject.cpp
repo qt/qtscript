@@ -226,14 +226,20 @@ public:
     void resetQtFunctionInvoked()
         { m_qtFunctionInvoked = -1; m_actuals.clear(); }
 
-    void clearConnectedSignal()
-        { m_connectedSignal = QByteArray(); }
-    void clearDisconnectedSignal()
-        { m_disconnectedSignal = QByteArray(); }
-    QByteArray connectedSignal() const
-        { return m_connectedSignal; }
-    QByteArray disconnectedSignal() const
-        { return m_disconnectedSignal; }
+    void clearConnectNotifySignals()
+        { m_connectNotifySignals.clear(); }
+    void clearDisconnectNotifySignals()
+        { m_disconnectNotifySignals.clear(); }
+    QList<QMetaMethod> connectNotifySignals() const
+        { return m_connectNotifySignals; }
+    QList<QMetaMethod> disconnectNotifySignals() const
+        { return m_disconnectNotifySignals; }
+    bool hasSingleConnectNotifySignal(const QMetaMethod &signal) const
+        { return (m_connectNotifySignals.size() == 1) && (m_connectNotifySignals.first() == signal); }
+    bool hasConnectNotifySignal(const QMetaMethod &signal) const
+        { return m_connectNotifySignals.contains(signal); }
+    bool hasSingleDisconnectNotifySignal(const QMetaMethod &signal) const
+        { return (m_disconnectNotifySignals.size() == 1) && (m_disconnectNotifySignals.first() == signal); }
 
     Q_INVOKABLE void myInvokable()
         { m_qtFunctionInvoked = 0; }
@@ -433,11 +439,11 @@ Q_SIGNALS:
     void mySignalWithScriptEngineArg(QScriptEngine *arg);
 
 protected:
-    void connectNotify(const char *signal) {
-        m_connectedSignal = signal;
+    void connectNotify(const QMetaMethod &signal) {
+        m_connectNotifySignals.append(signal);
     }
-    void disconnectNotify(const char *signal) {
-        m_disconnectedSignal = signal;
+    void disconnectNotify(const QMetaMethod &signal) {
+        m_disconnectNotifySignals.append(signal);
     }
 
 protected:
@@ -457,8 +463,8 @@ protected:
     Ability m_flagsValue;
     int m_qtFunctionInvoked;
     QVariantList m_actuals;
-    QByteArray m_connectedSignal;
-    QByteArray m_disconnectedSignal;
+    QList<QMetaMethod> m_connectNotifySignals;
+    QList<QMetaMethod> m_disconnectNotifySignals;
 };
 
 Q_DECLARE_METATYPE(MyQObject*)
@@ -1788,9 +1794,9 @@ void tst_QScriptExtQObject::connectAndDisconnect()
 
     m_engine->evaluate("myHandler = function() { global.gotSignal = true; global.signalArgs = arguments; global.slotThisObject = this; }");
 
-    m_myObject->clearConnectedSignal();
+    m_myObject->clearConnectNotifySignals();
     QVERIFY(m_engine->evaluate("myObject.mySignal.connect(myHandler)").isUndefined());
-    QCOMPARE(m_myObject->connectedSignal().constData(), SIGNAL(mySignal()));
+    QVERIFY(m_myObject->hasSingleConnectNotifySignal(QMetaMethod::fromSignal(&MyQObject::mySignal)));
 
     m_engine->evaluate("gotSignal = false");
     m_engine->evaluate("myObject.mySignal()");
@@ -1811,9 +1817,9 @@ void tst_QScriptExtQObject::connectAndDisconnect()
     QCOMPARE(m_engine->evaluate("signalArgs.length").toNumber(), 1.0);
     QCOMPARE(m_engine->evaluate("signalArgs[0]").toNumber(), 123.0);
 
-    m_myObject->clearDisconnectedSignal();
+    m_myObject->clearDisconnectNotifySignals();
     QVERIFY(m_engine->evaluate("myObject.mySignal.disconnect(myHandler)").isUndefined());
-    QCOMPARE(m_myObject->disconnectedSignal().constData(), SIGNAL(mySignal()));
+    QVERIFY(m_myObject->hasSingleDisconnectNotifySignal(QMetaMethod::fromSignal(&MyQObject::mySignal)));
 
     QVERIFY(m_engine->evaluate("myObject.mySignal.disconnect(myHandler)").isError());
 
@@ -1844,7 +1850,9 @@ void tst_QScriptExtQObject::connectAndDisconnect()
     QVERIFY(m_engine->evaluate("myObject['mySignal2()'].disconnect(myHandler)").isUndefined());
 
     // connecting to signal with default args should pick the most generic version (i.e. with all args)
+    m_myObject->clearConnectNotifySignals();
     QVERIFY(m_engine->evaluate("myObject.mySignalWithDefaultArg.connect(myHandler)").isUndefined());
+    QVERIFY(m_myObject->hasSingleConnectNotifySignal(QMetaMethod::fromSignal(&MyQObject::mySignalWithDefaultArg)));
     m_engine->evaluate("gotSignal = false");
     m_myObject->emitMySignalWithDefaultArgWithArg(456);
     QVERIFY(m_engine->evaluate("gotSignal").toBoolean());
@@ -1889,9 +1897,9 @@ void tst_QScriptExtQObject::connectAndDisconnect()
     QVERIFY(!m_engine->evaluate("gotSignal").toBoolean());
 
     // signal with QVariant arg: argument conversion should work
-    m_myObject->clearConnectedSignal();
+    m_myObject->clearConnectNotifySignals();
     QVERIFY(m_engine->evaluate("myObject.mySignalWithVariantArg.connect(myHandler)").isUndefined());
-    QCOMPARE(m_myObject->connectedSignal().constData(), SIGNAL(mySignalWithVariantArg(QVariant)));
+    QVERIFY(m_myObject->hasSingleConnectNotifySignal(QMetaMethod::fromSignal(&MyQObject::mySignalWithVariantArg)));
     m_engine->evaluate("gotSignal = false");
     m_myObject->emitMySignalWithVariantArg(123);
     QCOMPARE(m_engine->evaluate("gotSignal").toBoolean(), true);
@@ -1901,9 +1909,9 @@ void tst_QScriptExtQObject::connectAndDisconnect()
     QVERIFY(m_engine->evaluate("myObject.mySignalWithVariantArg.disconnect(myHandler)").isUndefined());
 
     // signal with argument type that's unknown to the meta-type system
-    m_myObject->clearConnectedSignal();
+    m_myObject->clearConnectNotifySignals();
     QVERIFY(m_engine->evaluate("myObject.mySignalWithScriptEngineArg.connect(myHandler)").isUndefined());
-    QCOMPARE(m_myObject->connectedSignal().constData(), SIGNAL(mySignalWithScriptEngineArg(QScriptEngine*)));
+    QVERIFY(m_myObject->hasSingleConnectNotifySignal(QMetaMethod::fromSignal(&MyQObject::mySignalWithScriptEngineArg)));
     m_engine->evaluate("gotSignal = false");
     QTest::ignoreMessage(QtWarningMsg, "QScriptEngine: Unable to handle unregistered datatype 'QScriptEngine*' when invoking handler of signal MyQObject::mySignalWithScriptEngineArg(QScriptEngine*)");
     m_myObject->emitMySignalWithScriptEngineArg(m_engine);
@@ -1913,9 +1921,9 @@ void tst_QScriptExtQObject::connectAndDisconnect()
     QVERIFY(m_engine->evaluate("myObject.mySignalWithScriptEngineArg.disconnect(myHandler)").isUndefined());
 
     // signal with QVariant arg: QVariant should be unwrapped only once
-    m_myObject->clearConnectedSignal();
+    m_myObject->clearConnectNotifySignals();
     QVERIFY(m_engine->evaluate("myObject.mySignalWithVariantArg.connect(myHandler)").isUndefined());
-    QCOMPARE(m_myObject->connectedSignal().constData(), SIGNAL(mySignalWithVariantArg(QVariant)));
+    QVERIFY(m_myObject->hasSingleConnectNotifySignal(QMetaMethod::fromSignal(&MyQObject::mySignalWithVariantArg)));
     m_engine->evaluate("gotSignal = false");
     QVariant tmp(123);
     QVariant signalArg(QMetaType::QVariant, &tmp);
@@ -1927,9 +1935,9 @@ void tst_QScriptExtQObject::connectAndDisconnect()
     QVERIFY(m_engine->evaluate("myObject.mySignalWithVariantArg.disconnect(myHandler)").isUndefined());
 
     // signal with QVariant arg: with an invalid QVariant
-    m_myObject->clearConnectedSignal();
+    m_myObject->clearConnectNotifySignals();
     QVERIFY(m_engine->evaluate("myObject.mySignalWithVariantArg.connect(myHandler)").isUndefined());
-    QCOMPARE(m_myObject->connectedSignal().constData(), SIGNAL(mySignalWithVariantArg(QVariant)));
+    QVERIFY(m_myObject->hasSingleConnectNotifySignal(QMetaMethod::fromSignal(&MyQObject::mySignalWithVariantArg)));
     m_engine->evaluate("gotSignal = false");
     m_myObject->emitMySignalWithVariantArg(QVariant());
     QCOMPARE(m_engine->evaluate("gotSignal").toBoolean(), true);
@@ -1938,9 +1946,9 @@ void tst_QScriptExtQObject::connectAndDisconnect()
     QVERIFY(m_engine->evaluate("myObject.mySignalWithVariantArg.disconnect(myHandler)").isUndefined());
 
     // signal with argument type that's unknown to the meta-type system
-    m_myObject->clearConnectedSignal();
+    m_myObject->clearConnectNotifySignals();
     QVERIFY(m_engine->evaluate("myObject.mySignalWithScriptEngineArg.connect(myHandler)").isUndefined());
-    QCOMPARE(m_myObject->connectedSignal().constData(), SIGNAL(mySignalWithScriptEngineArg(QScriptEngine*)));
+    QVERIFY(m_myObject->hasSingleConnectNotifySignal(QMetaMethod::fromSignal(&MyQObject::mySignalWithScriptEngineArg)));
     m_engine->evaluate("gotSignal = false");
     QTest::ignoreMessage(QtWarningMsg, "QScriptEngine: Unable to handle unregistered datatype 'QScriptEngine*' when invoking handler of signal MyQObject::mySignalWithScriptEngineArg(QScriptEngine*)");
     m_myObject->emitMySignalWithScriptEngineArg(m_engine);
@@ -2296,13 +2304,16 @@ void tst_QScriptExtQObject::cppConnectAndDisconnect2()
 
     // check that connectNotify() and disconnectNotify() are called (task 232987)
     {
-        m_myObject->clearConnectedSignal();
+        m_myObject->clearConnectNotifySignals();
         QVERIFY(qScriptConnect(m_myObject, SIGNAL(mySignal()), QScriptValue(), fun));
-        QCOMPARE(m_myObject->connectedSignal().constData(), SIGNAL(mySignal()));
+        QCOMPARE(m_myObject->connectNotifySignals().size(), 2);
+        QVERIFY(m_myObject->hasConnectNotifySignal(QMetaMethod::fromSignal(&MyQObject::mySignal)));
+        // We get a destroyed() connection as well, used internally by QtScript
+        QVERIFY(m_myObject->hasConnectNotifySignal(QMetaMethod::fromSignal(&QObject::destroyed)));
 
-        m_myObject->clearDisconnectedSignal();
+        m_myObject->clearDisconnectNotifySignals();
         QVERIFY(qScriptDisconnect(m_myObject, SIGNAL(mySignal()), QScriptValue(), fun));
-        QCOMPARE(m_myObject->disconnectedSignal().constData(), SIGNAL(mySignal()));
+        QVERIFY(m_myObject->hasSingleDisconnectNotifySignal(QMetaMethod::fromSignal(&MyQObject::mySignal)));
     }
 
     // bad args
