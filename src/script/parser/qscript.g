@@ -268,9 +268,9 @@ inline void QScriptParser::reallocateStack()
     else
         stack_size <<= 1;
 
-    sym_stack = reinterpret_cast<Value*> (qRealloc(sym_stack, stack_size * sizeof(Value)));
-    state_stack = reinterpret_cast<int*> (qRealloc(state_stack, stack_size * sizeof(int)));
-    location_stack = reinterpret_cast<Location*> (qRealloc(location_stack, stack_size * sizeof(Location)));
+    sym_stack = reinterpret_cast<Value*> (realloc(sym_stack, stack_size * sizeof(Value)));
+    state_stack = reinterpret_cast<int*> (realloc(state_stack, stack_size * sizeof(int)));
+    location_stack = reinterpret_cast<Location*> (realloc(location_stack, stack_size * sizeof(Location)));
 }
 
 :/
@@ -307,9 +307,9 @@ QScriptParser::QScriptParser():
 QScriptParser::~QScriptParser()
 {
     if (stack_size) {
-        qFree(sym_stack);
-        qFree(state_stack);
-        qFree(location_stack);
+        free(sym_stack);
+        free(state_stack);
+        free(location_stack);
     }
 }
 

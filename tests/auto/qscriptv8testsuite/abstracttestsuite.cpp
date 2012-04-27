@@ -320,7 +320,7 @@ AbstractTestSuite::AbstractTestSuite(const QByteArray &className,
 
 AbstractTestSuite::~AbstractTestSuite()
 {
-    qFree(dynamicMetaObject);
+    free(dynamicMetaObject);
 }
 
 void AbstractTestSuite::addTestFunction(const QString &name,

@@ -66,9 +66,9 @@ QScriptParser::QScriptParser():
 QScriptParser::~QScriptParser()
 {
     if (stack_size) {
-        qFree(sym_stack);
-        qFree(state_stack);
-        qFree(location_stack);
+        free(sym_stack);
+        free(state_stack);
+        free(location_stack);
     }
 }
 
