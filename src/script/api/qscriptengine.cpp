@@ -78,6 +78,8 @@
 #include "qscriptextensioninterface.h"
 #endif
 
+#include <stdlib.h>
+
 Q_DECLARE_METATYPE(QScriptValue)
 #ifndef QT_NO_QOBJECT
 Q_DECLARE_METATYPE(QObjectList)
@@ -1035,7 +1037,7 @@ QScriptEnginePrivate::~QScriptEnginePrivate()
     while (freeScriptValues) {
         QScriptValuePrivate *p = freeScriptValues;
         freeScriptValues = p->next;
-        qFree(p);
+        free(p);
     }
 }
 

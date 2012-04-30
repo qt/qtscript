@@ -26,6 +26,8 @@
 #include "qscriptlexer_p.h"
 #include "qscriptparser_p.h"
 
+#include <stdlib.h>
+
 QT_BEGIN_NAMESPACE
 
 namespace QScript {
@@ -41,7 +43,7 @@ SyntaxChecker::SyntaxChecker():
 SyntaxChecker::~SyntaxChecker()
 {
     if (stack_size) {
-        qFree(state_stack);
+        free(state_stack);
     }
 }
 

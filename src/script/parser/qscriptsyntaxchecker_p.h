@@ -39,6 +39,8 @@
 
 #include "qscriptgrammar_p.h"
 
+#include <stdlib.h>
+
 QT_BEGIN_NAMESPACE
 
 namespace QScript {
@@ -86,7 +88,7 @@ inline void SyntaxChecker::reallocateStack()
     else
         stack_size <<= 1;
 
-    state_stack = reinterpret_cast<int*> (qRealloc(state_stack, stack_size * sizeof(int)));
+    state_stack = reinterpret_cast<int*> (realloc(state_stack, stack_size * sizeof(int)));
 }
 
 } // namespace QScript
