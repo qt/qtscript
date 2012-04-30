@@ -264,7 +264,7 @@ void tst_QScriptV8TestSuite::addTestExclusion(const QRegExp &rx, const QString &
 bool tst_QScriptV8TestSuite::isExcludedTest(const QString &testName, QString *message) const
 {
     for (int i = 0; i < testExclusions.size(); ++i) {
-        if (testExclusions.at(i).first.indexIn(testName) != -1) {
+        if (QRegExp(testExclusions.at(i).first).indexIn(testName) != -1) {
             if (message)
                 *message = testExclusions.at(i).second;
             return true;
