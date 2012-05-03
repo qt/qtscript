@@ -69,7 +69,7 @@ static QString escape(QString txt)
 }
 
 template<typename T>
-QString prepareToInsert(T value) {return QString::fromAscii("\"") + escape(value) + "\"";}
+QString prepareToInsert(T value) {return QString::fromLatin1("\"") + escape(value) + "\"";}
 template<>
 QString prepareToInsert<qsreal>(qsreal value)
 {
@@ -88,7 +88,7 @@ QString prepareToInsert<quint16>(quint16 value) {return QString::number(value);}
 template<>
 QString prepareToInsert<bool>(bool value) {return value ? "true" : "false";}
 template<>
-QString prepareToInsert<QString>(QString value) {return QString::fromAscii("\"") + escape(value) + "\"";}
+QString prepareToInsert<QString>(QString value) {return QString::fromLatin1("\"") + escape(value) + "\"";}
 
 template<typename T>
 QString typeName() {return QString();}
@@ -246,15 +246,15 @@ static QString generateToXXXDef(const QString& name, const QList<QPair<QString, 
         t.first = escape(t.first);
         if (!valueSet.isEmpty()) {
             valueSet.append(QString(","));
-            tagSet.append(QString::fromAscii(","));
+            tagSet.append(QString::fromLatin1(","));
         }
         tagSet.append(QString("\n    \""));
         tagSet.append(t.first);
-        tagSet.append(QString::fromAscii("\""));
+        tagSet.append(QString::fromLatin1("\""));
         if (!((lineBreaker++)%2))
             valueSet.append(QString("\n    "));
         else
-            valueSet.append(QString::fromAscii(" "));
+            valueSet.append(QString::fromLatin1(" "));
         valueSet.append(prepareToInsert<T>(t.second));
     }
     return result.arg(name,
@@ -313,15 +313,15 @@ QString generateToXXXDef<qsreal>(const QString& name, const QList<QPair<QString,
         t.first = escape(t.first);
         if (!valueSet.isEmpty()) {
             valueSet.append(QString(","));
-            tagSet.append(QString::fromAscii(","));
+            tagSet.append(QString::fromLatin1(","));
         }
         tagSet.append(QString("\n    \""));
         tagSet.append(t.first);
-        tagSet.append(QString::fromAscii("\""));
+        tagSet.append(QString::fromLatin1("\""));
         if (!((lineBreaker++)%10))
             valueSet.append(QString("\n    "));
         else
-            valueSet.append(QString::fromAscii(" "));
+            valueSet.append(QString::fromLatin1(" "));
         valueSet.append(prepareToInsert<qsreal>(t.second));
     }
 
@@ -384,15 +384,15 @@ static QString generateCastDef(const QList<QPair<QString, T> >& list)
         t.first = escape(t.first);
         if (!valueSet.isEmpty()) {
             valueSet.append(QString(","));
-            tagSet.append(QString::fromAscii(","));
+            tagSet.append(QString::fromLatin1(","));
         }
         tagSet.append(QString("\n    \""));
         tagSet.append(t.first);
-        tagSet.append(QString::fromAscii("\""));
+        tagSet.append(QString::fromLatin1("\""));
         if (!((lineBreaker++)%2))
             valueSet.append(QString("\n    "));
         else
-            valueSet.append(QString::fromAscii(" "));
+            valueSet.append(QString::fromLatin1(" "));
         valueSet.append(prepareToInsert<T>(t.second));
     }
     return result.arg(typeName<T>(), tagSet.join(QString()), valueSet.join(QString()), QString::number(list.count()));
@@ -450,15 +450,15 @@ QString generateCastDef<qsreal>(const QList<QPair<QString, qsreal> >& list)
         t.first = escape(t.first);
         if (!valueSet.isEmpty()) {
             valueSet.append(QString(","));
-            tagSet.append(QString::fromAscii(","));
+            tagSet.append(QString::fromLatin1(","));
         }
         tagSet.append(QString("\n    \""));
         tagSet.append(t.first);
-        tagSet.append(QString::fromAscii("\""));
+        tagSet.append(QString::fromLatin1("\""));
         if (!((lineBreaker++)%10))
             valueSet.append(QString("\n    "));
         else
-            valueSet.append(QString::fromAscii(" "));
+            valueSet.append(QString::fromLatin1(" "));
         valueSet.append(prepareToInsert<qsreal>(t.second));
     }
     return result.arg(typeName<qsreal>(),

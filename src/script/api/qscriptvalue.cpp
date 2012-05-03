@@ -333,7 +333,7 @@ QScriptValue::QScriptValue(QScriptEngine *engine, const char *val)
         JSC::ExecState *exec = d_ptr->engine->currentFrame;
         d_ptr->initFrom(JSC::jsString(exec, val));
     } else {
-        d_ptr->initFrom(QString::fromAscii(val));
+        d_ptr->initFrom(QString::fromLatin1(val));
     }
 }
 #endif
@@ -432,7 +432,7 @@ QScriptValue::QScriptValue(const QLatin1String &value)
 QScriptValue::QScriptValue(const char *value)
     : d_ptr(new (/*engine=*/0)QScriptValuePrivate(/*engine=*/0))
 {
-    d_ptr->initFrom(QString::fromAscii(value));
+    d_ptr->initFrom(QString::fromLatin1(value));
 }
 #endif
 
