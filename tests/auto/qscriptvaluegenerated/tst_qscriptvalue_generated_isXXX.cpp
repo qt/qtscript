@@ -52,7 +52,7 @@ void tst_QScriptValueGenerated::isValid_initData()
     initScriptValues();
 }
 
-static QString isValid_array[] = {
+static const char *isValid_array[] = {
     "QScriptValue(QScriptValue::UndefinedValue)",
     "QScriptValue(QScriptValue::NullValue)",
     "QScriptValue(true)",
@@ -204,12 +204,8 @@ static QString isValid_array[] = {
 
 void tst_QScriptValueGenerated::isValid_makeData(const char* expr)
 {
-    static QSet<QString> isValid;
-    if (isValid.isEmpty()) {
-        isValid.reserve(147);
-        for (unsigned i = 0; i < 147; ++i)
-            isValid.insert(isValid_array[i]);
-    }
+    static const QSet<QString> isValid =
+        charArrayToQStringSet(isValid_array, int(sizeof(isValid_array) / sizeof(const char *)));
     newRow(expr) << isValid.contains(expr);
 }
 
@@ -229,7 +225,7 @@ void tst_QScriptValueGenerated::isBool_initData()
     initScriptValues();
 }
 
-static QString isBool_array[] = {
+static const char *isBool_array[] = {
     "QScriptValue(true)",
     "QScriptValue(false)",
     "QScriptValue(0, true)",
@@ -242,12 +238,8 @@ static QString isBool_array[] = {
 
 void tst_QScriptValueGenerated::isBool_makeData(const char* expr)
 {
-    static QSet<QString> isBool;
-    if (isBool.isEmpty()) {
-        isBool.reserve(8);
-        for (unsigned i = 0; i < 8; ++i)
-            isBool.insert(isBool_array[i]);
-    }
+    static const QSet<QString> isBool =
+            charArrayToQStringSet(isBool_array, int(sizeof(isBool_array) / sizeof(const char *)));
     newRow(expr) << isBool.contains(expr);
 }
 
@@ -267,7 +259,7 @@ void tst_QScriptValueGenerated::isBoolean_initData()
     initScriptValues();
 }
 
-static QString isBoolean_array[] = {
+static const char * isBoolean_array[] = {
     "QScriptValue(true)",
     "QScriptValue(false)",
     "QScriptValue(0, true)",
@@ -280,12 +272,8 @@ static QString isBoolean_array[] = {
 
 void tst_QScriptValueGenerated::isBoolean_makeData(const char* expr)
 {
-    static QSet<QString> isBoolean;
-    if (isBoolean.isEmpty()) {
-        isBoolean.reserve(8);
-        for (unsigned i = 0; i < 8; ++i)
-            isBoolean.insert(isBoolean_array[i]);
-    }
+    static const QSet<QString> isBoolean =
+        charArrayToQStringSet(isBoolean_array, int(sizeof(isBoolean_array) / sizeof(const char *)));
     newRow(expr) << isBoolean.contains(expr);
 }
 
@@ -305,7 +293,7 @@ void tst_QScriptValueGenerated::isNumber_initData()
     initScriptValues();
 }
 
-static QString isNumber_array[] = {
+static const char *isNumber_array[] = {
     "QScriptValue(int(122))",
     "QScriptValue(uint(124))",
     "QScriptValue(0)",
@@ -366,12 +354,8 @@ static QString isNumber_array[] = {
 
 void tst_QScriptValueGenerated::isNumber_makeData(const char* expr)
 {
-    static QSet<QString> isNumber;
-    if (isNumber.isEmpty()) {
-        isNumber.reserve(56);
-        for (unsigned i = 0; i < 56; ++i)
-            isNumber.insert(isNumber_array[i]);
-    }
+    static const QSet<QString> isNumber =
+        charArrayToQStringSet(isNumber_array, int(sizeof(isNumber_array) / sizeof(const char *)));
     newRow(expr) << isNumber.contains(expr);
 }
 
@@ -391,7 +375,7 @@ void tst_QScriptValueGenerated::isFunction_initData()
     initScriptValues();
 }
 
-static QString isFunction_array[] = {
+static const char *isFunction_array[] = {
     "engine->evaluate(\"Function.prototype\")",
     "engine->evaluate(\"Object\")",
     "engine->evaluate(\"Array\")",
@@ -408,12 +392,8 @@ static QString isFunction_array[] = {
 
 void tst_QScriptValueGenerated::isFunction_makeData(const char* expr)
 {
-    static QSet<QString> isFunction;
-    if (isFunction.isEmpty()) {
-        isFunction.reserve(12);
-        for (unsigned i = 0; i < 12; ++i)
-            isFunction.insert(isFunction_array[i]);
-    }
+    static const QSet<QString> isFunction
+        = charArrayToQStringSet(isFunction_array, int(sizeof(isFunction_array) / sizeof(const char *)));
     newRow(expr) << isFunction.contains(expr);
 }
 
@@ -433,7 +413,7 @@ void tst_QScriptValueGenerated::isNull_initData()
     initScriptValues();
 }
 
-static QString isNull_array[] = {
+static const char *isNull_array[] = {
     "QScriptValue(QScriptValue::NullValue)",
     "QScriptValue(0, QScriptValue::NullValue)",
     "QScriptValue(engine, QScriptValue::NullValue)",
@@ -444,12 +424,8 @@ static QString isNull_array[] = {
 
 void tst_QScriptValueGenerated::isNull_makeData(const char* expr)
 {
-    static QSet<QString> isNull;
-    if (isNull.isEmpty()) {
-        isNull.reserve(6);
-        for (unsigned i = 0; i < 6; ++i)
-            isNull.insert(isNull_array[i]);
-    }
+    static const QSet<QString> isNull =
+        charArrayToQStringSet(isNull_array, int(sizeof(isNull_array) / sizeof(const char *)));
     newRow(expr) << isNull.contains(expr);
 }
 
@@ -469,7 +445,7 @@ void tst_QScriptValueGenerated::isString_initData()
     initScriptValues();
 }
 
-static QString isString_array[] = {
+static const char *isString_array[] = {
     "QScriptValue(\"NaN\")",
     "QScriptValue(\"Infinity\")",
     "QScriptValue(\"-Infinity\")",
@@ -509,12 +485,8 @@ static QString isString_array[] = {
 
 void tst_QScriptValueGenerated::isString_makeData(const char* expr)
 {
-    static QSet<QString> isString;
-    if (isString.isEmpty()) {
-        isString.reserve(35);
-        for (unsigned i = 0; i < 35; ++i)
-            isString.insert(isString_array[i]);
-    }
+    static const QSet<QString> isString =
+        charArrayToQStringSet(isString_array, int(sizeof(isString_array) / sizeof(const char *)));
     newRow(expr) << isString.contains(expr);
 }
 
@@ -534,7 +506,7 @@ void tst_QScriptValueGenerated::isUndefined_initData()
     initScriptValues();
 }
 
-static QString isUndefined_array[] = {
+static const char *isUndefined_array[] = {
     "QScriptValue(QScriptValue::UndefinedValue)",
     "QScriptValue(0, QScriptValue::UndefinedValue)",
     "QScriptValue(engine, QScriptValue::UndefinedValue)",
@@ -545,12 +517,8 @@ static QString isUndefined_array[] = {
 
 void tst_QScriptValueGenerated::isUndefined_makeData(const char* expr)
 {
-    static QSet<QString> isUndefined;
-    if (isUndefined.isEmpty()) {
-        isUndefined.reserve(6);
-        for (unsigned i = 0; i < 6; ++i)
-            isUndefined.insert(isUndefined_array[i]);
-    }
+    static const QSet<QString> isUndefined =
+        charArrayToQStringSet(isUndefined_array, int(sizeof(isUndefined_array) / sizeof(const char *)));
     newRow(expr) << isUndefined.contains(expr);
 }
 
@@ -570,7 +538,7 @@ void tst_QScriptValueGenerated::isVariant_initData()
     initScriptValues();
 }
 
-static QString isVariant_array[] = {
+static const char *isVariant_array[] = {
     "engine->newVariant(QVariant())",
     "engine->newVariant(QVariant(123))",
     "engine->newVariant(QVariant(false))"
@@ -578,12 +546,8 @@ static QString isVariant_array[] = {
 
 void tst_QScriptValueGenerated::isVariant_makeData(const char* expr)
 {
-    static QSet<QString> isVariant;
-    if (isVariant.isEmpty()) {
-        isVariant.reserve(3);
-        for (unsigned i = 0; i < 3; ++i)
-            isVariant.insert(isVariant_array[i]);
-    }
+    static QSet<QString> isVariant =
+        charArrayToQStringSet(isVariant_array, int(sizeof(isVariant_array) / sizeof(const char *)));
     newRow(expr) << isVariant.contains(expr);
 }
 
@@ -603,19 +567,9 @@ void tst_QScriptValueGenerated::isQObject_initData()
     initScriptValues();
 }
 
-static QString isQObject_array[] = {
-    "engine->newQObject(engine)"
-};
-
 void tst_QScriptValueGenerated::isQObject_makeData(const char* expr)
 {
-    static QSet<QString> isQObject;
-    if (isQObject.isEmpty()) {
-        isQObject.reserve(1);
-        for (unsigned i = 0; i < 1; ++i)
-            isQObject.insert(isQObject_array[i]);
-    }
-    newRow(expr) << isQObject.contains(expr);
+    newRow(expr) << (qstrcmp(expr, "engine->newQObject(engine)") == 0);
 }
 
 void tst_QScriptValueGenerated::isQObject_test(const char*, const QScriptValue& value)
@@ -634,19 +588,9 @@ void tst_QScriptValueGenerated::isQMetaObject_initData()
     initScriptValues();
 }
 
-static QString isQMetaObject_array[] = {
-    "engine->newQMetaObject(&QObject::staticMetaObject)"
-};
-
 void tst_QScriptValueGenerated::isQMetaObject_makeData(const char* expr)
 {
-    static QSet<QString> isQMetaObject;
-    if (isQMetaObject.isEmpty()) {
-        isQMetaObject.reserve(1);
-        for (unsigned i = 0; i < 1; ++i)
-            isQMetaObject.insert(isQMetaObject_array[i]);
-    }
-    newRow(expr) << isQMetaObject.contains(expr);
+    newRow(expr) << (qstrcmp(expr, "engine->newQMetaObject(&QObject::staticMetaObject)") ==  0);
 }
 
 void tst_QScriptValueGenerated::isQMetaObject_test(const char*, const QScriptValue& value)
@@ -665,7 +609,7 @@ void tst_QScriptValueGenerated::isObject_initData()
     initScriptValues();
 }
 
-static QString isObject_array[] = {
+static const char *isObject_array[] = {
     "engine->evaluate(\"[]\")",
     "engine->evaluate(\"Object.prototype\")",
     "engine->evaluate(\"Date.prototype\")",
@@ -706,12 +650,8 @@ static QString isObject_array[] = {
 
 void tst_QScriptValueGenerated::isObject_makeData(const char* expr)
 {
-    static QSet<QString> isObject;
-    if (isObject.isEmpty()) {
-        isObject.reserve(36);
-        for (unsigned i = 0; i < 36; ++i)
-            isObject.insert(isObject_array[i]);
-    }
+    static const QSet<QString> isObject =
+        charArrayToQStringSet(isObject_array, int(sizeof(isObject_array) / sizeof(const char *)));
     newRow(expr) << isObject.contains(expr);
 }
 
@@ -731,19 +671,15 @@ void tst_QScriptValueGenerated::isDate_initData()
     initScriptValues();
 }
 
-static QString isDate_array[] = {
+static const char *isDate_array[] = {
     "engine->evaluate(\"Date.prototype\")",
     "engine->newDate(QDateTime())"
 };
 
 void tst_QScriptValueGenerated::isDate_makeData(const char* expr)
 {
-    static QSet<QString> isDate;
-    if (isDate.isEmpty()) {
-        isDate.reserve(2);
-        for (unsigned i = 0; i < 2; ++i)
-            isDate.insert(isDate_array[i]);
-    }
+    static const QSet<QString> isDate =
+        charArrayToQStringSet(isDate_array, int(sizeof(isDate_array) / sizeof(const char *)));
     newRow(expr) << isDate.contains(expr);
 }
 
@@ -763,7 +699,7 @@ void tst_QScriptValueGenerated::isRegExp_initData()
     initScriptValues();
 }
 
-static QString isRegExp_array[] = {
+static const char *isRegExp_array[] = {
     "engine->evaluate(\"/foo/\")",
     "engine->evaluate(\"new RegExp('foo', 'gim')\")",
     "engine->newRegExp(\"foo\", \"gim\")"
@@ -771,12 +707,8 @@ static QString isRegExp_array[] = {
 
 void tst_QScriptValueGenerated::isRegExp_makeData(const char* expr)
 {
-    static QSet<QString> isRegExp;
-    if (isRegExp.isEmpty()) {
-        isRegExp.reserve(3);
-        for (unsigned i = 0; i < 3; ++i)
-            isRegExp.insert(isRegExp_array[i]);
-    }
+    static const QSet<QString> isRegExp =
+        charArrayToQStringSet(isRegExp_array, int(sizeof(isRegExp_array) / sizeof(const char *)));
     newRow(expr) << isRegExp.contains(expr);
 }
 
@@ -796,7 +728,7 @@ void tst_QScriptValueGenerated::isArray_initData()
     initScriptValues();
 }
 
-static QString isArray_array[] = {
+static const char *isArray_array[] = {
     "engine->evaluate(\"[]\")",
     "engine->evaluate(\"Array.prototype\")",
     "engine->evaluate(\"new Array()\")",
@@ -806,12 +738,8 @@ static QString isArray_array[] = {
 
 void tst_QScriptValueGenerated::isArray_makeData(const char* expr)
 {
-    static QSet<QString> isArray;
-    if (isArray.isEmpty()) {
-        isArray.reserve(5);
-        for (unsigned i = 0; i < 5; ++i)
-            isArray.insert(isArray_array[i]);
-    }
+    static const QSet<QString> isArray =
+        charArrayToQStringSet(isArray_array, int(sizeof(isArray_array) / sizeof(const char *)));
     newRow(expr) << isArray.contains(expr);
 }
 
@@ -831,7 +759,7 @@ void tst_QScriptValueGenerated::isError_initData()
     initScriptValues();
 }
 
-static QString isError_array[] = {
+static const char *isError_array[] = {
     "engine->evaluate(\"Error.prototype\")",
     "engine->evaluate(\"new Error()\")",
     "engine->evaluate(\"Undefined\")",
@@ -842,12 +770,8 @@ static QString isError_array[] = {
 
 void tst_QScriptValueGenerated::isError_makeData(const char* expr)
 {
-    static QSet<QString> isError;
-    if (isError.isEmpty()) {
-        isError.reserve(6);
-        for (unsigned i = 0; i < 6; ++i)
-            isError.insert(isError_array[i]);
-    }
+    static QSet<QString> isError =
+        charArrayToQStringSet(isError_array, int(sizeof(isError_array) / sizeof(const char *)));
     newRow(expr) << isError.contains(expr);
 }
 

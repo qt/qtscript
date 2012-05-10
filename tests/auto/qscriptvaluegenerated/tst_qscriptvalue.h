@@ -363,6 +363,34 @@ private:
     QString m_currentExpression;
 };
 
+static inline QSet<QString> charArrayToQStringSet(const char **array, int size)
+{
+    QSet<QString> result;
+    result.reserve(size);
+    for (int i = 0; i < size; ++i)
+        result.insert(QLatin1String(array[i]));
+    return result;
+}
+
+static inline QHash<QString, QString> charArraysToStringHash(const char **keys, const char **values, int size)
+{
+    QHash<QString, QString > result;
+    result.reserve(size);
+    for (int i = 0; i < size; ++i)
+        result.insert(QLatin1String(keys[i]), QLatin1String(values[i]));
+    return result;
+}
+
+template <class Value>
+QHash<QString, Value> charValueArraysToHash(const char **keys, const Value *values, int size)
+{
+    QHash<QString, Value> result;
+    result.reserve(size);
+    for (int i = 0; i < size; ++i)
+        result.insert(QLatin1String(keys[i]), values[i]);
+    return result;
+}
+
 #define DEFINE_TEST_FUNCTION(name) \
 void tst_QScriptValueGenerated::name##_data() { dataHelper(&tst_QScriptValueGenerated::name##_initData, &tst_QScriptValueGenerated::name##_makeData); } \
 void tst_QScriptValueGenerated::name() { testHelper(&tst_QScriptValueGenerated::name##_test); }

@@ -53,7 +53,7 @@ void tst_QScriptValueGenerated::toString_initData()
     initScriptValues();
 }
 
-static QString toString_tagArray[] = {
+static const char *toString_tagArray[] = {
     "QScriptValue()",
     "QScriptValue(QScriptValue::UndefinedValue)",
     "QScriptValue(QScriptValue::NullValue)",
@@ -203,7 +203,7 @@ static QString toString_tagArray[] = {
     "engine->newQObject(0)",
     "engine->newQObject(engine)"};
 
-static QString toString_valueArray[] = {
+static const char *toString_valueArray[] = {
     "", "undefined",
     "null", "true",
     "false", "122",
@@ -281,12 +281,9 @@ static QString toString_valueArray[] = {
 
 void tst_QScriptValueGenerated::toString_makeData(const char* expr)
 {
-    static QHash<QString, QString> toString;
-    if (toString.isEmpty()) {
-        toString.reserve(148);
-        for (unsigned i = 0; i < 148; ++i)
-            toString.insert(toString_tagArray[i], toString_valueArray[i]);
-    }
+    static const QHash<QString, QString> toString =
+        charArraysToStringHash(toString_tagArray, toString_valueArray,
+                               int(sizeof(toString_tagArray) / sizeof(const char *)));
     newRow(expr) << toString.value(expr);
 }
 
@@ -306,7 +303,7 @@ void tst_QScriptValueGenerated::toNumber_initData()
     initScriptValues();
 }
 
-static QString toNumber_tagArray[] = {
+static const char *toNumber_tagArray[] = {
     "QScriptValue()",
     "QScriptValue(QScriptValue::UndefinedValue)",
     "QScriptValue(QScriptValue::NullValue)",
@@ -473,12 +470,9 @@ static qsreal toNumber_valueArray[] = {
     qQNaN(), qQNaN(), qQNaN(), qQNaN(), 123, 0, 0, qQNaN()};
 void tst_QScriptValueGenerated::toNumber_makeData(const char* expr)
 {
-    static QHash<QString, qsreal> toNumber;
-    if (toNumber.isEmpty()) {
-        toNumber.reserve(148);
-        for (unsigned i = 0; i < 148; ++i)
-            toNumber.insert(toNumber_tagArray[i], toNumber_valueArray[i]);
-    }
+    static const QHash<QString, qsreal> toNumber =
+        charValueArraysToHash(toNumber_tagArray, toNumber_valueArray,
+                              int(sizeof(toNumber_tagArray) / sizeof(const char *)));
     newRow(expr) << toNumber.value(expr);
 }
 
@@ -507,7 +501,7 @@ void tst_QScriptValueGenerated::toBool_initData()
     initScriptValues();
 }
 
-static QString toBool_tagArray[] = {
+static const char *toBool_tagArray[] = {
     "QScriptValue()",
     "QScriptValue(QScriptValue::UndefinedValue)",
     "QScriptValue(QScriptValue::NullValue)",
@@ -735,12 +729,9 @@ static bool toBool_valueArray[] = {
 
 void tst_QScriptValueGenerated::toBool_makeData(const char* expr)
 {
-    static QHash<QString, bool> toBool;
-    if (toBool.isEmpty()) {
-        toBool.reserve(148);
-        for (unsigned i = 0; i < 148; ++i)
-            toBool.insert(toBool_tagArray[i], toBool_valueArray[i]);
-    }
+    static const QHash<QString, bool> toBool =
+        charValueArraysToHash(toBool_tagArray, toBool_valueArray,
+                              int(sizeof(toBool_tagArray)  / sizeof(const char *)));
     newRow(expr) << toBool.value(expr);
 }
 
@@ -760,7 +751,7 @@ void tst_QScriptValueGenerated::toBoolean_initData()
     initScriptValues();
 }
 
-static QString toBoolean_tagArray[] = {
+static const char *toBoolean_tagArray[] = {
     "QScriptValue()",
     "QScriptValue(QScriptValue::UndefinedValue)",
     "QScriptValue(QScriptValue::NullValue)",
@@ -988,12 +979,9 @@ static bool toBoolean_valueArray[] = {
 
 void tst_QScriptValueGenerated::toBoolean_makeData(const char* expr)
 {
-    static QHash<QString, bool> toBoolean;
-    if (toBoolean.isEmpty()) {
-        toBoolean.reserve(148);
-        for (unsigned i = 0; i < 148; ++i)
-            toBoolean.insert(toBoolean_tagArray[i], toBoolean_valueArray[i]);
-    }
+    static const QHash<QString, bool> toBoolean =
+        charValueArraysToHash(toBoolean_tagArray, toBoolean_valueArray,
+                              int(sizeof(toBoolean_tagArray)  / sizeof(const char *)));
     newRow(expr) << toBoolean.value(expr);
 }
 
@@ -1013,7 +1001,7 @@ void tst_QScriptValueGenerated::toInteger_initData()
     initScriptValues();
 }
 
-static QString toInteger_tagArray[] = {
+static const char *toInteger_tagArray[] = {
     "QScriptValue()",
     "QScriptValue(QScriptValue::UndefinedValue)",
     "QScriptValue(QScriptValue::NullValue)",
@@ -1180,12 +1168,9 @@ static qsreal toInteger_valueArray[] = {
     0, 0, 0, 0, 123, 0, 0, 0};
 void tst_QScriptValueGenerated::toInteger_makeData(const char* expr)
 {
-    static QHash<QString, qsreal> toInteger;
-    if (toInteger.isEmpty()) {
-        toInteger.reserve(148);
-        for (unsigned i = 0; i < 148; ++i)
-            toInteger.insert(toInteger_tagArray[i], toInteger_valueArray[i]);
-    }
+    static const QHash<QString, qsreal> toInteger =
+        charValueArraysToHash(toInteger_tagArray, toInteger_valueArray,
+                              int(sizeof(toInteger_tagArray)  / sizeof(const char *)));
     newRow(expr) << toInteger.value(expr);
 }
 
@@ -1210,7 +1195,7 @@ void tst_QScriptValueGenerated::toInt32_initData()
     initScriptValues();
 }
 
-static QString toInt32_tagArray[] = {
+static const char *toInt32_tagArray[] = {
     "QScriptValue()",
     "QScriptValue(QScriptValue::UndefinedValue)",
     "QScriptValue(QScriptValue::NullValue)",
@@ -1438,12 +1423,9 @@ static qint32 toInt32_valueArray[] = {
 
 void tst_QScriptValueGenerated::toInt32_makeData(const char* expr)
 {
-    static QHash<QString, qint32> toInt32;
-    if (toInt32.isEmpty()) {
-        toInt32.reserve(148);
-        for (unsigned i = 0; i < 148; ++i)
-            toInt32.insert(toInt32_tagArray[i], toInt32_valueArray[i]);
-    }
+    static const QHash<QString, qint32> toInt32 =
+        charValueArraysToHash(toInt32_tagArray, toInt32_valueArray,
+                              int(sizeof(toInt32_tagArray) / sizeof(const char *)));
     newRow(expr) << toInt32.value(expr);
 }
 
@@ -1463,7 +1445,7 @@ void tst_QScriptValueGenerated::toUInt32_initData()
     initScriptValues();
 }
 
-static QString toUInt32_tagArray[] = {
+static const char *toUInt32_tagArray[] = {
     "QScriptValue()",
     "QScriptValue(QScriptValue::UndefinedValue)",
     "QScriptValue(QScriptValue::NullValue)",
@@ -1691,12 +1673,9 @@ static quint32 toUInt32_valueArray[] = {
 
 void tst_QScriptValueGenerated::toUInt32_makeData(const char* expr)
 {
-    static QHash<QString, quint32> toUInt32;
-    if (toUInt32.isEmpty()) {
-        toUInt32.reserve(148);
-        for (unsigned i = 0; i < 148; ++i)
-            toUInt32.insert(toUInt32_tagArray[i], toUInt32_valueArray[i]);
-    }
+    static const QHash<QString, quint32> toUInt32 =
+        charValueArraysToHash(toUInt32_tagArray, toUInt32_valueArray,
+                              int(sizeof(toUInt32_tagArray) / sizeof(const char *)));
     newRow(expr) << toUInt32.value(expr);
 }
 
@@ -1716,7 +1695,7 @@ void tst_QScriptValueGenerated::toUInt16_initData()
     initScriptValues();
 }
 
-static QString toUInt16_tagArray[] = {
+static const char *toUInt16_tagArray[] = {
     "QScriptValue()",
     "QScriptValue(QScriptValue::UndefinedValue)",
     "QScriptValue(QScriptValue::NullValue)",
@@ -1944,12 +1923,9 @@ static quint16 toUInt16_valueArray[] = {
 
 void tst_QScriptValueGenerated::toUInt16_makeData(const char* expr)
 {
-    static QHash<QString, quint16> toUInt16;
-    if (toUInt16.isEmpty()) {
-        toUInt16.reserve(148);
-        for (unsigned i = 0; i < 148; ++i)
-            toUInt16.insert(toUInt16_tagArray[i], toUInt16_valueArray[i]);
-    }
+    static const QHash<QString, quint16> toUInt16 =
+        charValueArraysToHash(toUInt16_tagArray, toUInt16_valueArray,
+                              int(sizeof(toUInt16_tagArray) / sizeof(const char *)));
     newRow(expr) << toUInt16.value(expr);
 }
 

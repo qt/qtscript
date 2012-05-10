@@ -54,7 +54,7 @@ void tst_QScriptValueGenerated::equals_initData()
     initScriptValues();
 }
 
-static QString equals_array[] = {
+static const char *equals_array[] = {
     "QScriptValue() <=> QScriptValue()",
     "QScriptValue(QScriptValue::UndefinedValue) <=> QScriptValue(QScriptValue::UndefinedValue)",
     "QScriptValue(QScriptValue::UndefinedValue) <=> QScriptValue(QScriptValue::NullValue)",
@@ -1363,17 +1363,16 @@ static QString equals_array[] = {
     "engine->newQObject(0) <=> engine->newQObject(0)",
     "engine->newQObject(engine) <=> engine->newQObject(engine)"};
 
-void tst_QScriptValueGenerated::equals_makeData(const char *expr)
+void tst_QScriptValueGenerated::equals_makeData(const char *exprC)
 {
-    static QSet<QString> equals;
-    if (equals.isEmpty()) {
-        equals.reserve(1307);
-        for (unsigned i = 0; i < 1307; ++i)
-            equals.insert(equals_array[i]);
-    }
-    QHash<QString, QScriptValue>::const_iterator it;
-    for (it = m_values.constBegin(); it != m_values.constEnd(); ++it) {
-        QString tag = QString::fromLatin1("%20 <=> %21").arg(expr).arg(it.key());
+    typedef QHash<QString, QScriptValue>::const_iterator ValuesIterator;
+    static const QSet<QString> equals =
+        charArrayToQStringSet(equals_array, int(sizeof(equals_array) / sizeof(const char *)));
+
+    const ValuesIterator cend = m_values.constEnd();
+    const QString tagPrefix = QLatin1String(exprC) + QLatin1String(" <=> ");
+    for (ValuesIterator it = m_values.constBegin(); it != cend; ++it) {
+        const QString tag = tagPrefix + it.key();
         newRow(tag.toLatin1()) << it.value() << equals.contains(tag);
     }
 }
@@ -1395,7 +1394,7 @@ void tst_QScriptValueGenerated::strictlyEquals_initData()
     initScriptValues();
 }
 
-static QString strictlyEquals_array[] = {
+static const char *strictlyEquals_array[] = {
     "QScriptValue() <=> QScriptValue()",
     "QScriptValue(QScriptValue::UndefinedValue) <=> QScriptValue(QScriptValue::UndefinedValue)",
     "QScriptValue(QScriptValue::UndefinedValue) <=> QScriptValue(0, QScriptValue::UndefinedValue)",
@@ -1928,15 +1927,16 @@ static QString strictlyEquals_array[] = {
 
 void tst_QScriptValueGenerated::strictlyEquals_makeData(const char *expr)
 {
-    static QSet<QString> equals;
-    if (equals.isEmpty()) {
-        equals.reserve(529);
-        for (unsigned i = 0; i < 529; ++i)
-            equals.insert(strictlyEquals_array[i]);
-    }
-    QHash<QString, QScriptValue>::const_iterator it;
-    for (it = m_values.constBegin(); it != m_values.constEnd(); ++it) {
-        QString tag = QString::fromLatin1("%20 <=> %21").arg(expr).arg(it.key());
+    typedef QHash<QString, QScriptValue>::const_iterator ValueIterator;
+
+    static const QSet<QString> equals =
+            charArrayToQStringSet(strictlyEquals_array,
+                                  int(sizeof(strictlyEquals_array) / sizeof(const char *)));
+
+    const ValueIterator cend = m_values.constEnd();
+    const QString tagPrefix = QLatin1String(expr) + QLatin1String(" <=> ");
+    for (ValueIterator it = m_values.constBegin(); it != cend; ++it) {
+        const QString tag = tagPrefix + it.key();
         newRow(tag.toLatin1()) << it.value() << equals.contains(tag);
     }
 }
@@ -1958,7 +1958,7 @@ void tst_QScriptValueGenerated::lessThan_initData()
     initScriptValues();
 }
 
-static QString lessThan_array[] = {
+static const char *lessThan_array[] = {
     "QScriptValue(QScriptValue::NullValue) <=> QScriptValue(true)",
     "QScriptValue(QScriptValue::NullValue) <=> QScriptValue(int(122))",
     "QScriptValue(QScriptValue::NullValue) <=> QScriptValue(uint(124))",
@@ -7438,15 +7438,15 @@ static QString lessThan_array[] = {
 
 void tst_QScriptValueGenerated::lessThan_makeData(const char *expr)
 {
-    static QSet<QString> equals;
-    if (equals.isEmpty()) {
-        equals.reserve(5476);
-        for (unsigned i = 0; i < 5476; ++i)
-            equals.insert(lessThan_array[i]);
-    }
-    QHash<QString, QScriptValue>::const_iterator it;
-    for (it = m_values.constBegin(); it != m_values.constEnd(); ++it) {
-        QString tag = QString::fromLatin1("%20 <=> %21").arg(expr).arg(it.key());
+    typedef QHash<QString, QScriptValue>::const_iterator ValuesIterator;
+
+    static const QSet<QString> equals =
+        charArrayToQStringSet(lessThan_array, int(sizeof(lessThan_array) / sizeof(const char *)));
+
+    const ValuesIterator cend = m_values.constEnd();
+    const QString tagPrefix = QLatin1String(expr) + QLatin1String(" <=> ");
+    for (ValuesIterator it = m_values.constBegin(); it != cend; ++it) {
+        const QString tag = tagPrefix + it.key();
         newRow(tag.toLatin1()) << it.value() << equals.contains(tag);
     }
 }
@@ -7468,7 +7468,7 @@ void tst_QScriptValueGenerated::instanceOf_initData()
     initScriptValues();
 }
 
-static QString instanceOf_array[] = {
+static const char *instanceOf_array[] = {
     "engine->evaluate(\"[]\") <=> engine->evaluate(\"Object\")",
     "engine->evaluate(\"[]\") <=> engine->evaluate(\"Array\")",
     "engine->evaluate(\"Date.prototype\") <=> engine->evaluate(\"Object\")",
@@ -7519,16 +7519,16 @@ static QString instanceOf_array[] = {
 
 void tst_QScriptValueGenerated::instanceOf_makeData(const char *expr)
 {
-    static QSet<QString> equals;
-    if (equals.isEmpty()) {
-        equals.reserve(47);
-        for (unsigned i = 0; i < 47; ++i)
-            equals.insert(instanceOf_array[i]);
-    }
-    QHash<QString, QScriptValue>::const_iterator it;
-    for (it = m_values.constBegin(); it != m_values.constEnd(); ++it) {
-        QString tag = QString::fromLatin1("%20 <=> %21").arg(expr).arg(it.key());
-        newRow(tag.toLatin1()) << it.value() << equals.contains(tag);
+    typedef QHash<QString, QScriptValue>::const_iterator ValuesIterator;
+
+    static const QSet<QString> instanceOf =
+         charArrayToQStringSet(instanceOf_array, int(sizeof(instanceOf_array) / sizeof(const char *)));
+
+    const ValuesIterator cend = m_values.constEnd();
+    const QString tagPrefix = QLatin1String(expr) + QLatin1String(" <=> ");
+    for (ValuesIterator it = m_values.constBegin(); it != cend; ++it) {
+        const QString tag = tagPrefix + it.key();
+        newRow(tag.toLatin1()) << it.value() << instanceOf.contains(tag);
     }
 }
 
