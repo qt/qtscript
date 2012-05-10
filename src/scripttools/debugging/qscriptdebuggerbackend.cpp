@@ -402,7 +402,7 @@ QScriptDebuggerBackend::QScriptDebuggerBackend(QScriptDebuggerBackendPrivate &dd
   This function installs its own agent on the \a engine using
   QScriptEngine::setAgent(); any existing agent will be replaced.
 
-  \sa detach(). engine()
+  \sa detach(), engine()
 */
 void QScriptDebuggerBackend::attachTo(QScriptEngine *engine)
 {
