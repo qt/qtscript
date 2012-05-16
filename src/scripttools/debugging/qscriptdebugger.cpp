@@ -88,7 +88,7 @@
 
 #include <QtWidgets/qaction.h>
 #include <QtGui/qevent.h>
-#include <QtWidgets/qicon.h>
+#include <QtGui/qicon.h>
 #include <QtWidgets/qinputdialog.h>
 #include <QtWidgets/qmenu.h>
 #include <QtWidgets/qtoolbar.h>

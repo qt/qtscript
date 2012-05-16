@@ -43,7 +43,7 @@
 #include "qscriptsyntaxhighlighter_p.h"
 
 #include <QtGui/qpainter.h>
-#include <QtWidgets/qicon.h>
+#include <QtGui/qicon.h>
 #include <QtWidgets/qboxlayout.h>
 #include <QtWidgets/qlabel.h>
 #include <QtWidgets/qlineedit.h>
