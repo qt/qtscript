@@ -5020,13 +5020,11 @@ void tst_QScriptEngine::translateScript_data()
     QTest::newRow("eval('qsTranslate(\\'FooContext\\', \\'Goodbye\\')')@translatable.js")
             << QString::fromLatin1("eval('qsTranslate(\\'FooContext\\', \\'Goodbye\\')')") << fileName << QString::fromLatin1("Farvel");
 
-    QTest::newRow("qsTranslate('FooContext', 'Goodbye', '', 'UnicodeUTF8')@translatable.js")
-            << QString::fromLatin1("qsTranslate('FooContext', 'Goodbye', '', 'UnicodeUTF8')") << fileName << QString::fromLatin1("Farvel");
-    QTest::newRow("qsTranslate('FooContext', 'Goodbye', '', 'CodecForTr')@translatable.js")
-            << QString::fromLatin1("qsTranslate('FooContext', 'Goodbye', '', 'CodecForTr')") << fileName << QString::fromLatin1("Farvel");
+    QTest::newRow("qsTranslate('FooContext', 'Goodbye', '')@translatable.js")
+            << QString::fromLatin1("qsTranslate('FooContext', 'Goodbye', '')") << fileName << QString::fromLatin1("Farvel");
 
-    QTest::newRow("qsTranslate('FooContext', 'Goodbye', '', 'UnicodeUTF8', 42)@translatable.js")
-            << QString::fromLatin1("qsTranslate('FooContext', 'Goodbye', '', 'UnicodeUTF8', 42)") << fileName << QString::fromLatin1("Goodbye");
+    QTest::newRow("qsTranslate('FooContext', 'Goodbye', '', 42)@translatable.js")
+            << QString::fromLatin1("qsTranslate('FooContext', 'Goodbye', '', 42)") << fileName << QString::fromLatin1("Goodbye");
 
     QTest::newRow("qsTr('One', 'not the same one')@translatable.js")
             << QString::fromLatin1("qsTr('One', 'not the same one')") << fileName << QString::fromLatin1("Enda en");
@@ -5035,10 +5033,10 @@ void tst_QScriptEngine::translateScript_data()
             << QString::fromLatin1("qsTr('One', 'not the same one', 42)") << fileName << QString::fromLatin1("One");
 
     // Plural
-    QTest::newRow("qsTranslate('FooContext', '%n fooish bar(s) found', '', 'UnicodeUTF8', 1)@translatable.js")
-            << QString::fromLatin1("qsTranslate('FooContext', '%n fooish bar(s) found', '', 'UnicodeUTF8', 1)") << fileName << QString::fromLatin1("1 fooaktig bar funnet");
-    QTest::newRow("qsTranslate('FooContext', '%n fooish bar(s) found', '', 'UnicodeUTF8', 2)@translatable.js")
-            << QString::fromLatin1("qsTranslate('FooContext', '%n fooish bar(s) found', '', 'UnicodeUTF8', 2)") << fileName << QString::fromLatin1("2 fooaktige barer funnet");
+    QTest::newRow("qsTranslate('FooContext', '%n fooish bar(s) found', '', 1)@translatable.js")
+            << QString::fromLatin1("qsTranslate('FooContext', '%n fooish bar(s) found', '', 1)") << fileName << QString::fromLatin1("1 fooaktig bar funnet");
+    QTest::newRow("qsTranslate('FooContext', '%n fooish bar(s) found', '', 2)@translatable.js")
+            << QString::fromLatin1("qsTranslate('FooContext', '%n fooish bar(s) found', '', 2)") << fileName << QString::fromLatin1("2 fooaktige barer funnet");
 
     // Don't exist in translation
     QTest::newRow("qsTr('Three')@translatable.js")
@@ -5168,9 +5166,7 @@ void tst_QScriptEngine::translateWithInvalidArgs_data()
     QTest::newRow("qsTranslate(123, 'foo')")  << "qsTranslate(123, 'foo')" << "Error: qsTranslate(): first argument (context) must be a string";
     QTest::newRow("qsTranslate('foo', 123)")  << "qsTranslate('foo', 123)" << "Error: qsTranslate(): second argument (text) must be a string";
     QTest::newRow("qsTranslate('foo', 'bar', 123)")  << "qsTranslate('foo', 'bar', 123)" << "Error: qsTranslate(): third argument (comment) must be a string";
-    QTest::newRow("qsTranslate('foo', 'bar', 'baz', 123)")  << "qsTranslate('foo', 'bar', 'baz', 123)" << "Error: qsTranslate(): fourth argument (encoding) must be a string";
     QTest::newRow("qsTranslate('foo', 'bar', 'baz', 'zab', 'rab')")  << "qsTranslate('foo', 'bar', 'baz', 'zab', 'rab')" << "Error: qsTranslate(): fifth argument (n) must be a number";
-    QTest::newRow("qsTranslate('foo', 'bar', 'baz', 'zab', 123)")  << "qsTranslate('foo', 'bar', 'baz', 'zab', 123)" << "Error: qsTranslate(): invalid encoding 'zab'";
 
     QTest::newRow("qsTrId()")  << "qsTrId()" << "Error: qsTrId() requires at least one argument";
     QTest::newRow("qsTrId(123)")  << "qsTrId(123)" << "TypeError: qsTrId(): first argument (id) must be a string";

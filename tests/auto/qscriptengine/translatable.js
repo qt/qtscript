@@ -9,4 +9,4 @@ var greeting_strings = [
 qsTr("One", "not the same one");
 
 qsTr("%n message(s) saved", "", 10);
-qsTranslate("FooContext", "%n fooish bar(s) found", "", "UnicodeUTF8", 10);
+qsTranslate("FooContext", "%n fooish bar(s) found", "", 10);

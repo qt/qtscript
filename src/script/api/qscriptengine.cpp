@@ -800,10 +800,23 @@ JSC::JSValue JSC_HOST_CALL functionQsTranslate(JSC::ExecState *exec, JSC::JSObje
         return JSC::throwError(exec, JSC::GeneralError, "qsTranslate(): second argument (text) must be a string");
     if ((args.size() > 2) && !args.at(2).isString())
         return JSC::throwError(exec, JSC::GeneralError, "qsTranslate(): third argument (comment) must be a string");
-    if ((args.size() > 3) && !args.at(3).isString())
-        return JSC::throwError(exec, JSC::GeneralError, "qsTranslate(): fourth argument (encoding) must be a string");
-    if ((args.size() > 4) && !args.at(4).isNumber())
-        return JSC::throwError(exec, JSC::GeneralError, "qsTranslate(): fifth argument (n) must be a number");
+
+    int n = -1;
+    if ((args.size() > 3)) {
+        if (args.at(3).isString()) {
+            qWarning("qsTranslate(): specifying the encoding as fourth argument is deprecated");
+            if (args.size() > 4) {
+                if (args.at(4).isNumber())
+                    n = args.at(4).toInt32(exec);
+                else
+                    return JSC::throwError(exec, JSC::GeneralError, "qsTranslate(): fifth argument (n) must be a number");
+            }
+        } else if (args.at(3).isNumber()) {
+            n = args.at(3).toInt32(exec);
+        } else {
+            return JSC::throwError(exec, JSC::GeneralError, "qsTranslate(): fourth argument (n) must be a number");
+        }
+    }
 #ifndef QT_NO_QOBJECT
     JSC::UString context = args.at(0).toString(exec);
 #endif
@@ -812,26 +825,13 @@ JSC::JSValue JSC_HOST_CALL functionQsTranslate(JSC::ExecState *exec, JSC::JSObje
     JSC::UString comment;
     if (args.size() > 2)
         comment = args.at(2).toString(exec);
-    QCoreApplication::Encoding encoding = QCoreApplication::UnicodeUTF8;
-    if (args.size() > 3) {
-        JSC::UString encStr = args.at(3).toString(exec);
-        if (encStr == "CodecForTr")
-            encoding = QCoreApplication::DefaultCodec;
-        else if (encStr == "UnicodeUTF8")
-            encoding = QCoreApplication::UnicodeUTF8;
-        else
-            return JSC::throwError(exec, JSC::GeneralError, QString::fromLatin1("qsTranslate(): invalid encoding '%0'").arg(encStr));
-    }
-    int n = -1;
-    if (args.size() > 4)
-        n = args.at(4).toInt32(exec);
 #endif
     JSC::UString result;
 #ifndef QT_NO_QOBJECT
     result = QCoreApplication::translate(context.UTF8String().c_str(),
                                          text.UTF8String().c_str(),
                                          comment.UTF8String().c_str(),
-                                         encoding, n);
+                                         n);
 #else
     result = text;
 #endif
@@ -886,7 +886,7 @@ JSC::JSValue JSC_HOST_CALL functionQsTr(JSC::ExecState *exec, JSC::JSObject*, JS
     result = QCoreApplication::translate(context.UTF8String().c_str(),
                                          text.UTF8String().c_str(),
                                          comment.UTF8String().c_str(),
-                                         QCoreApplication::UnicodeUTF8, n);
+                                         n);
 #else
     result = text;
 #endif
