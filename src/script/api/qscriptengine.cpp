@@ -1050,8 +1050,8 @@ QVariant QScriptEnginePrivate::jscValueToVariant(JSC::ExecState *exec, JSC::JSVa
         return v;
     if (isVariant(value)) {
         v = variantValue(value);
-        if (v.canConvert(QVariant::Type(targetType))) {
-            v.convert(QVariant::Type(targetType));
+        if (v.canConvert(targetType)) {
+            v.convert(targetType);
             return v;
         }
         QByteArray typeName = v.typeName();

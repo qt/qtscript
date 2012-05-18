@@ -603,9 +603,9 @@ static JSC::JSValue callQtMethod(JSC::ExecState *exec, QMetaMethod::MethodType c
                     if (tid == -1)
                         tid = argType.typeId();
                     QVariant vv = QScriptEnginePrivate::variantValue(actual);
-                    if (vv.canConvert(QVariant::Type(tid))) {
+                    if (vv.canConvert(tid)) {
                         v = vv;
-                        converted = v.convert(QVariant::Type(tid));
+                        converted = v.convert(tid);
                         if (converted && (vv.userType() != tid))
                             matchDistance += 10;
                     } else {
