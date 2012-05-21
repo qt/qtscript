@@ -1,6 +1,7 @@
 load(qt_module)
 
 TARGET  = qtscriptdbus
+DESTDIR = $$QT.script.plugins/script
 load(qt_plugin)
 QT = core gui script
 CONFIG += qdbus
@@ -8,6 +9,5 @@ CONFIG += qdbus
 SOURCES += main.cpp
 HEADERS += main.h
 
-DESTDIR = $$QT_BUILD_TREE/plugins/script
 target.path += $$[QT_INSTALL_PLUGINS]/script
 INSTALLS += target
