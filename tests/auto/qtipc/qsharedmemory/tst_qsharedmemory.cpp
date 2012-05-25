@@ -710,7 +710,8 @@ void tst_QSharedMemory::simpleThreadedProducerConsumer()
 
     p.wait(5000);
     while (!consumers.isEmpty()) {
-        QVERIFY(consumers.first()->wait(5000));
+        Consumer *c = consumers.first();
+        QVERIFY(c->isFinished() || c->wait(5000));
         delete consumers.takeFirst();
     }
 }
