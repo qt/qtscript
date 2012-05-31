@@ -3515,7 +3515,7 @@ void tst_QScriptEngine::abortEvaluation_fromNative()
 }
 
 class ThreadedEngine : public QThread {
-    Q_OBJECT;
+    Q_OBJECT
 
 private:
     QScriptEngine* m_engine;
