@@ -173,12 +173,16 @@ int QScriptEdit::currentLineNumber() const
 
 void QScriptEdit::gotoLine(int lineNumber)
 {
+#ifndef QT_NO_SYNTAXHIGHLIGHTER
     int blockNumber = lineNumber - m_baseLineNumber;
     const QTextBlock &block = document()->findBlockByNumber(blockNumber);
     if (block.isValid()) {
         setTextCursor(QTextCursor(block));
         centerCursor();
     }
+#else
+    Q_UNUSED(lineNumber);
+#endif
 }
 
 void QScriptEdit::setBreakpoint(int lineNumber)
@@ -259,8 +263,10 @@ void QScriptEdit::updateExtraSelections()
             lineColor = QColor(Qt::green).lighter(160);
         selection.format.setBackground(lineColor);
         selection.format.setProperty(QTextFormat::FullWidthSelection, true);
+#ifndef QT_NO_SYNTAXHIGHLIGHTER
         int blockNumber = m_executionLineNumber - m_baseLineNumber;
         selection.cursor = QTextCursor(document()->findBlockByNumber(blockNumber));
+#endif
         selection.cursor.clearSelection();
         extraSelections.append(selection);
     }
@@ -318,6 +324,7 @@ void QScriptEdit::extraAreaPaintEvent(QPaintEvent *e)
         painter.drawLine(rect.x(), rect.top(), rect.x(), rect.bottom());
     painter.setRenderHint(QPainter::Antialiasing);
 
+#ifndef QT_NO_SYNTAXHIGHLIGHTER
     QTextBlock block = firstVisibleBlock();
     int blockNumber = block.blockNumber();
     qreal top = blockBoundingGeometry(block).translated(contentOffset()).top();
@@ -366,12 +373,15 @@ void QScriptEdit::extraAreaPaintEvent(QPaintEvent *e)
         bottom = top + blockBoundingRect(block).height();
         ++blockNumber;
     }
+#endif
 }
 
 void QScriptEdit::extraAreaMouseEvent(QMouseEvent *e)
 {
     QTextCursor cursor = cursorForPosition(QPoint(0, e->pos().y()));
+#ifndef QT_NO_SYNTAXHIGHLIGHTER
     cursor.setPosition(cursor.block().position());
+#endif
 
     QFontMetrics fm(font());
     int markWidth = fm.lineSpacing();

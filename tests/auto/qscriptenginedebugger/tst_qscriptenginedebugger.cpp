@@ -245,18 +245,24 @@ void tst_QScriptEngineDebugger::standardObjects()
 
     QMenu *menu = debugger.createStandardMenu();
     QCOMPARE(static_cast<QWidget *>(menu->parent()), (QWidget*)0);
+#ifndef QT_NO_TOOLBAR
     QToolBar *toolBar = debugger.createStandardToolBar();
     QCOMPARE(static_cast<QWidget *>(toolBar->parent()), (QWidget*)0);
+#endif
 
     QMenu *menu2 = debugger.createStandardMenu(win);
     QCOMPARE(static_cast<QWidget *>(menu2->parent()), (QWidget*)win);
     QVERIFY(menu2 != menu);
+#ifndef QT_NO_TOOLBAR
     QToolBar *toolBar2 = debugger.createStandardToolBar(win);
     QCOMPARE(static_cast<QWidget *>(toolBar2->parent()), (QWidget*)win);
     QVERIFY(toolBar2 != toolBar);
+#endif
 
     delete menu;
+#ifndef QT_NO_TOOLBAR
     delete toolBar;
+#endif
 }
 
 void tst_QScriptEngineDebugger::debuggerSignals()

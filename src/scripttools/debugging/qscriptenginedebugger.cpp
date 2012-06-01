@@ -518,6 +518,7 @@ QMainWindow *QScriptEngineDebugger::standardWindow() const
     QScriptEngineDebugger *that = const_cast<QScriptEngineDebugger*>(this);
 
     QMainWindow *win = new QMainWindow();
+#ifndef QT_NO_DOCKWIDGET
     QDockWidget *scriptsDock = new QDockWidget(win);
     scriptsDock->setObjectName(QLatin1String("qtscriptdebugger_scriptsDockWidget"));
     scriptsDock->setWindowTitle(tr("Loaded Scripts"));
@@ -562,8 +563,11 @@ QMainWindow *QScriptEngineDebugger::standardWindow() const
 
     win->tabifyDockWidget(errorLogDock, debugOutputDock);
     win->tabifyDockWidget(debugOutputDock, consoleDock);
+#endif
 
+#ifndef QT_NO_TOOLBAR
     win->addToolBar(Qt::TopToolBarArea, that->createStandardToolBar());
+#endif
 
 #ifndef QT_NO_MENUBAR
     win->menuBar()->addMenu(that->createStandardMenu(win));
@@ -575,6 +579,7 @@ QMainWindow *QScriptEngineDebugger::standardWindow() const
     editMenu->addSeparator();
     editMenu->addAction(action(GoToLineAction));
 
+#ifndef QT_NO_DOCKWIDGET
     QMenu *viewMenu = win->menuBar()->addMenu(tr("View"));
     viewMenu->addAction(scriptsDock->toggleViewAction());
     viewMenu->addAction(breakpointsDock->toggleViewAction());
@@ -583,6 +588,7 @@ QMainWindow *QScriptEngineDebugger::standardWindow() const
     viewMenu->addAction(consoleDock->toggleViewAction());
     viewMenu->addAction(debugOutputDock->toggleViewAction());
     viewMenu->addAction(errorLogDock->toggleViewAction());
+#endif
 #endif
 
     QWidget *central = new QWidget();
@@ -594,7 +600,9 @@ QMainWindow *QScriptEngineDebugger::standardWindow() const
     win->setCentralWidget(central);
 
     win->setWindowTitle(tr("Qt Script Debugger"));
+#ifndef QT_NO_TOOLBAR
     win->setUnifiedTitleAndToolBarOnMac(true);
+#endif
 
     QSettings settings(QSettings::UserScope, QLatin1String("Trolltech"));
     QVariant geometry = settings.value(QLatin1String("Qt/scripttools/debugging/mainWindowGeometry"));

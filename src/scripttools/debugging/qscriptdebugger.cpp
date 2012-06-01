@@ -881,6 +881,7 @@ void QScriptDebuggerPrivate::_q_goToLine()
     QScriptDebuggerCodeViewInterface *view = codeWidget->currentView();
     if (!view)
         return;
+#ifndef QT_NO_INPUTDIALOG
     bool ok = false;
     int lineNumber = QInputDialog::getInt(0, QScriptDebugger::tr("Go to Line"),
                                           QScriptDebugger::tr("Line:"),
@@ -888,6 +889,7 @@ void QScriptDebuggerPrivate::_q_goToLine()
                                           1, INT_MAX, 1, &ok);
     if (ok)
         view->gotoLine(lineNumber);
+#endif
 }
 
 class QScriptDebuggerShowLineJob : public QScriptDebuggerCommandSchedulerJob
@@ -1676,7 +1678,9 @@ QAction *QScriptDebugger::interruptAction(QObject *parent) const
         QScriptDebugger *that = const_cast<QScriptDebugger*>(this);
         that->d_func()->interruptAction = new QAction(interruptIcon, QScriptDebugger::tr("Interrupt"), parent);
         d->interruptAction->setEnabled(!d->interactive);
+#ifndef QT_NO_SHORTCUT
         d->interruptAction->setShortcut(QScriptDebugger::tr("Shift+F5"));
+#endif
         QObject::connect(d->interruptAction, SIGNAL(triggered()),
                          that, SLOT(_q_interrupt()));
     }
@@ -1693,7 +1697,9 @@ QAction *QScriptDebugger::continueAction(QObject *parent) const
         QScriptDebugger *that = const_cast<QScriptDebugger*>(this);
         that->d_func()->continueAction = new QAction(continueIcon, QScriptDebugger::tr("Continue"), parent);
         d->continueAction->setEnabled(d->interactive);
+#ifndef QT_NO_SHORTCUT
         d->continueAction->setShortcut(QScriptDebugger::tr("F5"));
+#endif
         QObject::connect(d->continueAction, SIGNAL(triggered()),
                          that, SLOT(_q_continue()));
     }
@@ -1710,7 +1716,9 @@ QAction *QScriptDebugger::stepIntoAction(QObject *parent) const
         QScriptDebugger *that = const_cast<QScriptDebugger*>(this);
         that->d_func()->stepIntoAction = new QAction(stepIntoIcon, QScriptDebugger::tr("Step Into"), parent);
         d->stepIntoAction->setEnabled(d->interactive);
+#ifndef QT_NO_SHORTCUT
         d->stepIntoAction->setShortcut(QScriptDebugger::tr("F11"));
+#endif
         QObject::connect(d->stepIntoAction, SIGNAL(triggered()),
                          that, SLOT(_q_stepInto()));
     }
@@ -1727,7 +1735,9 @@ QAction *QScriptDebugger::stepOverAction(QObject *parent) const
         QScriptDebugger *that = const_cast<QScriptDebugger*>(this);
         that->d_func()->stepOverAction = new QAction(stepOverIcon, QScriptDebugger::tr("Step Over"), parent);
         d->stepOverAction->setEnabled(d->interactive);
+#ifndef QT_NO_SHORTCUT
         d->stepOverAction->setShortcut(QScriptDebugger::tr("F10"));
+#endif
         QObject::connect(d->stepOverAction, SIGNAL(triggered()),
                          that, SLOT(_q_stepOver()));
     }
@@ -1744,7 +1754,9 @@ QAction *QScriptDebugger::stepOutAction(QObject *parent) const
         QScriptDebugger *that = const_cast<QScriptDebugger*>(this);
         that->d_func()->stepOutAction = new QAction(stepOutIcon, QScriptDebugger::tr("Step Out"), parent);
         d->stepOutAction->setEnabled(d->interactive);
+#ifndef QT_NO_SHORTCUT
         d->stepOutAction->setShortcut(QScriptDebugger::tr("Shift+F11"));
+#endif
         QObject::connect(d->stepOutAction, SIGNAL(triggered()),
                          that, SLOT(_q_stepOut()));
     }
@@ -1761,7 +1773,9 @@ QAction *QScriptDebugger::runToCursorAction(QObject *parent) const
         QScriptDebugger *that = const_cast<QScriptDebugger*>(this);
         that->d_func()->runToCursorAction = new QAction(runToCursorIcon, QScriptDebugger::tr("Run to Cursor"), parent);
         d->runToCursorAction->setEnabled(d->interactive);
+#ifndef QT_NO_SHORTCUT
         d->runToCursorAction->setShortcut(QScriptDebugger::tr("Ctrl+F10"));
+#endif
         QObject::connect(d->runToCursorAction, SIGNAL(triggered()),
                          that, SLOT(_q_runToCursor()));
     }
@@ -1793,7 +1807,9 @@ QAction *QScriptDebugger::toggleBreakpointAction(QObject *parent) const
         QScriptDebugger *that = const_cast<QScriptDebugger*>(this);
         that->d_func()->toggleBreakpointAction = new QAction(toggleBreakpointIcon,
                                                              QScriptDebugger::tr("Toggle Breakpoint"), parent);
+#ifndef QT_NO_SHORTCUT
         d->toggleBreakpointAction->setShortcut(QScriptDebugger::tr("F9"));
+#endif
         d->toggleBreakpointAction->setEnabled((d->codeWidget != 0) && (d->codeWidget->currentView() != 0));
         QObject::connect(d->toggleBreakpointAction, SIGNAL(triggered()),
                          that, SLOT(_q_toggleBreakpoint()));
@@ -1848,7 +1864,9 @@ QAction *QScriptDebugger::findInScriptAction(QObject *parent) const
         findInScriptIcon.addPixmap(d->pixmap(QString::fromLatin1("find.png")), QIcon::Normal);
         QScriptDebugger *that = const_cast<QScriptDebugger*>(this);
         that->d_func()->findInScriptAction = new QAction(findInScriptIcon, QScriptDebugger::tr("&Find in Script..."), parent);
+#ifndef QT_NO_SHORTCUT
         d->findInScriptAction->setShortcut(QScriptDebugger::tr("Ctrl+F"));
+#endif
         d->findInScriptAction->setEnabled(
             (d->codeFinderWidget != 0)
             && (d->codeWidget != 0)
@@ -1867,7 +1885,9 @@ QAction *QScriptDebugger::findNextInScriptAction(QObject *parent) const
         QScriptDebugger *that = const_cast<QScriptDebugger*>(this);
         that->d_func()->findNextInScriptAction = new QAction(findNextInScriptIcon, QScriptDebugger::tr("Find &Next"), parent);
         d->findNextInScriptAction->setEnabled(d->codeFinderWidget && !d->codeFinderWidget->text().isEmpty());
+#ifndef QT_NO_SHORTCUT
         d->findNextInScriptAction->setShortcut(QScriptDebugger::tr("F3"));
+#endif
         QObject::connect(d->findNextInScriptAction, SIGNAL(triggered()),
                          that, SLOT(_q_findNextInScript()));
     }
@@ -1882,7 +1902,9 @@ QAction *QScriptDebugger::findPreviousInScriptAction(QObject *parent) const
         QScriptDebugger *that = const_cast<QScriptDebugger*>(this);
         that->d_func()->findPreviousInScriptAction = new QAction(findPreviousInScriptIcon, QScriptDebugger::tr("Find &Previous"), parent);
         d->findPreviousInScriptAction->setEnabled(d->codeFinderWidget && !d->codeFinderWidget->text().isEmpty());
+#ifndef QT_NO_SHORTCUT
         d->findPreviousInScriptAction->setShortcut(QScriptDebugger::tr("Shift+F3"));
+#endif
         QObject::connect(d->findPreviousInScriptAction, SIGNAL(triggered()),
                          that, SLOT(_q_findPreviousInScript()));
     }
@@ -1896,7 +1918,9 @@ QAction *QScriptDebugger::goToLineAction(QObject *parent) const
         QIcon goToLineIcon;
         QScriptDebugger *that = const_cast<QScriptDebugger*>(this);
         that->d_func()->goToLineAction = new QAction(goToLineIcon, QScriptDebugger::tr("Go to Line"), parent);
+#ifndef QT_NO_SHORTCUT
         d->goToLineAction->setShortcut(QScriptDebugger::tr("Ctrl+G"));
+#endif
         d->goToLineAction->setEnabled((d->codeWidget != 0) && (d->codeWidget->currentView() != 0));
         QObject::connect(d->goToLineAction, SIGNAL(triggered()),
                          that, SLOT(_q_goToLine()));

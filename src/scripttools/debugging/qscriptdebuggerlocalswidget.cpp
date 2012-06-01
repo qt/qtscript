@@ -156,6 +156,7 @@ void QScriptDebuggerLocalsWidgetPrivate::_q_onCompletionTaskFinished()
             QObject::connect(completer, SIGNAL(activated(QString)),
                              q, SLOT(_q_insertCompletion(QString)));
         }
+#ifndef QT_NO_STRINGLISTMODEL
         QStringListModel *model = qobject_cast<QStringListModel*>(completer->model());
         if (!model) {
             model = new QStringListModel(q);
@@ -165,6 +166,7 @@ void QScriptDebuggerLocalsWidgetPrivate::_q_onCompletionTaskFinished()
         for (int i = 0; i < task->resultCount(); ++i)
             strings.append(task->resultAt(i));
         model->setStringList(strings);
+#endif
         QString prefix = completingEditor->text().mid(task->position(), task->length());
         completer->setCompletionPrefix(prefix);
         completingEditor->setCompleter(completer);
