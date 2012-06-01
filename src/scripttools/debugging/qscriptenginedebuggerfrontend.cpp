@@ -201,7 +201,8 @@ QScriptEngineDebuggerBackend::~QScriptEngineDebuggerBackend()
 void QScriptEngineDebuggerBackend::processCommand(int id, const QScriptDebuggerCommand &command)
 {
     Q_D(QScriptEngineDebuggerBackend);
-    d->postEvent(new QScriptDebuggerCommandEvent(id, command));
+    if (d->agent)
+        d->postEvent(new QScriptDebuggerCommandEvent(id, command));
 }
 
 /*!

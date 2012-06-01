@@ -154,6 +154,7 @@ void QScriptDebuggerBackendPrivate::postEvent(QEvent *e)
 {
     if (!eventReceiver) {
         eventReceiver = new QScriptDebuggerBackendEventReceiver(this);
+        Q_ASSERT(agent != 0);
         eventReceiver->moveToThread(agent->engine()->thread());
     }
     QCoreApplication::postEvent(eventReceiver, e);

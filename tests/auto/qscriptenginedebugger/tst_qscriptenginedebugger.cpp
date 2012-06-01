@@ -82,6 +82,7 @@ private slots:
     void multithreadedDebugging();
     void autoShowStandardWindow();
     void standardWindowOwnership();
+    void engineDeleted();
 };
 
 tst_QScriptEngineDebugger::tst_QScriptEngineDebugger()
@@ -830,6 +831,23 @@ void tst_QScriptEngineDebugger::standardWindowOwnership()
         win->setParent(&widget);
     }
     QVERIFY(win != 0);
+}
+
+void tst_QScriptEngineDebugger::engineDeleted()
+{
+    QScriptEngine* engine = new QScriptEngine;
+    QScriptEngineDebugger *debugger = new QScriptEngineDebugger;
+    debugger->attachTo(engine);
+
+    debugger->standardWindow()->show();
+    QTest::qWaitForWindowShown(debugger->standardWindow());
+
+    QSignalSpy destroyedSpy(engine, SIGNAL(destroyed()));
+    engine->deleteLater();
+    QTRY_COMPARE(destroyedSpy.count(), 1);
+
+    // Shouldn't crash (QTBUG-21548)
+    debugger->action(QScriptEngineDebugger::ContinueAction)->trigger();
 }
 
 QTEST_MAIN(tst_QScriptEngineDebugger)
