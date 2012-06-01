@@ -50,6 +50,7 @@
 #include "bridge/qscriptobject_p.h"
 #include "bridge/qscriptqobject_p.h"
 #include "bridge/qscriptvariant_p.h"
+#include "bridge/qscriptactivationobject_p.h"
 
 #include "DateConstructor.h"
 #include "DateInstance.h"
@@ -1070,6 +1071,9 @@ inline QObject *QScriptEnginePrivate::toQObject(JSC::ExecState *exec, JSC::JSVal
             if (QMetaType::typeFlags(type) & QMetaType::PointerToQObject)
                 return *reinterpret_cast<QObject* const *>(var.constData());
         }
+    } else if (isObject(value) && value.inherits(&QScript::QScriptActivationObject::info)) {
+        QScript::QScriptActivationObject *proxy = static_cast<QScript::QScriptActivationObject *>(JSC::asObject(value));
+        return toQObject(exec, proxy->delegate());
     }
 #endif
     return 0;

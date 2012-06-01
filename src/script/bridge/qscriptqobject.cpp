@@ -32,6 +32,7 @@
 #include "../api/qscriptable_p.h"
 #include "../api/qscriptcontext_p.h"
 #include "qscriptfunction_p.h"
+#include "qscriptactivationobject_p.h"
 
 #include "Error.h"
 #include "PrototypeFunction.h"
