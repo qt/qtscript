@@ -52,7 +52,7 @@ QT_BEGIN_NAMESPACE
   beginning of the sequence of properties. Here's how to iterate over
   all the properties of a QScriptValue:
 
-  \snippet doc/src/snippets/code/src_script_qscriptvalueiterator.cpp 0
+  \snippet code/src_script_qscriptvalueiterator.cpp 0
 
   The next() advances the iterator. The name(), value() and flags()
   functions return the name, value and flags of the last item that was
@@ -66,14 +66,14 @@ QT_BEGIN_NAMESPACE
   own properties; i.e. it does not follow the prototype chain. You can
   use a loop like this to follow the prototype chain:
 
-  \snippet doc/src/snippets/code/src_script_qscriptvalueiterator.cpp 1
+  \snippet code/src_script_qscriptvalueiterator.cpp 1
 
   Note that QScriptValueIterator will not automatically skip over
   properties that have the QScriptValue::SkipInEnumeration flag set;
   that flag only affects iteration in script code.  If you want, you
   can skip over such properties with code like the following:
 
-  \snippet doc/src/snippets/code/src_script_qscriptvalueiterator.cpp 2
+  \snippet code/src_script_qscriptvalueiterator.cpp 2
 
   \sa QScriptValue::property()
 */

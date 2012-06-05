@@ -56,7 +56,7 @@ QT_BEGIN_NAMESPACE
   QScriptEngine::newFunction()) that will be called from script
   code. For example, when the script code
 
-  \snippet doc/src/snippets/code/src_script_qscriptcontext.cpp 0
+  \snippet code/src_script_qscriptcontext.cpp 0
 
   is evaluated, a QScriptContext will be created, and the context will
   carry the arguments as QScriptValues; in this particular case, the
@@ -76,7 +76,7 @@ QT_BEGIN_NAMESPACE
   native "instance method", you typically fetch the thisObject() and access
   one or more of its properties:
 
-  \snippet doc/src/snippets/code/src_script_qscriptcontext.cpp 1
+  \snippet code/src_script_qscriptcontext.cpp 1
 
   Use isCalledAsConstructor() to determine if the function was called
   as a constructor (e.g. \c{"new foo()"} (as constructor) or just
@@ -100,7 +100,7 @@ QT_BEGIN_NAMESPACE
   evaluated in the context of the parent context, e.g. to implement an
   include() function:
 
-  \snippet doc/src/snippets/code/src_script_qscriptcontext.cpp 2
+  \snippet code/src_script_qscriptcontext.cpp 2
 
   Use backtrace() to get a human-readable backtrace associated with
   this context. This can be useful for debugging purposes when

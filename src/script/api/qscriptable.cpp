@@ -65,7 +65,7 @@ QT_BEGIN_NAMESPACE
   The following is what subclassing QScriptable typically looks
   like:
 
-  \snippet doc/src/snippets/code/src_script_qscriptable.cpp 0
+  \snippet code/src_script_qscriptable.cpp 0
 
   The only difference from regular QObject subclassing is that you
   also inherit from QScriptable.
@@ -73,7 +73,7 @@ QT_BEGIN_NAMESPACE
   In the implementation of your slots, you can then use the functions
   inherited from QScriptable:
 
-  \snippet doc/src/snippets/code/src_script_qscriptable.cpp 1
+  \snippet code/src_script_qscriptable.cpp 1
 
   \sa {Default Prototypes Example}, QScriptEngine::newFunction()
 */

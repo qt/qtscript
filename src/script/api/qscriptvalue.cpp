@@ -71,7 +71,7 @@
   QScriptValues. Use setProperty() to set a property of an object, and
   call property() to retrieve the value of a property.
 
-  \snippet doc/src/snippets/code/src_script_qscriptvalue.cpp 0
+  \snippet code/src_script_qscriptvalue.cpp 0
 
   Each property can have a set of attributes; these are specified as
   the third (optional) argument to setProperty(). The attributes of a
@@ -79,7 +79,7 @@
   following code snippet creates a property that cannot be modified by
   script code:
 
-  \snippet doc/src/snippets/code/src_script_qscriptvalue.cpp 1
+  \snippet code/src_script_qscriptvalue.cpp 1
 
   If you want to iterate over the properties of a script object, use
   the QScriptValueIterator class.
@@ -1551,7 +1551,7 @@ QScriptValue::PropertyFlags QScriptValue::propertyFlags(const QScriptString &nam
   QScriptEngine::hasUncaughtException() to determine if an exception
   occurred.
 
-  \snippet doc/src/snippets/code/src_script_qscriptvalue.cpp 2
+  \snippet code/src_script_qscriptvalue.cpp 2
 
   \sa construct()
 */
@@ -1629,7 +1629,7 @@ QScriptValue QScriptValue::call(const QScriptValue &thisObject,
   One common usage of this function is to forward native function
   calls to another function:
 
-  \snippet doc/src/snippets/code/src_script_qscriptvalue.cpp 3
+  \snippet code/src_script_qscriptvalue.cpp 3
 
   \sa construct(), QScriptContext::argumentsObject()
 */

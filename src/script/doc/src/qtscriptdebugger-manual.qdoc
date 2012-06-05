@@ -55,7 +55,7 @@
 
   \list
     \li The \c{debugger} statement is encountered in the script.
-    \li Clicking the \gui Interrupt menu item from the \gui Debug
+    \li Clicking the \uicontrol Interrupt menu item from the \uicontrol Debug
         menu in the main window.
     \li A breakpoint is reached.
     \li An uncaught script exception is thrown.
@@ -66,7 +66,7 @@
   stack shown. New breakpoints can be set.
 
   The debugger will resume, i.e., give the control back to the script
-  engine, when the user clicks \gui Continue menu item from the \gui
+  engine, when the user clicks \uicontrol Continue menu item from the \uicontrol
   Debug menu. It will be invoked again if one of the conditions
   described in the list above is met.
 

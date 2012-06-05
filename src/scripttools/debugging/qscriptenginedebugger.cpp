@@ -86,7 +86,7 @@ public:
   To attach the debugger to a script engine, call the attachTo()
   function.
 
-  \snippet doc/src/snippets/code/src.scripttools.qscriptenginedebugger.cpp 0
+  \snippet code/src.scripttools.qscriptenginedebugger.cpp 0
 
   Once the debugger has been attached to a script engine, you can
   proceed to evaluate scripts as usual, e.g. by calling
@@ -98,7 +98,7 @@ public:
   you trigger the action before you begin to \l{QScriptEngine::}{evaluate()}
   the script.
 
-  \snippet doc/src/snippets/scriptdebugger.cpp 2
+  \snippet scriptdebugger.cpp 2
 
   By default, the \l{standardWindow()}{standard debugger window} is shown when
   evaluation is suspended.  This can be changed by calling the
@@ -140,7 +140,7 @@ public:
   the function call does not return until the user has finished
   interacting with the debugger.
 
-  \snippet doc/src/snippets/code/src.scripttools.qscriptenginedebugger.cpp 1
+  \snippet code/src.scripttools.qscriptenginedebugger.cpp 1
 
   When the Qt Script debugger is running, the C++ application itself
   is not "frozen". This means that it is possible that more scripts
@@ -431,7 +431,7 @@ QScriptEngineDebugger::DebuggerState QScriptEngineDebugger::state() const
     \l{QScriptEngineDebugger::CodeWidget}{code window} and a
     \l{QScriptEngineDebugger::StackWidget}{stack widget}.
 
-    \snippet doc/src/snippets/scriptdebugger.cpp 0
+    \snippet scriptdebugger.cpp 0
 
     Note that you need to set setAutoShowStandardWindow() to false; if
     not, the standard window will be shown regardless.
@@ -454,7 +454,7 @@ QWidget *QScriptEngineDebugger::widget(DebuggerWidget widget) const
     wish to spice things up with your own groovy icons. The code
     example below shows how to add actions to a QToolBar.
 
-    \snippet doc/src/snippets/scriptdebugger.cpp 1
+    \snippet scriptdebugger.cpp 1
 
     Note that QScriptEngineDebugger has already added the actions to
     its \l{DebuggerWidget}{standard widgets} and \l{standardWindow()}{standard window}.

@@ -357,7 +357,7 @@ bool QScriptClass::supportsExtension(Extension extension) const
   result of the function call. In the following example the sum of the
   arguments to the script function are added up and returned:
 
-  \snippet doc/src/snippets/code/src_script_qscriptclass.cpp 0
+  \snippet code/src_script_qscriptclass.cpp 0
 
   If you implement the HasInstance extension, Qt Script will call this
   function as part of evaluating the \c{instanceof} operator, as

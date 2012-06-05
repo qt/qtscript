@@ -21,6 +21,8 @@ HEADERS += qtscriptversion.h
 
 CONFIG += building-libs
 
+QMAKE_DOCS = $$PWD/doc/qtscript.qdocconf
+
 WEBKITDIR = $$PWD/../3rdparty/javascriptcore
 GENERATED_SOURCES_DIR = generated
 

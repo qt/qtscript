@@ -106,7 +106,7 @@ QT_BEGIN_NAMESPACE
   Use evaluate() to evaluate script code; this is the C++ equivalent
   of the built-in script function \c{eval()}.
 
-  \snippet doc/src/snippets/code/src_script_qscriptengine.cpp 0
+  \snippet code/src_script_qscriptengine.cpp 0
 
   evaluate() returns a QScriptValue that holds the result of the
   evaluation. The QScriptValue class provides functions for converting
@@ -116,13 +116,13 @@ QT_BEGIN_NAMESPACE
   The following code snippet shows how a script function can be
   defined and then invoked from C++ using QScriptValue::call():
 
-  \snippet doc/src/snippets/code/src_script_qscriptengine.cpp 1
+  \snippet code/src_script_qscriptengine.cpp 1
 
   As can be seen from the above snippets, a script is provided to the
   engine in the form of a string. One common way of loading scripts is
   by reading the contents of a file and passing it to evaluate():
 
-  \snippet doc/src/snippets/code/src_script_qscriptengine.cpp 2
+  \snippet code/src_script_qscriptengine.cpp 2
 
   Here we pass the name of the file as the second argument to
   evaluate().  This does not affect evaluation in any way; the second
@@ -139,7 +139,7 @@ QT_BEGIN_NAMESPACE
   want to configure a script engine by adding one or more properties
   to the Global Object:
 
-  \snippet doc/src/snippets/code/src_script_qscriptengine.cpp 3
+  \snippet code/src_script_qscriptengine.cpp 3
 
   Adding custom properties to the scripting environment is one of the
   standard means of providing a scripting API that is specific to your
@@ -159,7 +159,7 @@ QT_BEGIN_NAMESPACE
   Calling clearExceptions() will cause any uncaught exceptions to be
   cleared.
 
-  \snippet doc/src/snippets/code/src_script_qscriptengine.cpp 4
+  \snippet code/src_script_qscriptengine.cpp 4
 
   The checkSyntax() function can be used to determine whether code can be
   usefully passed to evaluate().
@@ -182,7 +182,7 @@ QT_BEGIN_NAMESPACE
   properties of the proxy object. No binding code is needed because it
   is done dynamically using the Qt meta object system.
 
-  \snippet doc/src/snippets/code/src_script_qscriptengine.cpp 5
+  \snippet code/src_script_qscriptengine.cpp 5
 
   Use qScriptConnect() to connect a C++ signal to a script function;
   this is the Qt Script equivalent of QObject::connect().  When a
@@ -243,17 +243,17 @@ QT_BEGIN_NAMESPACE
   argument to newFunction(). Here is an example of a function that
   returns the sum of its first two arguments:
 
-  \snippet doc/src/snippets/code/src_script_qscriptengine.cpp 6
+  \snippet code/src_script_qscriptengine.cpp 6
 
   To expose this function to script code, you can set it as a property
   of the Global Object:
 
-  \snippet doc/src/snippets/code/src_script_qscriptengine.cpp 7
+  \snippet code/src_script_qscriptengine.cpp 7
 
   Once this is done, script code can call your function in the exact
   same manner as a "normal" script function:
 
-  \snippet doc/src/snippets/code/src_script_qscriptengine.cpp 8
+  \snippet code/src_script_qscriptengine.cpp 8
 
   \section1 Long-running Scripts
 
@@ -2078,12 +2078,12 @@ QScriptValue QScriptEngine::undefinedValue()
   wrapping a custom type, by having registered the defaultPrototype()
   of that type. Example:
 
-  \snippet doc/src/snippets/code/src_script_qscriptengine.cpp 9
+  \snippet code/src_script_qscriptengine.cpp 9
 
   To wrap a custom type and provide a constructor for it, you'd typically
   do something like this:
 
-  \snippet doc/src/snippets/code/src_script_qscriptengine.cpp 10
+  \snippet code/src_script_qscriptengine.cpp 10
 */
 QScriptValue QScriptEngine::newFunction(QScriptEngine::FunctionSignature fun,
                                         const QScriptValue &prototype,
@@ -2336,7 +2336,7 @@ QScriptValue QScriptEngine::newActivationObject()
   functions (analogous to how properties work in \l{Qt's Property
   System}). Example:
 
-  \snippet doc/src/snippets/code/src_script_qscriptengine.cpp 11
+  \snippet code/src_script_qscriptengine.cpp 11
 
   When the property \c{foo} of the script object is subsequently
   accessed in script code, \c{getSetFoo()} will be invoked to handle
@@ -2351,7 +2351,7 @@ QScriptValue QScriptEngine::newActivationObject()
   (QScriptValue::PropertyGetter or QScriptValue::PropertySetter) when
   setting the property, e.g.:
 
-  \snippet doc/src/snippets/code/src_script_qscriptengine.cpp 12
+  \snippet code/src_script_qscriptengine.cpp 12
 
   \sa QScriptValue::call()
 */
@@ -2449,7 +2449,7 @@ QScriptValue QScriptEngine::newDate(const QDateTime &value)
 
   Example:
 
-  \snippet doc/src/snippets/code/src_script_qscriptengine.cpp 27
+  \snippet code/src_script_qscriptengine.cpp 27
 
   \sa newQObject(), scriptValueFromQMetaObject()
 */
@@ -2471,7 +2471,7 @@ QScriptValue QScriptEngine::newQMetaObject(
   This function is used in combination with one of the
   Q_SCRIPT_DECLARE_QMETAOBJECT() macro. Example:
 
-  \snippet doc/src/snippets/code/src_script_qscriptengine.cpp 13
+  \snippet code/src_script_qscriptengine.cpp 13
 
   \sa QScriptEngine::newQMetaObject()
 */
@@ -2525,27 +2525,27 @@ QScriptValue QScriptEngine::newQMetaObject(
   different results.)
 
   Given the input
-  \snippet doc/src/snippets/code/src_script_qscriptengine.cpp 14
+  \snippet code/src_script_qscriptengine.cpp 14
   canEvaluate() will return true, since the program appears to be complete.
 
   Given the input
-  \snippet doc/src/snippets/code/src_script_qscriptengine.cpp 15
+  \snippet code/src_script_qscriptengine.cpp 15
   canEvaluate() will return false, since the if-statement is not complete,
   but is syntactically correct so far.
 
   Given the input
-  \snippet doc/src/snippets/code/src_script_qscriptengine.cpp 16
+  \snippet code/src_script_qscriptengine.cpp 16
   canEvaluate() will return true, but evaluate() will throw a
   SyntaxError given the same input.
 
   Given the input
-  \snippet doc/src/snippets/code/src_script_qscriptengine.cpp 17
+  \snippet code/src_script_qscriptengine.cpp 17
   canEvaluate() will return true, even though the code is clearly not
   syntactically valid QtScript code. evaluate() will throw a
   SyntaxError when this code is evaluated.
 
   Given the input
-  \snippet doc/src/snippets/code/src_script_qscriptengine.cpp 18
+  \snippet code/src_script_qscriptengine.cpp 18
   canEvaluate() will return true, but evaluate() will throw a
   ReferenceError if \c{foo} is not defined in the script
   environment.
@@ -2695,7 +2695,7 @@ QScriptContext *QScriptEngine::currentContext() const
   \l{QScriptContext::activationObject()}{activationObject}() to initialize
   local variables that will be available to scripts. Example:
 
-  \snippet doc/src/snippets/code/src_script_qscriptengine.cpp 19
+  \snippet code/src_script_qscriptengine.cpp 19
 
   In the above example, the new variable "tmp" defined in the script
   will be local to the context; in other words, the script doesn't
@@ -3945,28 +3945,28 @@ QStringList QScriptEngine::importedExtensions() const
     specify custom conversion of our type \c{MyStruct}. Here's the C++
     type:
 
-    \snippet doc/src/snippets/code/src_script_qscriptengine.cpp 20
+    \snippet code/src_script_qscriptengine.cpp 20
 
     We must declare it so that the type will be known to QMetaType:
 
-    \snippet doc/src/snippets/code/src_script_qscriptengine.cpp 21
+    \snippet code/src_script_qscriptengine.cpp 21
 
     Next, the \c{MyStruct} conversion functions. We represent the
     \c{MyStruct} value as a script object and just copy the properties:
 
-    \snippet doc/src/snippets/code/src_script_qscriptengine.cpp 22
+    \snippet code/src_script_qscriptengine.cpp 22
 
     Now we can register \c{MyStruct} with the engine:
-    \snippet doc/src/snippets/code/src_script_qscriptengine.cpp 23
+    \snippet code/src_script_qscriptengine.cpp 23
 
     Working with \c{MyStruct} values is now easy:
-    \snippet doc/src/snippets/code/src_script_qscriptengine.cpp 24
+    \snippet code/src_script_qscriptengine.cpp 24
 
     If you want to be able to construct values of your custom type
     from script code, you have to register a constructor function for
     the type. For example:
 
-    \snippet doc/src/snippets/code/src_script_qscriptengine.cpp 25
+    \snippet code/src_script_qscriptengine.cpp 25
 
     \sa qScriptRegisterSequenceMetaType(), qRegisterMetaType()
 */
@@ -4006,7 +4006,7 @@ QStringList QScriptEngine::importedExtensions() const
     type, it must be declared using Q_DECLARE_METATYPE() as well.
     Example:
 
-    \snippet doc/src/snippets/code/src_script_qscriptengine.cpp 26
+    \snippet code/src_script_qscriptengine.cpp 26
 
     \sa qScriptRegisterMetaType()
 */

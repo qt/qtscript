@@ -1,0 +1,93 @@
+include(global/qt-html-templates-offline.qdocconf)
+include(global/qt-cpp-ignore.qdocconf)
+
+project                 = QtScript
+description             = Qt Script Reference Documentation
+url                     = http://qt-project.org/doc/qt-5.0/qtscript
+version                 = 5.0.0
+
+sourceencoding          = UTF-8
+outputencoding          = UTF-8
+naturallanguage         = en_US
+qhp.projects            = QtScript
+
+qhp.QtScript.file            = qtscript.qhp
+qhp.QtScript.namespace           = org.qt-project.qtscript.500
+qhp.QtScript.virtualFolder       = qdoc
+qhp.QtScript.indexTitle          = Qt Script Reference Documentation
+qhp.QtScript.indexRoot           =
+
+qhp.QtScript.filterAttributes    = qtscript 5.0.0 qtrefdoc
+qhp.QtScript.customFilters.Qt.name = QtScript 5.0.0
+qhp.QtScript.customFilters.Qt.filterAttributes = qtscript 5.0.0
+qhp.QtScript.subprojects         = classes overviews examples
+qhp.QtScript.subprojects.classes.title = Classes
+qhp.QtScript.subprojects.classes.indexTitle = Qt Script's Classes
+qhp.QtScript.subprojects.classes.selectors = class fake:headerfile
+qhp.QtScript.subprojects.classes.sortPages = true
+qhp.QtScript.subprojects.overviews.title = Overviews
+qhp.QtScript.subprojects.overviews.indexTitle = All Overviews and HOWTOs
+qhp.QtScript.subprojects.overviews.selectors = fake:page,group,module
+qhp.QtScript.subprojects.examples.title = Qt Script Examples
+qhp.QtScript.subprojects.examples.indexTitle = Qt Script Examples
+qhp.QtScript.subprojects.examples.selectors = fake:example
+
+dita.metadata.default.author      = Qt Project
+dita.metadata.default.permissions = all
+dita.metadata.default.publisher   = Qt Project
+dita.metadata.default.copyryear = 2012
+dita.metadata.default.copyrholder = Nokia
+dita.metadata.default.audience = programmer
+
+sources.fileextensions  = "*.c++ *.cc *.cpp *.cxx *.mm *.qml *.qdoc"
+headers.fileextensions  = "*.ch *.h *.h++ *.hh *.hpp *.hxx"
+
+examples.fileextensions = "*.cpp *.h *.js *.xq *.svg *.xml *.ui *.qhp *.qhcp *.qml *.css"
+examples.imageextensions = "*.png"
+
+outputdir               = ../../../doc/qtscript
+tagfile                 = ../../../doc/qtscript/qtscript.tags
+
+HTML.generatemacrefs    = "true"
+HTML.nobreadcrumbs      = "true"
+
+HTML.templatedir = .
+
+HTML.stylesheets = global/style/offline.css
+
+HTML.headerstyles = \
+    "  <link rel=\"stylesheet\" type=\"text/css\" href=\"style/offline.css\" />\n"
+
+HTML.endheader = \
+    "</head>\n" \
+
+defines                 = Q_QDOC \
+                          QT_.*_SUPPORT \
+                          QT_.*_LIB \
+                          QT_COMPAT \
+                          QT_KEYPAD_NAVIGATION \
+                          QT_NO_EGL \
+                          Q_WS_.* \
+                          Q_OS_.* \
+                          Q_BYTE_ORDER \
+                          QT_DEPRECATED \
+                          QT_DEPRECATED_* \
+                          Q_NO_USING_KEYWORD \
+                          __cplusplus \
+                          Q_COMPILER_INITIALIZER_LISTS
+
+versionsym              = QT_VERSION_STR
+
+codeindent              = 1
+
+depends                 += qtcore
+
+headerdirs  += ..
+
+sourcedirs  += ..
+
+exampledirs += ../../../examples \
+               ../ \
+               snippets
+
+imagedirs   += images
