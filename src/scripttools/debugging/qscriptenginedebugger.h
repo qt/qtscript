@@ -43,6 +43,7 @@
 #define QSCRIPTENGINEDEBUGGER_H
 
 #include <QtCore/qobject.h>
+#include <QtScript/qtscriptglobal.h>
 
 QT_BEGIN_HEADER
 

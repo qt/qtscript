@@ -32,4 +32,5 @@ HEADERS += \
     $$PWD/qscriptvalue_p.h \
     $$PWD/qscriptvalueiterator.h \
     $$PWD/qscriptable.h \
-    $$PWD/qscriptable_p.h
+    $$PWD/qscriptable_p.h \
+    $$PWD/qtscriptglobal.h

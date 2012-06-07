@@ -27,6 +27,7 @@
 #include <QtCore/qstring.h>
 
 #include <QtCore/qsharedpointer.h>
+#include <QtScript/qtscriptglobal.h>
 
 QT_BEGIN_HEADER
 

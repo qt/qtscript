@@ -27,6 +27,7 @@
 #include <QtCore/qobjectdefs.h>
 
 #include <QtCore/qscopedpointer.h>
+#include <QtScript/qtscriptglobal.h>
 
 QT_BEGIN_HEADER
 

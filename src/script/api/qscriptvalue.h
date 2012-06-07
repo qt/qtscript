@@ -28,6 +28,7 @@
 
 #include <QtCore/qlist.h>
 #include <QtCore/qsharedpointer.h>
+#include <QtScript/qtscriptglobal.h>
 
 QT_BEGIN_HEADER
 

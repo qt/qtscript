@@ -27,6 +27,7 @@
 #include <QtCore/qfactoryinterface.h>
 
 #include <QtCore/qobject.h>
+#include <QtScript/qtscriptglobal.h>
 
 QT_BEGIN_HEADER
 
