@@ -56,6 +56,9 @@
 #ifdef Q_OS_WIN
 # include <qt_windows.h>
 #endif
+
+QT_BEGIN_NAMESPACE
+
 class QSystemLockPrivate
 {
 
@@ -105,6 +108,8 @@ private:
     bool createdSemaphore;
 #endif
 };
+
+QT_END_NAMESPACE
 
 #endif // QT_NO_SYSTEMLOCK
 
