@@ -14,7 +14,7 @@ SUBDIRS=\
            qscriptvalue \
            qscriptvaluegenerated \
            qscriptvalueiterator \
-           qtipc \
+#           qtipc \
 
 !contains(QT_CONFIG, private_tests):SUBDIRS -= \
            qscriptcontext \
