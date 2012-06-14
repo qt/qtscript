@@ -36,7 +36,7 @@ typedef wchar_t UChar;
 #else
 typedef uint16_t UChar;
 #endif
-typedef uint32_t UChar32;
+typedef int32_t UChar32;
 
 // some defines from ICU
 
