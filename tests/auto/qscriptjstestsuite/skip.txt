@@ -11,4 +11,3 @@ ecma_3/RegExp/regress-289669.js | Can fail due to relying on wall-clock time
 ecma_3/RegExp/regress-311414.js | Can fail due to relying on wall-clock time
 ecma_3/RegExp/regress-330684.js | Can fail due to relying on wall-clock time
 ecma_3/RegExp/regress-375711.js | Can fail due to relying on wall-clock time
-ecma/String/15.5.4.11-2.js | Fails after Unicode upgrade to 6.1

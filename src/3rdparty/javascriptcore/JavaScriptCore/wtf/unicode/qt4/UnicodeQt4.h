@@ -30,31 +30,6 @@
 
 #include <stdint.h>
 
-QT_BEGIN_NAMESPACE
-namespace QUnicodeTables {
-    struct Properties {
-        ushort category : 8;
-        ushort line_break_class : 8;
-        ushort direction : 8;
-        ushort combiningClass :8;
-        ushort joining : 2;
-        signed short digitValue : 6; /* 5 needed */
-        ushort unicodeVersion : 4;
-        ushort lowerCaseSpecial : 1;
-        ushort upperCaseSpecial : 1;
-        ushort titleCaseSpecial : 1;
-        ushort caseFoldSpecial : 1; /* currently unused */
-        signed short mirrorDiff : 16;
-        signed short lowerCaseDiff : 16;
-        signed short upperCaseDiff : 16;
-        signed short titleCaseDiff : 16;
-        signed short caseFoldDiff : 16;
-    };
-    Q_CORE_EXPORT const Properties * QT_FASTCALL properties(uint ucs4);
-    Q_CORE_EXPORT const Properties * QT_FASTCALL properties(ushort ucs2);
-}
-QT_END_NAMESPACE
-
 // ugly hack to make UChar compatible with JSChar in API/JSStringRef.h
 #if defined(Q_OS_WIN) || COMPILER(WINSCW) || COMPILER(RVCT)
 typedef wchar_t UChar;
@@ -152,7 +127,6 @@ enum DecompositionType {
 };
 
 enum CharCategory {
-    NoCategory = 0,
     Mark_NonSpacing = U_MASK(QChar::Mark_NonSpacing),
     Mark_SpacingCombining = U_MASK(QChar::Mark_SpacingCombining),
     Mark_Enclosing = U_MASK(QChar::Mark_Enclosing),
@@ -195,55 +169,22 @@ inline UChar32 toLower(UChar32 ch)
 
 inline int toLower(UChar* result, int resultLength, const UChar* src, int srcLength,  bool* error)
 {
-    const UChar *e = src + srcLength;
-    const UChar *s = src;
-    UChar *r = result;
-    uint rindex = 0;
+    QString s = QString::fromRawData(reinterpret_cast<const QChar *>(src), srcLength);
 
-    // this avoids one out of bounds check in the loop
-    if (s < e && QChar(*s).isLowSurrogate()) {
-        if (r)
-            r[rindex] = *s++;
-        ++rindex;
+    s = s.toLower();
+
+    *error = resultLength < s.size();
+
+    if (!*error && result) {
+        const ushort *p = reinterpret_cast<const ushort *>(s.constData());
+        ushort *pp = reinterpret_cast<ushort *>(result);
+        memcpy(pp, p, s.size() * sizeof(ushort));
+
+        if (resultLength > s.size())
+            pp[s.size()] = 0;
     }
 
-    int needed = 0;
-    while (s < e && (rindex < uint(resultLength) || !r)) {
-        uint c = *s;
-        if (QChar(c).isLowSurrogate() && QChar(*(s - 1)).isHighSurrogate())
-            c = QChar::surrogateToUcs4(*(s - 1), c);
-        const QUnicodeTables::Properties *prop = QUnicodeTables::properties(c);
-        if (prop->lowerCaseSpecial) {
-            QString qstring;
-            if (c < 0x10000) {
-                qstring += QChar(c);
-            } else {
-                qstring += QChar(*(s-1));
-                qstring += QChar(*s);
-            }
-            qstring = qstring.toLower();
-            for (int i = 0; i < qstring.length(); ++i) {
-                if (rindex >= uint(resultLength)) {
-                    needed += qstring.length() - i;
-                    break;
-                }
-                if (r)
-                    r[rindex] = qstring.at(i).unicode();
-                ++rindex;
-            }
-        } else {
-            if (r)
-                r[rindex] = *s + prop->lowerCaseDiff;
-            ++rindex;
-        }
-        ++s;
-    }
-    if (s < e)
-        needed += e - s;
-    *error = (needed != 0);
-    if (rindex < uint(resultLength))
-        r[rindex] = 0;
-    return rindex + needed;
+    return s.size();
 }
 
 inline UChar32 toUpper(UChar32 ch)
@@ -253,58 +194,25 @@ inline UChar32 toUpper(UChar32 ch)
 
 inline int toUpper(UChar* result, int resultLength, const UChar* src, int srcLength,  bool* error)
 {
-    const UChar *e = src + srcLength;
-    const UChar *s = src;
-    UChar *r = result;
-    int rindex = 0;
+    QString s = QString::fromRawData(reinterpret_cast<const QChar *>(src), srcLength);
 
-    // this avoids one out of bounds check in the loop
-    if (s < e && QChar(*s).isLowSurrogate()) {
-        if (r)
-            r[rindex] = *s++;
-        ++rindex;
+    s = s.toUpper();
+
+    *error = resultLength < s.size();
+
+    if (!*error && result) {
+        const ushort *p = reinterpret_cast<const ushort *>(s.constData());
+        ushort *pp = reinterpret_cast<ushort *>(result);
+        memcpy(pp, p, s.size() * sizeof(ushort));
+
+        if (resultLength > s.size())
+            pp[s.size()] = 0;
     }
 
-    int needed = 0;
-    while (s < e && (rindex < resultLength || !r)) {
-        uint c = *s;
-        if (QChar(c).isLowSurrogate() && QChar(*(s - 1)).isHighSurrogate())
-            c = QChar::surrogateToUcs4(*(s - 1), c);
-        const QUnicodeTables::Properties *prop = QUnicodeTables::properties(c);
-        if (prop->upperCaseSpecial) {
-            QString qstring;
-            if (c < 0x10000) {
-                qstring += QChar(c);
-            } else {
-                qstring += QChar(*(s-1));
-                qstring += QChar(*s);
-            }
-            qstring = qstring.toUpper();
-            for (int i = 0; i < qstring.length(); ++i) {
-                if (rindex >= resultLength) {
-                    needed += qstring.length() - i;
-                    break;
-                }
-                if (r)
-                    r[rindex] = qstring.at(i).unicode();
-                ++rindex;
-            }
-        } else {
-            if (r)
-                r[rindex] = *s + prop->upperCaseDiff;
-            ++rindex;
-        }
-        ++s;
-    }
-    if (s < e)
-        needed += e - s;
-    *error = (needed != 0);
-    if (rindex < resultLength)
-        r[rindex] = 0;
-    return rindex + needed;
+    return s.size();
 }
 
-inline int toTitleCase(UChar32 c)
+inline UChar32 toTitleCase(UChar32 c)
 {
     return QChar::toTitleCase(c);
 }
@@ -316,15 +224,22 @@ inline UChar32 foldCase(UChar32 c)
 
 inline int foldCase(UChar* result, int resultLength, const UChar* src, int srcLength,  bool* error)
 {
-    // FIXME: handle special casing. Easiest with some low level API in Qt
-    *error = false;
-    if (resultLength < srcLength) {
-        *error = true;
-        return srcLength;
+    QString s = QString::fromRawData(reinterpret_cast<const QChar *>(src), srcLength);
+
+    s = s.toCaseFolded();
+
+    *error = resultLength < s.size();
+
+    if (!*error && result) {
+        const ushort *p = reinterpret_cast<const ushort *>(s.constData());
+        ushort *pp = reinterpret_cast<ushort *>(result);
+        memcpy(pp, p, s.size() * sizeof(ushort));
+
+        if (resultLength > s.size())
+            pp[s.size()] = 0;
     }
-    for (int i = 0; i < srcLength; ++i)
-        result[i] = QChar::toCaseFolded(ushort(src[i]));
-    return srcLength;
+
+    return s.size();
 }
 
 inline bool isArabicChar(UChar32 c)
@@ -334,9 +249,7 @@ inline bool isArabicChar(UChar32 c)
 
 inline bool isPrintableChar(UChar32 c)
 {
-    const uint test = U_MASK(QChar::Other_Control) |
-                      U_MASK(QChar::Other_NotAssigned);
-    return !(U_MASK(QChar::category(c)) & test);
+    return QChar::isPrint(c);
 }
 
 inline bool isSeparatorSpace(UChar32 c)
@@ -346,19 +259,12 @@ inline bool isSeparatorSpace(UChar32 c)
 
 inline bool isPunct(UChar32 c)
 {
-    const uint test = U_MASK(QChar::Punctuation_Connector) |
-                      U_MASK(QChar::Punctuation_Dash) |
-                      U_MASK(QChar::Punctuation_Open) |
-                      U_MASK(QChar::Punctuation_Close) |
-                      U_MASK(QChar::Punctuation_InitialQuote) |
-                      U_MASK(QChar::Punctuation_FinalQuote) |
-                      U_MASK(QChar::Punctuation_Other);
-    return U_MASK(QChar::category(c)) & test;
+    return QChar::isPunct(c);
 }
 
 inline bool isLower(UChar32 c)
 {
-    return QChar::category(c) == QChar::Letter_Lowercase;
+    return QChar::isLower(c);
 }
 
 inline bool hasLineBreakingPropertyComplexContext(UChar32)
