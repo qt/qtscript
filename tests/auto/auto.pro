@@ -14,6 +14,7 @@ SUBDIRS=\
            qscriptvalue \
            qscriptvaluegenerated \
            qscriptvalueiterator \
+           cmake \
 #           qtipc \
 
 !contains(QT_CONFIG, private_tests):SUBDIRS -= \
