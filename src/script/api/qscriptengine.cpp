@@ -1253,6 +1253,9 @@ void QScriptEnginePrivate::setContextFlags(JSC::ExecState *exec, uint flags)
 }
 
 
+// This function is called by JSC after all objects reachable by JSC itself
+// have been processed (see JSC::Heap::markRoots()).
+// Here we should mark additional objects managed by QtScript.
 void QScriptEnginePrivate::mark(JSC::MarkStack& markStack)
 {
     Q_Q(QScriptEngine);

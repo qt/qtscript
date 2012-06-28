@@ -97,7 +97,7 @@ struct QObjectConnection
                 QObjectDelegate *inst = static_cast<QObjectDelegate*>(delegate);
                 if ((inst->ownership() == QScriptEngine::ScriptOwnership)
                     || ((inst->ownership() == QScriptEngine::AutoOwnership)
-                        && inst->value() && !inst->value()->parent())) {
+                        && !inst->hasParent())) {
                     senderWrapper = JSC::JSValue();
                 } else {
                     markStack.append(senderWrapper);
@@ -2199,6 +2199,10 @@ QObjectData::~QObjectData()
     }
 }
 
+// This function assumes all objects reachable elsewhere in the JS environment
+// (stack, heap) have been marked already (see QScriptEnginePrivate::mark()).
+// This determines whether any of QtScript's internal QObject wrappers are only
+// weakly referenced and can be discarded.
 void QObjectData::mark(JSC::MarkStack& markStack)
 {
     if (connectionManager)
@@ -2207,10 +2211,14 @@ void QObjectData::mark(JSC::MarkStack& markStack)
         QList<QScript::QObjectWrapperInfo>::iterator it;
         for (it = wrappers.begin(); it != wrappers.end(); ) {
             const QScript::QObjectWrapperInfo &info = *it;
-            // ### don't mark if there are no other references.
-            // we need something like isMarked()
-            markStack.append(info.object);
-            ++it;
+            if (JSC::Heap::isCellMarked(info.object)) {
+                ++it;
+            } else if (info.isCollectableWhenWeaklyReferenced()) {
+                it = wrappers.erase(it);
+            } else {
+                markStack.append(info.object);
+                ++it;
+            }
         }
     }
 }

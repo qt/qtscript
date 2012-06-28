@@ -248,6 +248,8 @@ private slots:
     void dateConversionJSQt();
     void dateConversionQtJS();
     void stringListFromArrayWithEmptyElement();
+    void collectQObjectWithCachedWrapper_data();
+    void collectQObjectWithCachedWrapper();
 };
 
 tst_QScriptEngine::tst_QScriptEngine()
@@ -6140,6 +6142,80 @@ void tst_QScriptEngine::stringListFromArrayWithEmptyElement()
     QScriptEngine eng;
     QCOMPARE(qscriptvalue_cast<QStringList>(eng.evaluate("[,'hello']")),
              QStringList() << "" << "hello");
+}
+
+// QTBUG-21993
+void tst_QScriptEngine::collectQObjectWithCachedWrapper_data()
+{
+    QTest::addColumn<QString>("program");
+    QTest::addColumn<QString>("ownership");
+    QTest::addColumn<bool>("giveParent");
+    QTest::addColumn<bool>("shouldBeCollected");
+
+    QString prog1 = QString::fromLatin1("newQObject(ownership, parent)");
+    QTest::newRow("unassigned,cpp,no-parent") << prog1 << "cpp" << false << false;
+    QTest::newRow("unassigned,cpp,parent") << prog1 << "cpp" << true << false;
+    QTest::newRow("unassigned,auto,no-parent") << prog1 << "auto" << false << true;
+    QTest::newRow("unassigned,auto,parent") << prog1 << "auto" << true << false;
+    QTest::newRow("unassigned,script,no-parent") << prog1 << "script" << false << true;
+    QTest::newRow("unassigned,script,parent") << prog1 << "script" << true << true;
+
+    QString prog2 = QString::fromLatin1("myObject = { foo: newQObject(ownership, parent) }; myObject.foo");
+    QTest::newRow("global-property-property,cpp,no-parent") << prog2 << "cpp" << false << false;
+    QTest::newRow("global-property-property,cpp,parent") << prog2 << "cpp" << true << false;
+    QTest::newRow("global-property-property,auto,no-parent") << prog2 << "auto" << false << false;
+    QTest::newRow("global-property-property,auto,parent") << prog2 << "auto" << true << false;
+    QTest::newRow("global-property-property,script,no-parent") << prog2 << "script" << false << false;
+    QTest::newRow("global-property-property,script,parent") << prog2 << "script" << true << false;
+
+}
+
+void tst_QScriptEngine::collectQObjectWithCachedWrapper()
+{
+    struct Functions {
+        static QScriptValue newQObject(QScriptContext *ctx, QScriptEngine *eng)
+        {
+            QString ownershipString = ctx->argument(0).toString();
+            QScriptEngine::ValueOwnership ownership;
+            if (ownershipString == "cpp")
+                ownership = QScriptEngine::QtOwnership;
+            else if (ownershipString == "auto")
+                ownership = QScriptEngine::AutoOwnership;
+            else if (ownershipString == "script")
+                ownership = QScriptEngine::ScriptOwnership;
+            else
+                return ctx->throwError("Ownership specifier 'cpp', 'auto' or 'script' expected");
+
+            QObject *parent = ctx->argument(1).toQObject();
+            return eng->newQObject(new QObject(parent), ownership,
+                                   QScriptEngine::PreferExistingWrapperObject);
+        }
+    };
+
+    QFETCH(QString, program);
+    QFETCH(QString, ownership);
+    QFETCH(bool, giveParent);
+    QFETCH(bool, shouldBeCollected);
+
+    QScriptEngine eng;
+    eng.globalObject().setProperty("ownership", ownership);
+    eng.globalObject().setProperty("newQObject",
+                                   eng.newFunction(Functions::newQObject));
+
+    QObject parent;
+    eng.globalObject().setProperty("parent",
+                                   giveParent ? eng.newQObject(&parent)
+                                              : QScriptValue(QScriptValue::NullValue));
+
+    QPointer<QObject> ptr = eng.evaluate(program).toQObject();
+    QVERIFY(ptr != 0);
+    QVERIFY(ptr->parent() == (giveParent ? &parent : 0));
+
+    collectGarbage_helper(eng);
+
+    if (ptr && shouldBeCollected)
+        QEXPECT_FAIL("", "Test can fail because the garbage collector is conservative", Continue);
+    QCOMPARE(ptr == 0, shouldBeCollected);
 }
 
 QTEST_MAIN(tst_QScriptEngine)

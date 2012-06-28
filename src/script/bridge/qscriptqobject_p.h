@@ -95,6 +95,7 @@ public:
 
     inline QObject *value() const { return data->value; }
     inline void setValue(QObject* value) { data->value = value; }
+    inline bool hasParent() const { return data->value && data->value->parent(); }
 
     inline QScriptEngine::ValueOwnership ownership() const
         { return data->ownership; }
@@ -138,6 +139,25 @@ struct QObjectWrapperInfo
     QScriptObject *object;
     QScriptEngine::ValueOwnership ownership;
     QScriptEngine::QObjectWrapOptions options;
+
+    // Returns true if this wrapper can be garbage-collected when there are no
+    // other references to it in the JS environment (weak reference), otherwise
+    // returns false (should not be collected).
+    bool isCollectableWhenWeaklyReferenced() const
+    {
+        switch (ownership) {
+        case QScriptEngine::ScriptOwnership:
+            return true;
+        case QScriptEngine::AutoOwnership: {
+            QScriptObjectDelegate *delegate = object->delegate();
+            Q_ASSERT(delegate && (delegate->type() == QScriptObjectDelegate::QtObject));
+            return !static_cast<QObjectDelegate *>(delegate)->hasParent();
+        }
+        default:
+            break;
+        }
+        return false;
+    }
 };
 
 class QObjectData // : public QObjectUserData
