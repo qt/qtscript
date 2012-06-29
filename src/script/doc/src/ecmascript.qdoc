@@ -130,6 +130,14 @@
 
     \section1 Array Objects
 
+    \section2 Array Constructor
+
+    \section3 Function Properties
+
+    \list
+    \li isArray(arg)
+    \endlist
+
     \section2 Array Prototype Object
 
     \section3 Function Properties
@@ -159,6 +167,14 @@
     \endlist
 
     \section1 String Objects
+
+    \section2 String Constructor
+
+    \section3 Function Properties
+
+    \list
+    \li fromCharCode([char0 [, char1 [,...]]])
+    \endlist
 
     \section2 String Prototype Object
 
@@ -250,6 +266,16 @@
     \endlist
 
     \section1 Date Objects
+
+    \section2 Date Constructor
+
+    \section3 Function Properties
+
+    \list
+    \li now()
+    \li parse(string)
+    \li UTC(year, month [, date [, hours [, minutes [, seconds [, ms]]]]])
+    \endlist
 
     \section2 Date Prototype Object
 
