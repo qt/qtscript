@@ -154,42 +154,6 @@ static bool isEnumerableMetaProperty(const QMetaProperty &prop,
         && (mo->indexOfProperty(prop.name()) == index);
 }
 
-/*! \internal
-  Calculates the length of the name of the given \a method by looking
-  for the first '(' character.
-*/
-static inline int methodNameLength(const QMetaMethod &method)
-{
-    QByteArray signature = method.methodSignature();
-    const char *s = signature.constData();
-    while (*s && (*s != '('))
-        ++s;
-    return s - signature.constData();
-}
-
-/*! \internal
-  Makes a deep copy of the first \a nameLength characters of the given
-  method \a signature and returns the copy.
-*/
-static inline QByteArray methodName(const char *signature, int nameLength)
-{
-    return QByteArray(signature, nameLength);
-}
-
-/*! \internal
-
-  Returns true if the name of the given \a method is the same as that
-  specified by the (signature, nameLength) pair, otherwise returns
-  false.
-*/
-static inline bool methodNameEquals(const QMetaMethod &method,
-                                    const QByteArray &signature, int nameLength)
-{
-    QByteArray otherSignature = method.methodSignature();
-    return !qstrncmp(otherSignature.constData(), signature.constData(), nameLength)
-        && (otherSignature[nameLength] == '(');
-}
-
 static const bool GeneratePropertyFunctions = true;
 
 static unsigned flagsForMetaProperty(const QMetaProperty &prop)
@@ -310,9 +274,9 @@ QList<int> QScript::QtFunction::overloadedIndexes() const
     QList<int> result;
     const QMetaObject *meta = metaObject();
     QMetaMethod method = meta->method(initialIndex());
-    int nameLength = methodNameLength(method);
+    QByteArray name = method.name();
     for (int index = mostGeneralMethod() - 1; index >= 0; --index) {
-        if (methodNameEquals(meta->method(index), method.methodSignature(), nameLength))
+        if (meta->method(index).name() == name)
             result.append(index);
     }
     return result;
@@ -490,20 +454,16 @@ static JSC::JSValue callQtMethod(JSC::ExecState *exec, QMetaMethod::MethodType c
     QVector<int> tooFewArgs;
     QVector<int> conversionFailed;
     int index;
-    int nameLength = 0;
-    QByteArray initialMethodSignature;
+    QByteArray methodName;
     exec->clearException();
     QScriptEnginePrivate *engine = QScript::scriptEngineFromExec(exec);
     for (index = initialIndex; index >= 0; --index) {
         QMetaMethod method = metaMethod(meta, callType, index);
 
-        if (index == initialIndex) {
-            initialMethodSignature = method.methodSignature();
-            nameLength = methodNameLength(method);
-        } else {
-            if (!methodNameEquals(method, initialMethodSignature, nameLength))
-                continue;
-        }
+        if (index == initialIndex)
+            methodName = method.name();
+        else if (method.name() != methodName)
+            continue;
 
         QList<QByteArray> parameterTypeNames = method.parameterTypes();
 
@@ -822,7 +782,7 @@ static JSC::JSValue callQtMethod(JSC::ExecState *exec, QMetaMethod::MethodType c
 //#ifndef Q_SCRIPT_NO_EVENT_NOTIFY
 //        engine->notifyFunctionEntry(context);
 //#endif
-        QString funName = QString::fromLatin1(methodName(initialMethodSignature, nameLength));
+        QString funName = QString::fromLatin1(methodName);
         if (!conversionFailed.isEmpty()) {
             QString message = QString::fromLatin1("incompatible type of argument(s) in call to %0(); candidates were\n")
                               .arg(funName);
@@ -868,9 +828,8 @@ static JSC::JSValue callQtMethod(JSC::ExecState *exec, QMetaMethod::MethodType c
                 && (metaArgs.args.count() == candidates.at(1).args.count())
                 && (metaArgs.matchDistance == candidates.at(1).matchDistance)) {
                 // ambiguous call
-                QByteArray funName = methodName(initialMethodSignature, nameLength);
                 QString message = QString::fromLatin1("ambiguous call of overloaded function %0(); candidates were\n")
-                                  .arg(QLatin1String(funName));
+                                  .arg(QLatin1String(methodName));
                 for (int i = 0; i < candidates.size(); ++i) {
                     if (i > 0)
                         message += QLatin1String("\n");
@@ -1236,8 +1195,7 @@ bool QObjectDelegate::getOwnPropertySlot(QScriptObject *object, JSC::ExecState *
                        ? meta->methodOffset() : 0;
     for (index = meta->methodCount() - 1; index >= offset; --index) {
         QMetaMethod method = meta->method(index);
-        if (hasMethodAccess(method, index, opt)
-            && methodNameEquals(method, name.constData(), name.length())) {
+        if (hasMethodAccess(method, index, opt) && (method.name() == name)) {
             QtFunction *fun = new (exec)QtFunction(
                 object, index, /*maybeOverloaded=*/true,
                 &exec->globalData(), eng->originalGlobalObject()->functionStructure(),
@@ -1368,8 +1326,7 @@ bool QObjectDelegate::getOwnPropertyDescriptor(QScriptObject *object, JSC::ExecS
                        ? meta->methodOffset() : 0;
     for (index = meta->methodCount() - 1; index >= offset; --index) {
         QMetaMethod method = meta->method(index);
-        if (hasMethodAccess(method, index, opt)
-            && methodNameEquals(method, name.constData(), name.length())) {
+        if (hasMethodAccess(method, index, opt) && (method.name() == name)) {
             QtFunction *fun = new (exec)QtFunction(
                 object, index, /*maybeOverloaded=*/true,
                 &exec->globalData(), eng->originalGlobalObject()->functionStructure(),
@@ -1482,8 +1439,7 @@ void QObjectDelegate::put(QScriptObject *object, JSC::ExecState* exec,
                        ? meta->methodOffset() : 0;
     for (index = meta->methodCount() - 1; index >= offset; --index) {
         QMetaMethod method = meta->method(index);
-        if (hasMethodAccess(method, index, opt)
-            && methodNameEquals(method, name.constData(), name.length())) {
+        if (hasMethodAccess(method, index, opt) && (method.name() == name)) {
             data->cachedMembers.insert(name, value);
             return;
         }
