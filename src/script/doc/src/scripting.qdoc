@@ -1863,13 +1863,6 @@
     \li \c{lineNumber}: The line number where the error occurred.
     \li \c{fileName}: The file name where the error occurred (if a file name
     was passed to QScriptEngine::evaluate()).
-    \li \c{stack}: An array of objects describing the stack. Each object has
-      the following properties:
-      \list
-      \li \c{functionName}: The function name, if available.
-      \li \c{fileName}: The file name, if available.
-      \li \c{lineNumber}: The line number, if available.
-      \endlist
     \endlist
 
   \endlist
