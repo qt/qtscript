@@ -197,8 +197,7 @@ QScriptContextInfoPrivate::QScriptContextInfoPrivate(const QScriptContext *conte
         // ### get the function name from the AST
     } else if (callee && callee->inherits(&QScript::QtFunction::info)) {
         functionType = QScriptContextInfo::QtFunction;
-        // ### the slot can be overloaded -- need to get the particular overload from the context
-        functionMetaIndex = static_cast<QScript::QtFunction*>(callee)->initialIndex();
+        functionMetaIndex = static_cast<QScript::QtFunction*>(callee)->specificIndex(context);
         const QMetaObject *meta = static_cast<QScript::QtFunction*>(callee)->metaObject();
         if (meta != 0) {
             QMetaMethod method = meta->method(functionMetaIndex);

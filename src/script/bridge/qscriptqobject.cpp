@@ -441,10 +441,15 @@ static QMetaMethod metaMethod(const QMetaObject *meta,
         return meta->constructor(index);
 }
     
-static JSC::JSValue callQtMethod(JSC::ExecState *exec, QMetaMethod::MethodType callType,
-                                 QObject *thisQObject, const JSC::ArgList &scriptArgs,
-                                 const QMetaObject *meta, int initialIndex,
-                                 bool maybeOverloaded)
+/*!
+  \internal
+  Derives the actual method to call based on the script arguments,
+  \a scriptArgs, and delegates it to the given \a delegate.
+*/
+template <class Delegate>
+static JSC::JSValue delegateQtMethod(JSC::ExecState *exec, QMetaMethod::MethodType callType,
+                                     const JSC::ArgList &scriptArgs, const QMetaObject *meta,
+                                     int initialIndex, bool maybeOverloaded, Delegate &delegate)
 {
     QScriptMetaMethod chosenMethod;
     int chosenIndex = -1;
@@ -456,7 +461,6 @@ static JSC::JSValue callQtMethod(JSC::ExecState *exec, QMetaMethod::MethodType c
     int index;
     QByteArray methodName;
     exec->clearException();
-    QScriptEnginePrivate *engine = QScript::scriptEngineFromExec(exec);
     for (index = initialIndex; index >= 0; --index) {
         QMetaMethod method = metaMethod(meta, callType, index);
 
@@ -844,70 +848,97 @@ static JSC::JSValue callQtMethod(JSC::ExecState *exec, QMetaMethod::MethodType c
             }
         }
 
-        if (chosenIndex != -1) {
-            // call it
-//            context->calleeMetaIndex = chosenIndex;
-
-            QVarLengthArray<void*, 9> array(args.count());
-            void **params = array.data();
-            for (int i = 0; i < args.count(); ++i) {
-                const QVariant &v = args[i];
-                switch (chosenMethod.type(i).kind()) {
-                case QScriptMetaType::Variant:
-                    params[i] = const_cast<QVariant*>(&v);
-                    break;
-                case QScriptMetaType::MetaType:
-                case QScriptMetaType::MetaEnum:
-                case QScriptMetaType::Unresolved:
-                    params[i] = const_cast<void*>(v.constData());
-                    break;
-                default:
-                    Q_ASSERT(0);
-                }
-            }
-
-            QScriptable *scriptable = 0;
-            if (thisQObject)
-                scriptable = scriptableFromQObject(thisQObject);
-            QScriptEngine *oldEngine = 0;
-            if (scriptable) {
-                oldEngine = QScriptablePrivate::get(scriptable)->engine;
-                QScriptablePrivate::get(scriptable)->engine = QScriptEnginePrivate::get(engine);
-            }
-
-// ### fixme
-//#ifndef Q_SCRIPT_NO_EVENT_NOTIFY
-//            engine->notifyFunctionEntry(context);
-//#endif
-
-            if (callType == QMetaMethod::Constructor) {
-                Q_ASSERT(meta != 0);
-                meta->static_metacall(QMetaObject::CreateInstance, chosenIndex, params);
-            } else {
-                QMetaObject::metacall(thisQObject, QMetaObject::InvokeMetaMethod, chosenIndex, params);
-            }
-
-            if (scriptable)
-                QScriptablePrivate::get(scriptable)->engine = oldEngine;
-
-            if (exec->hadException()) {
-                result = exec->exception() ; // propagate
-            } else {
-                QScriptMetaType retType = chosenMethod.returnType();
-                if (retType.isVariant()) {
-                    result = QScriptEnginePrivate::jscValueFromVariant(exec, *(QVariant *)params[0]);
-                } else if (retType.typeId() != QMetaType::Void) {
-                    result = QScriptEnginePrivate::create(exec, retType.typeId(), params[0]);
-                    if (!result)
-                        result = engine->newVariant(QVariant(retType.typeId(), params[0]));
-                } else {
-                    result = JSC::jsUndefined();
-                }
-            }
-        }
+        if (chosenIndex != -1)
+            result = delegate(exec, callType, meta, chosenMethod, chosenIndex, args);
     }
 
     return result;
+}
+
+struct QtMethodCaller
+{
+    QtMethodCaller(QObject *o)
+        : thisQObject(o)
+    {}
+    JSC::JSValue operator()(JSC::ExecState *exec, QMetaMethod::MethodType callType,
+                            const QMetaObject *meta, const QScriptMetaMethod &chosenMethod,
+                            int chosenIndex, const QVarLengthArray<QVariant, 9> &args)
+    {
+        JSC::JSValue result;
+
+        QVarLengthArray<void*, 9> array(args.count());
+        void **params = array.data();
+        for (int i = 0; i < args.count(); ++i) {
+            const QVariant &v = args[i];
+            switch (chosenMethod.type(i).kind()) {
+            case QScriptMetaType::Variant:
+                params[i] = const_cast<QVariant*>(&v);
+                break;
+            case QScriptMetaType::MetaType:
+            case QScriptMetaType::MetaEnum:
+            case QScriptMetaType::Unresolved:
+                params[i] = const_cast<void*>(v.constData());
+                break;
+            default:
+                Q_ASSERT(0);
+            }
+        }
+
+        QScriptable *scriptable = 0;
+        if (thisQObject)
+            scriptable = scriptableFromQObject(thisQObject);
+        QScriptEngine *oldEngine = 0;
+        QScriptEnginePrivate *engine = QScript::scriptEngineFromExec(exec);
+        if (scriptable) {
+            oldEngine = QScriptablePrivate::get(scriptable)->engine;
+            QScriptablePrivate::get(scriptable)->engine = QScriptEnginePrivate::get(engine);
+        }
+
+    // ### fixme
+    //#ifndef Q_SCRIPT_NO_EVENT_NOTIFY
+    //            engine->notifyFunctionEntry(context);
+    //#endif
+
+        if (callType == QMetaMethod::Constructor) {
+            Q_ASSERT(meta != 0);
+            meta->static_metacall(QMetaObject::CreateInstance, chosenIndex, params);
+        } else {
+            QMetaObject::metacall(thisQObject, QMetaObject::InvokeMetaMethod, chosenIndex, params);
+        }
+
+        if (scriptable)
+            QScriptablePrivate::get(scriptable)->engine = oldEngine;
+
+        if (exec->hadException()) {
+            result = exec->exception() ; // propagate
+        } else {
+            QScriptMetaType retType = chosenMethod.returnType();
+            if (retType.isVariant()) {
+                result = QScriptEnginePrivate::jscValueFromVariant(exec, *(QVariant *)params[0]);
+            } else if (retType.typeId() != QMetaType::Void) {
+                result = QScriptEnginePrivate::create(exec, retType.typeId(), params[0]);
+                if (!result)
+                    result = engine->newVariant(QVariant(retType.typeId(), params[0]));
+            } else {
+                result = JSC::jsUndefined();
+            }
+        }
+
+        return result;
+    }
+
+private:
+    QObject *thisQObject;
+};
+
+static JSC::JSValue callQtMethod(JSC::ExecState *exec, QMetaMethod::MethodType callType,
+                                 QObject *thisQObject, const JSC::ArgList &scriptArgs,
+                                 const QMetaObject *meta, int initialIndex,
+                                 bool maybeOverloaded)
+{
+    QtMethodCaller caller(thisQObject);
+    return delegateQtMethod<QtMethodCaller>(exec, callType, scriptArgs, meta,
+                                            initialIndex, maybeOverloaded, caller);
 }
 
 JSC::JSValue QtFunction::execute(JSC::ExecState *exec, JSC::JSValue thisValue,
@@ -958,6 +989,45 @@ JSC::JSValue JSC_HOST_CALL QtFunction::call(JSC::ExecState *exec, JSC::JSObject 
     eng_p->popContext();
     eng_p->currentFrame = previousFrame;
     return result;
+}
+
+struct QtMethodIndexReturner
+{
+    JSC::JSValue operator()(JSC::ExecState *exec, QMetaMethod::MethodType,
+                            const QMetaObject *, const QScriptMetaMethod &,
+                            int chosenIndex, const QVarLengthArray<QVariant, 9> &)
+    {
+        return JSC::jsNumber(exec, chosenIndex);
+    }
+};
+
+/*!
+  \internal
+  Returns the specific index of the meta-method that was used in the
+  function call represented by the given \a context. If the method is
+  overloaded, the actual parameters that were passed to the function
+  are used to derive the selected index, matching the behavior of
+  callQtMethod().
+*/
+int QtFunction::specificIndex(const QScriptContext *context) const
+{
+    if (!maybeOverloaded())
+        return initialIndex();
+    JSC::ExecState *exec = const_cast<JSC::ExecState *>(QScriptEnginePrivate::frameForContext(context));
+    int argCount = exec->argumentCount();
+
+    // Create arguments list wrapper; this logic must match
+    // JITStubs.cpp op_call_NotJSFunction, and Interpreter.cpp op_call
+    JSC::Register* argv = exec->registers() - JSC::RegisterFile::CallFrameHeaderSize - argCount;
+    JSC::ArgList args(argv + 1, argCount - 1);
+
+    QtMethodIndexReturner returner;
+    JSC::JSValue result =  delegateQtMethod<QtMethodIndexReturner>(
+                exec, QMetaMethod::Method, args, metaObject(),
+                initialIndex(), maybeOverloaded(), returner);
+    if (exec->hadException() || !result || !result.isInt32())
+        return initialIndex();
+    return result.asInt32();
 }
 
 const JSC::ClassInfo QtPropertyFunction::info = { "QtPropertyFunction", &InternalFunction::info, 0, 0 };
