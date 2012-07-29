@@ -1,4 +1,4 @@
 TEMPLATE = subdirs
 CONFIG += ordered
 SUBDIRS += script
-!contains(QT_CONFIG, no-widgets): SUBDIRS += scripttools
+!isEmpty(QT.widgets.name): SUBDIRS += scripttools

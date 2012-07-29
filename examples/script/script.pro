@@ -7,6 +7,12 @@ SUBDIRS = customclass
 
 symbian: SUBDIRS = context2d
 
+isEmpty(QT.widgets.name):SUBDIRS -= \
+    context2d \
+    defaultprototypes \
+    helloscript \
+    qscript
+
 # install
 target.path = $$[QT_INSTALL_EXAMPLES]/qtscript/script
 sources.files = $$SOURCES $$HEADERS $$RESOURCES $$FORMS script.pro README
