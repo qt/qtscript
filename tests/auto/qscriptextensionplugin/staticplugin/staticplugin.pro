@@ -7,3 +7,4 @@ QT = core script
 DEFINES += QT_STATICPLUGIN
 TARGET = staticplugin
 DESTDIR = ../plugins/script
+DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0

@@ -14,3 +14,4 @@ SOURCES		+= main.cpp
 TARGET		= lackey
 
 
+DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0

@@ -8,3 +8,4 @@ RESOURCES += qscriptclass_bytearray.qrc
 include(../../../../examples/script/customclass/bytearrayclass.pri)
 
 QT = core script testlib
+DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0

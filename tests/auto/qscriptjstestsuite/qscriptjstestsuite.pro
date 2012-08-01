@@ -12,3 +12,4 @@ testFiles.files = tests
 testFiles.path = .
 DEPLOYMENT += testFiles
 }
+DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0

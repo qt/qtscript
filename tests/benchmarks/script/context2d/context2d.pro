@@ -20,3 +20,4 @@ SOURCES += $$CONTEXT2D_EXAMPLE_DIR/qcontext2dcanvas.cpp \
 RESOURCES += $$CONTEXT2D_EXAMPLE_DIR/context2d.qrc
 
 QT += script testlib
+DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0

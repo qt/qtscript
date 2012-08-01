@@ -14,3 +14,4 @@ SOURCES		+= tst_qsystemlock.cpp
 TARGET		= tst_qsystemlock
 
 
+DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0

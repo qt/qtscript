@@ -12,3 +12,4 @@ SOURCES += ../tst_qsharedmemory.cpp
 TARGET = tst_qsharedmemory
 
 DEFINES += SRCDIR=\\\"$$PWD\\\"
+DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0
