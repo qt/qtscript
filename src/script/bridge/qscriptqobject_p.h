@@ -183,7 +183,9 @@ public:
                          QScriptEngine::ValueOwnership ownership,
                          const QScriptEngine::QObjectWrapOptions &options);
 
-    void mark(JSC::MarkStack&);
+    void clearConnectionMarkBits();
+    int markConnections(JSC::MarkStack&);
+    void markWrappers(JSC::MarkStack&);
 
 private:
     QScriptEnginePrivate *engine;

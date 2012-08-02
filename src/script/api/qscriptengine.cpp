@@ -1307,14 +1307,7 @@ void QScriptEnginePrivate::mark(JSC::MarkStack& markStack)
     }
 
 #ifndef QT_NO_QOBJECT
-    markStack.drain(); // make sure everything is marked before marking qobject data
-    {
-        QHash<QObject*, QScript::QObjectData*>::const_iterator it;
-        for (it = m_qobjectData.constBegin(); it != m_qobjectData.constEnd(); ++it) {
-            QScript::QObjectData *qdata = it.value();
-            qdata->mark(markStack);
-        }
-    }
+    markQObjectData(markStack);
 #endif
 }
 
@@ -1416,6 +1409,37 @@ JSC::JSValue QScriptEnginePrivate::evaluateHelper(JSC::ExecState *exec, intptr_t
 }
 
 #ifndef QT_NO_QOBJECT
+
+void QScriptEnginePrivate::markQObjectData(JSC::MarkStack& markStack)
+{
+    QHash<QObject*, QScript::QObjectData*>::const_iterator it;
+    // 1. Clear connection mark bits for all objects
+    for (it = m_qobjectData.constBegin(); it != m_qobjectData.constEnd(); ++it) {
+        QScript::QObjectData *qdata = it.value();
+        qdata->clearConnectionMarkBits();
+    }
+
+    // 2. Iterate until no more connections are marked
+    int markedCount;
+    do {
+        // Drain the stack to ensure mark bits are set; this is used to determine
+        // whether a connection's sender object is weakly referenced
+        markStack.drain();
+
+        markedCount = 0;
+        for (it = m_qobjectData.constBegin(); it != m_qobjectData.constEnd(); ++it) {
+            QScript::QObjectData *qdata = it.value();
+            markedCount += qdata->markConnections(markStack);
+        }
+    } while (markedCount > 0);
+    markStack.drain(); // One last time before marking wrappers
+
+    // 3. Mark all wrappers
+    for (it = m_qobjectData.constBegin(); it != m_qobjectData.constEnd(); ++it) {
+        QScript::QObjectData *qdata = it.value();
+        qdata->markWrappers(markStack);
+    }
+}
 
 JSC::JSValue QScriptEnginePrivate::newQObject(
     QObject *object, QScriptEngine::ValueOwnership ownership,

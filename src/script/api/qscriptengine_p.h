@@ -315,6 +315,7 @@ public:
     JSC::UString translationContextFromUrl(const JSC::UString &);
 
 #ifndef QT_NO_QOBJECT
+    void markQObjectData(JSC::MarkStack&);
     JSC::JSValue newQObject(QObject *object,
         QScriptEngine::ValueOwnership ownership = QScriptEngine::QtOwnership,
         const QScriptEngine:: QObjectWrapOptions &options = 0);

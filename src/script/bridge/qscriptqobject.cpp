@@ -62,15 +62,16 @@ namespace QScript
 
 struct QObjectConnection
 {
-    int slotIndex;
+    uint marked:1;
+    uint slotIndex:31;
     JSC::JSValue receiver;
     JSC::JSValue slot;
     JSC::JSValue senderWrapper;
 
     QObjectConnection(int i, JSC::JSValue r, JSC::JSValue s,
                       JSC::JSValue sw)
-        : slotIndex(i), receiver(r), slot(s), senderWrapper(sw) {}
-    QObjectConnection() : slotIndex(-1) {}
+        : marked(false), slotIndex(i), receiver(r), slot(s), senderWrapper(sw) {}
+    QObjectConnection() : marked(false), slotIndex(0) {}
 
     bool hasTarget(JSC::JSValue r, JSC::JSValue s) const
     {
@@ -83,12 +84,9 @@ struct QObjectConnection
         return (s == slot);
     }
 
-    void mark(JSC::MarkStack& markStack)
+    bool hasWeaklyReferencedSender() const
     {
         if (senderWrapper) {
-            // see if the sender should be marked or not;
-            // if the C++ object is owned by script, we don't want
-            // it to stay alive due to a script connection.
             Q_ASSERT(senderWrapper.inherits(&QScriptObject::info));
             QScriptObject *scriptObject = static_cast<QScriptObject*>(JSC::asObject(senderWrapper));
             if (!JSC::Heap::isCellMarked(scriptObject)) {
@@ -98,16 +96,23 @@ struct QObjectConnection
                 if ((inst->ownership() == QScriptEngine::ScriptOwnership)
                     || ((inst->ownership() == QScriptEngine::AutoOwnership)
                         && !inst->hasParent())) {
-                    senderWrapper = JSC::JSValue();
-                } else {
-                    markStack.append(senderWrapper);
+                    return true;
                 }
             }
         }
+        return false;
+    }
+
+    void mark(JSC::MarkStack& markStack)
+    {
+        Q_ASSERT(!marked);
+        if (senderWrapper)
+            markStack.append(senderWrapper);
         if (receiver)
             markStack.append(receiver);
         if (slot)
             markStack.append(slot);
+        marked = true;
     }
 };
 
@@ -129,7 +134,8 @@ public:
 
     void execute(int slotIndex, void **argv);
 
-    void mark(JSC::MarkStack&);
+    void clearMarkBits();
+    int mark(JSC::MarkStack&);
 
 private:
     QScriptEnginePrivate *engine;
@@ -2212,13 +2218,41 @@ QObjectConnectionManager::~QObjectConnectionManager()
 {
 }
 
-void QObjectConnectionManager::mark(JSC::MarkStack& markStack)
+void QObjectConnectionManager::clearMarkBits()
 {
     for (int i = 0; i < connections.size(); ++i) {
         QVector<QObjectConnection> &cs = connections[i];
         for (int j = 0; j < cs.size(); ++j)
-            cs[j].mark(markStack);
+            cs[j].marked = false;
     }
+}
+
+/*!
+  \internal
+
+  Marks connections owned by this manager.
+  Returns the number of connections that were marked by this pass
+  (i.e., excluding connections that were already marked).
+*/
+int QObjectConnectionManager::mark(JSC::MarkStack& markStack)
+{
+    int markedCount = 0;
+    for (int i = 0; i < connections.size(); ++i) {
+        QVector<QObjectConnection> &cs = connections[i];
+        for (int j = 0; j < cs.size(); ++j) {
+            QObjectConnection &c = cs[j];
+            if (!c.marked) {
+                if (c.hasWeaklyReferencedSender()) {
+                    // Don't mark the connection; we don't want the script-owned
+                    // sender object to stay alive merely due to a connection.
+                } else {
+                    c.mark(markStack);
+                    ++markedCount;
+                }
+            }
+        }
+    }
+    return markedCount;
 }
 
 bool QObjectConnectionManager::addSignalHandler(
@@ -2269,26 +2303,35 @@ QObjectData::~QObjectData()
     }
 }
 
+void QObjectData::clearConnectionMarkBits()
+{
+    if (connectionManager)
+        connectionManager->clearMarkBits();
+}
+
+int QObjectData::markConnections(JSC::MarkStack& markStack)
+{
+    if (connectionManager)
+        return connectionManager->mark(markStack);
+    return 0;
+}
+
 // This function assumes all objects reachable elsewhere in the JS environment
 // (stack, heap) have been marked already (see QScriptEnginePrivate::mark()).
 // This determines whether any of QtScript's internal QObject wrappers are only
 // weakly referenced and can be discarded.
-void QObjectData::mark(JSC::MarkStack& markStack)
+void QObjectData::markWrappers(JSC::MarkStack& markStack)
 {
-    if (connectionManager)
-        connectionManager->mark(markStack);
-    {
-        QList<QScript::QObjectWrapperInfo>::iterator it;
-        for (it = wrappers.begin(); it != wrappers.end(); ) {
-            const QScript::QObjectWrapperInfo &info = *it;
-            if (JSC::Heap::isCellMarked(info.object)) {
-                ++it;
-            } else if (info.isCollectableWhenWeaklyReferenced()) {
-                it = wrappers.erase(it);
-            } else {
-                markStack.append(info.object);
-                ++it;
-            }
+    QList<QScript::QObjectWrapperInfo>::iterator it;
+    for (it = wrappers.begin(); it != wrappers.end(); ) {
+        const QScript::QObjectWrapperInfo &info = *it;
+        if (JSC::Heap::isCellMarked(info.object)) {
+            ++it;
+        } else if (info.isCollectableWhenWeaklyReferenced()) {
+            it = wrappers.erase(it);
+        } else {
+            markStack.append(info.object);
+            ++it;
         }
     }
 }

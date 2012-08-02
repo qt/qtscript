@@ -50,6 +50,8 @@
 #include <qpushbutton.h>
 #include <qlineedit.h>
 
+#include "../shared/util.h"
+
 struct CustomType
 {
     QString string;
@@ -586,6 +588,8 @@ private slots:
     void nestedObjectAsSlotArgument();
     void propertyAccessThroughActivationObject();
     void connectionRemovedAfterQueuedCall();
+    void collectQObjectWithClosureSlot();
+    void collectQObjectWithClosureSlot2();
 
 private:
     QScriptEngine *m_engine;
@@ -3703,6 +3707,69 @@ void tst_QScriptExtQObject::connectionRemovedAfterQueuedCall()
     QCoreApplication::processEvents();
 
     QVERIFY(m_engine->evaluate("pass").toBool());
+}
+
+// QTBUG-26590
+void tst_QScriptExtQObject::collectQObjectWithClosureSlot()
+{
+    QScriptEngine eng;
+    QScriptValue fun = eng.evaluate("(function(obj) {\n"
+        "    obj.mySignal.connect(function() { obj.mySlot(); });\n"
+        "})");
+    QVERIFY(fun.isFunction());
+
+    QPointer<MyQObject> obj = new MyQObject;
+    {
+        QScriptValue wrapper = eng.newQObject(obj, QScriptEngine::ScriptOwnership);
+        QVERIFY(fun.call(QScriptValue(), QScriptValueList() << wrapper).isUndefined());
+    }
+    QVERIFY(obj != 0);
+    QCOMPARE(obj->qtFunctionInvoked(), -1);
+    obj->emitMySignal();
+    QCOMPARE(obj->qtFunctionInvoked(), 20);
+
+    collectGarbage_helper(eng);
+    // The closure that's connected to obj's signal has the only JS reference
+    // to obj, and the closure is only referenced by the connection. Hence, obj
+    // should have been collected.
+    if (obj != 0)
+        QEXPECT_FAIL("", "Test can fail because the garbage collector is conservative", Continue);
+    QVERIFY(obj == 0);
+}
+
+void tst_QScriptExtQObject::collectQObjectWithClosureSlot2()
+{
+    QScriptEngine eng;
+    QScriptValue fun = eng.evaluate("(function(obj1, obj2) {\n"
+        "    obj2.mySignal.connect(function() { obj1.mySlot(); });\n"
+        "    obj1.mySignal.connect(function() { obj2.mySlot(); });\n"
+        "})");
+    QVERIFY(fun.isFunction());
+
+    QPointer<MyQObject> obj1 = new MyQObject;
+    QScriptValue wrapper1 = eng.newQObject(obj1, QScriptEngine::ScriptOwnership);
+    QPointer<MyQObject> obj2 = new MyQObject;
+    {
+        QScriptValue wrapper2 = eng.newQObject(obj2, QScriptEngine::ScriptOwnership);
+        QVERIFY(fun.call(QScriptValue(), QScriptValueList() << wrapper1 << wrapper2).isUndefined());
+    }
+    QVERIFY(obj1 != 0);
+    QVERIFY(obj2 != 0);
+
+    collectGarbage_helper(eng);
+    // obj1 is referenced by a QScriptValue, so it (and its connections) should not be collected.
+    QVERIFY(obj1 != 0);
+    // obj2 is referenced from the closure that's connected to obj1's signal, so it
+    // (and its connections) should not be collected.
+    QVERIFY(obj2 != 0);
+
+    QCOMPARE(obj2->qtFunctionInvoked(), -1);
+    obj1->emitMySignal();
+    QCOMPARE(obj2->qtFunctionInvoked(), 20);
+
+    QCOMPARE(obj1->qtFunctionInvoked(), -1);
+    obj2->emitMySignal();
+    QCOMPARE(obj1->qtFunctionInvoked(), 20);
 }
 
 QTEST_MAIN(tst_QScriptExtQObject)
