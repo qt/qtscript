@@ -250,6 +250,7 @@ private slots:
     void stringListFromArrayWithEmptyElement();
     void collectQObjectWithCachedWrapper_data();
     void collectQObjectWithCachedWrapper();
+    void pushContext_noInheritedScope();
 };
 
 tst_QScriptEngine::tst_QScriptEngine()
@@ -6216,6 +6217,32 @@ void tst_QScriptEngine::collectQObjectWithCachedWrapper()
     if (ptr && shouldBeCollected)
         QEXPECT_FAIL("", "Test can fail because the garbage collector is conservative", Continue);
     QCOMPARE(ptr == 0, shouldBeCollected);
+}
+
+// QTBUG-18188
+void tst_QScriptEngine::pushContext_noInheritedScope()
+{
+    QScriptEngine eng;
+    eng.globalObject().setProperty("foo", 123);
+
+    QScriptContext *ctx1 = eng.pushContext();
+    QCOMPARE(ctx1->scopeChain().size(), 2);
+    ctx1->activationObject().setProperty("foo", 456);
+    QCOMPARE(eng.evaluate("foo").toInt32(), 456);
+
+    QScriptContext *ctx2 = eng.pushContext();
+    // The parent context's scope should not be inherited.
+    QCOMPARE(ctx2->scopeChain().size(), 2);
+    QCOMPARE(eng.evaluate("foo").toInt32(), 123);
+
+    ctx2->activationObject().setProperty("foo", 789);
+    QCOMPARE(eng.evaluate("foo").toInt32(), 789);
+
+    eng.popContext();
+    QCOMPARE(eng.evaluate("foo").toInt32(), 456);
+
+    eng.popContext();
+    QCOMPARE(eng.evaluate("foo").toInt32(), 123);
 }
 
 QTEST_MAIN(tst_QScriptEngine)

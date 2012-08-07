@@ -397,27 +397,19 @@ QScriptValue QScriptDeclarativeClass::scopeChainValue(QScriptContext *context, i
   By default, the `this' object of the new context is the Global Object.
   The context's \l{QScriptContext::callee()}{callee}() will be invalid.
 
-  Unlike pushContext(), the default scope chain is reset to include
-  only the global object and the QScriptContext's activation object.
+  The context's scope chain initially contains only the Global Object
+  and the QScriptContext's activation object.
 
-  \sa QScriptEngine::popContext()
+  This function behaves exactly like QScriptEngine::popContext();
+  it exists because QScriptEngine::popContext() used to have a bug
+  that caused the scope chain of the new context to be incorrect.
 */
 QScriptContext * QScriptDeclarativeClass::pushCleanContext(QScriptEngine *engine)
 {
     if (!engine)
         return 0;
 
-    QScriptEnginePrivate *d = QScriptEnginePrivate::get(engine);
-    QScript::APIShim shim(d);
-
-    JSC::CallFrame* newFrame = d->pushContext(d->currentFrame, 
-                                              d->currentFrame->globalData().dynamicGlobalObject,
-                                              JSC::ArgList(), /*callee = */0, false, true);
-
-    if (engine->agent())
-        engine->agent()->contextPush();
-
-    return d->contextForFrame(newFrame);
+    return engine->pushContext();
 }
 
 QScriptDeclarativeClass::~QScriptDeclarativeClass()

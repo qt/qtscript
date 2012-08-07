@@ -2733,8 +2733,7 @@ QScriptContext *QScriptEngine::pushContext()
    return the new top frame. (might be the same as exec if a new stackframe was not needed) or 0 if stack overflow
 */
 JSC::CallFrame *QScriptEnginePrivate::pushContext(JSC::CallFrame *exec, JSC::JSValue _thisObject,
-                                                  const JSC::ArgList& args, JSC::JSObject *callee, bool calledAsConstructor,
-                                                  bool clearScopeChain)
+                                                  const JSC::ArgList& args, JSC::JSObject *callee, bool calledAsConstructor)
 {
     JSC::JSValue thisObject = _thisObject;
     if (!callee) {
@@ -2777,11 +2776,7 @@ JSC::CallFrame *QScriptEnginePrivate::pushContext(JSC::CallFrame *exec, JSC::JSV
             newCallFrame[++dst] = *it;
         newCallFrame += argc + JSC::RegisterFile::CallFrameHeaderSize;
 
-        if (!clearScopeChain) {
-            newCallFrame->init(0, /*vPC=*/0, exec->scopeChain(), exec, flags | ShouldRestoreCallFrame, argc, callee);
-        } else {
-            newCallFrame->init(0, /*vPC=*/0, globalExec()->scopeChain(), exec, flags | ShouldRestoreCallFrame, argc, callee);
-        }
+        newCallFrame->init(0, /*vPC=*/0, globalExec()->scopeChain(), exec, flags | ShouldRestoreCallFrame, argc, callee);
     } else {
         setContextFlags(newCallFrame, flags);
 #if ENABLE(JIT)

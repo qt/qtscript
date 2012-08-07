@@ -248,7 +248,7 @@ public:
     static JSC::Register *thisRegisterForFrame(JSC::ExecState *frame);
 
     JSC::CallFrame *pushContext(JSC::CallFrame *exec, JSC::JSValue thisObject, const JSC::ArgList& args,
-                                JSC::JSObject *callee, bool calledAsConstructor = false, bool clearScopeChain = false);
+                                JSC::JSObject *callee, bool calledAsConstructor = false);
     void popContext();
 
     void mark(JSC::MarkStack& markStack);
