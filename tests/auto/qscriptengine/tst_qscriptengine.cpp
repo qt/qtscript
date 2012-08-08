@@ -53,6 +53,8 @@
 
 #include <QtScript/private/qscriptdeclarativeclass_p.h>
 
+#include "../shared/util.h"
+
 Q_DECLARE_METATYPE(QList<int>)
 Q_DECLARE_METATYPE(QObjectList)
 Q_DECLARE_METATYPE(QScriptProgram)
@@ -62,21 +64,6 @@ Q_DECLARE_METATYPE(QScriptProgram)
 # define TOSTRING(x) STRINGIFY(x)
 # define SRCDIR "C:/Private/" TOSTRING(SYMBIAN_SRCDIR_UID)
 #endif
-
-// The JavaScriptCore GC marks the C stack. To try to ensure that there is
-// no JSObject* left in stack memory by the compiler, we call this function
-// to zap some bytes of memory before calling collectGarbage().
-static void zapSomeStack()
-{
-    char buf[4096];
-    memset(buf, 0, sizeof(buf));
-}
-
-static void collectGarbage_helper(QScriptEngine &eng)
-{
-    zapSomeStack();
-    eng.collectGarbage();
-}
 
 class tst_QScriptEngine : public QObject
 {
