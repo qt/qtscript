@@ -1533,7 +1533,6 @@ void tst_QScriptExtQObject::callQtInvokable4()
         QCOMPARE(m_myObject->qtFunctionInvoked(), 63);
         QCOMPARE(m_myObject->qtFunctionActuals().size(), 1);
         QVariant v = m_myObject->qtFunctionActuals().at(0);
-        QCOMPARE(v.userType(), int(QMetaType::QWidgetStar));
         QCOMPARE(qvariant_cast<QWidget*>(v), (QObject *)0);
     }
 
@@ -1702,7 +1701,7 @@ void tst_QScriptExtQObject::callQtInvokable5()
     {
         QScriptValue ret = m_engine->evaluate("myObject.myInvokableReturningMyQObject()");
         QCOMPARE(m_myObject->qtFunctionInvoked(), 53);
-        QVERIFY(ret.isVariant());
+        QVERIFY(ret.isQObject());
         QCOMPARE(*reinterpret_cast<MyQObject* const *>(ret.toVariant().constData()), m_myObject);
     }
 

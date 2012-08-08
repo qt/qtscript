@@ -14,6 +14,7 @@ SUBDIRS=\
            qscriptvalue \
            qscriptvaluegenerated \
            qscriptvalueiterator \
+           qscriptqwidgets \
            cmake \
 #           qtipc \
 

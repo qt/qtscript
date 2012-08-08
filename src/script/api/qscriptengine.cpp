@@ -3130,7 +3130,6 @@ JSC::JSValue QScriptEnginePrivate::create(JSC::ExecState *exec, int type, const 
 #endif
 #ifndef QT_NO_QOBJECT
         case QMetaType::QObjectStar:
-        case QMetaType::QWidgetStar:
             result = eng->newQObject(*reinterpret_cast<QObject* const *>(ptr));
             break;
 #endif
@@ -3138,6 +3137,11 @@ JSC::JSValue QScriptEnginePrivate::create(JSC::ExecState *exec, int type, const 
             result = eng->newVariant(*reinterpret_cast<const QVariant*>(ptr));
             break;
         default:
+            if (QMetaType::typeFlags(type) & QMetaType::PointerToQObject) {
+                result = eng->newQObject(*reinterpret_cast<QObject* const *>(ptr));
+                break;
+            }
+
             if (type == qMetaTypeId<QScriptValue>()) {
                 result = eng->scriptValueToJSCValue(*reinterpret_cast<const QScriptValue*>(ptr));
                 if (!result)
@@ -3261,14 +3265,6 @@ bool QScriptEnginePrivate::convertValue(JSC::ExecState *exec, JSC::JSValue value
         if (isQObject(value) || value.isNull()) {
             *reinterpret_cast<QObject* *>(ptr) = toQObject(exec, value);
             return true;
-        } break;
-    case QMetaType::QWidgetStar:
-        if (isQObject(value) || value.isNull()) {
-            QObject *qo = toQObject(exec, value);
-            if (!qo || qo->isWidgetType()) {
-                *reinterpret_cast<QWidget* *>(ptr) = reinterpret_cast<QWidget*>(qo);
-                return true;
-            }
         } break;
 #endif
     case QMetaType::QStringList:

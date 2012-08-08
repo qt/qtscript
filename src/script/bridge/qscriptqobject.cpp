@@ -713,18 +713,17 @@ static JSC::JSValue delegateQtMethod(JSC::ExecState *exec, QMetaMethod::MethodTy
                 } else if (QScriptEnginePrivate::isQObject(actual)) {
                     switch (tid) {
                     case QMetaType::QObjectStar:
-                    case QMetaType::QWidgetStar:
                         // perfect
                         break;
                     default:
-                        matchDistance += 10;
+                        if (!(QMetaType::typeFlags(tid) & QMetaType::PointerToQObject))
+                            matchDistance += 10;
                         break;
                     }
                 } else if (actual.isNull()) {
                     switch (tid) {
                     case QMetaType::VoidStar:
                     case QMetaType::QObjectStar:
-                    case QMetaType::QWidgetStar:
                         // perfect
                         break;
                     default:
