@@ -39,7 +39,9 @@ void RefCountedLeakCounter::decrement() { }
 #else
 
 #define LOG_CHANNEL_PREFIX Log
+#if !defined(LOG_DISABLED) || !LOG_DISABLED
 static WTFLogChannel LogRefCountedLeaks = { 0x00000000, "", WTFLogChannelOn };
+#endif
 
 typedef HashCountedSet<const char*, PtrHash<const char*> > ReasonSet;
 static ReasonSet* leakMessageSuppressionReasons;

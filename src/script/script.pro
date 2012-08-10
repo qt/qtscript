@@ -40,6 +40,9 @@ mac {
     }
 }
 
+# Suppress 'LEAK' messages (see QTBUG-18201)
+DEFINES += LOG_DISABLED=1
+
 include($$WEBKITDIR/JavaScriptCore/JavaScriptCore.pri)
 
 INCLUDEPATH += $$WEBKITDIR/JavaScriptCore
