@@ -132,6 +132,7 @@ private slots:
     void valueConversion_basic2();
     void valueConversion_dateTime();
     void valueConversion_regExp();
+    void valueConversion_long();
     void qScriptValueFromValue_noEngine();
     void importExtension();
     void infiniteRecursion();
@@ -2500,6 +2501,39 @@ void tst_QScriptEngine::valueConversion_regExp()
         QVERIFY(val.isRegExp());
         QEXPECT_FAIL("", "QTBUG-6136: JSC-based back-end doesn't preserve QRegExp::minimal (always false)", Continue);
         QCOMPARE(val.toRegExp().isMinimal(), in.isMinimal());
+    }
+}
+
+void tst_QScriptEngine::valueConversion_long()
+{
+    QScriptEngine eng;
+    {
+        QScriptValue num(&eng, 123);
+        QCOMPARE(qscriptvalue_cast<long>(num), long(123));
+        QCOMPARE(qscriptvalue_cast<ulong>(num), ulong(123));
+    }
+    {
+        QScriptValue num(456);
+        QCOMPARE(qscriptvalue_cast<long>(num), long(456));
+        QCOMPARE(qscriptvalue_cast<ulong>(num), ulong(456));
+    }
+    {
+        QScriptValue str(&eng, "123");
+        QCOMPARE(qscriptvalue_cast<long>(str), long(123));
+        QCOMPARE(qscriptvalue_cast<ulong>(str), ulong(123));
+    }
+    {
+        QScriptValue str("456");
+        QCOMPARE(qscriptvalue_cast<long>(str), long(456));
+        QCOMPARE(qscriptvalue_cast<ulong>(str), ulong(456));
+    }
+    {
+        QScriptValue num = qScriptValueFromValue<long>(&eng, long(123));
+        QCOMPARE(num.toInt32(), 123);
+    }
+    {
+        QScriptValue num = qScriptValueFromValue<ulong>(&eng, ulong(456));
+        QCOMPARE(num.toInt32(), 456);
     }
 }
 

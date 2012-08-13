@@ -343,6 +343,10 @@ public:
         { m_qtFunctionInvoked = 67; m_actuals << qVariantFromValue(arg); return arg; }
     Q_INVOKABLE qulonglong myInvokableWithULonglongArg(qulonglong arg)
         { m_qtFunctionInvoked = 68; m_actuals << qVariantFromValue(arg); return arg; }
+    Q_INVOKABLE long myInvokableWithLongArg(long arg)
+        { m_qtFunctionInvoked = 69; m_actuals << qVariantFromValue(arg); return arg; }
+    Q_INVOKABLE unsigned long myInvokableWithULongArg(unsigned long arg)
+        { m_qtFunctionInvoked = 70; m_actuals << qVariantFromValue(arg); return arg; }
 
     Q_INVOKABLE QObjectList findObjects() const
     {  return findChildren<QObject *>();  }
@@ -1593,6 +1597,32 @@ void tst_QScriptExtQObject::callQtInvokable4()
         QVariant v = m_myObject->qtFunctionActuals().at(0);
         QCOMPARE(v.userType(), int(QMetaType::ULongLong));
         QCOMPARE(qvariant_cast<qulonglong>(v), qulonglong(123));
+    }
+
+    m_myObject->resetQtFunctionInvoked();
+    {
+        QScriptValue ret = m_engine->evaluate("myObject.myInvokableWithLongArg(123)");
+        QCOMPARE(m_myObject->qtFunctionInvoked(), 69);
+        QVERIFY(ret.isNumber());
+        QCOMPARE(long(ret.toInteger()), long(123));
+
+        QCOMPARE(m_myObject->qtFunctionActuals().size(), 1);
+        QVariant v = m_myObject->qtFunctionActuals().at(0);
+        QCOMPARE(v.userType(), int(QMetaType::Long));
+        QCOMPARE(qvariant_cast<long>(v), long(123));
+    }
+
+    m_myObject->resetQtFunctionInvoked();
+    {
+        QScriptValue ret = m_engine->evaluate("myObject.myInvokableWithULongArg(456)");
+        QCOMPARE(m_myObject->qtFunctionInvoked(), 70);
+        QVERIFY(ret.isNumber());
+        QCOMPARE(ulong(ret.toInteger()), ulong(456));
+
+        QCOMPARE(m_myObject->qtFunctionActuals().size(), 1);
+        QVariant v = m_myObject->qtFunctionActuals().at(0);
+        QCOMPARE(v.userType(), int(QMetaType::ULong));
+        QCOMPARE(qvariant_cast<unsigned long>(v), ulong(456));
     }
 }
 

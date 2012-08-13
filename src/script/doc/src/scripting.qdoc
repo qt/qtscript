@@ -478,6 +478,8 @@
     \row    \li ushort \li QScriptValue::toUInt16()
     \row    \li char \li char(QScriptValue::toInt32())
     \row    \li uchar \li unsigned char(QScriptValue::toInt32())
+    \row    \li long \li long(QScriptValue::toInteger())
+    \row    \li ulong \li ulong(QScriptValue::toInteger())
     \row    \li qlonglong \li qlonglong(QScriptValue::toInteger())
     \row    \li qulonglong \li qulonglong(QScriptValue::toInteger())
     \row    \li QString \li An empty string if the QScriptValue is null
@@ -549,6 +551,12 @@
     \row    \li char \li QScriptValue(engine, value)
     \row    \li uchar \li QScriptValue(engine, value)
     \row    \li QString \li QScriptValue(engine, value)
+    \row    \li long \li If the input fits in an int, QScriptValue(engine, int(value));
+               otherwise, QScriptValue(engine, double(value)). Note that the latter
+               conversion can be lossy.
+    \row    \li ulong \li If the input fits in a uint, QScriptValue(engine, uint(value));
+               otherwise, QScriptValue(engine, double(value)). Note that the latter
+               conversion can be lossy.
     \row    \li qlonglong \li QScriptValue(engine, qsreal(value)). Note that
                the conversion may lead to loss of precision, since not all
                64-bit integers can be represented using the qsreal type.
