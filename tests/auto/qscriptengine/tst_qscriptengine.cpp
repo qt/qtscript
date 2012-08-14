@@ -3078,41 +3078,6 @@ void tst_QScriptEngine::stacktrace()
     QCOMPARE(result.property("fileName").toString(), fileName);
     QCOMPARE(result.property("lineNumber").toInt32(), 9);
 
-    QScriptValue stack = result.property("stack");
-    QVERIFY(stack.isArray());
-
-    QCOMPARE(stack.property("length").toInt32(), 7);
-
-    QScriptValueIterator it(stack);
-    int counter = 5;
-    while (it.hasNext()) {
-        it.next();
-        QScriptValue obj = it.value();
-        QScriptValue frame = obj.property("frame");
-
-        QCOMPARE(obj.property("fileName").toString(), fileName);
-        if (counter >= 0) {
-            QScriptValue callee = frame.property("arguments").property("callee");
-            QVERIFY(callee.strictlyEquals(eng.globalObject().property("foo")));
-            QCOMPARE(obj.property("functionName").toString(), QString("foo"));
-            int line = obj.property("lineNumber").toInt32();
-            if (counter == 5)
-                QCOMPARE(line, 9);
-            else
-                QCOMPARE(line, 3 + counter);
-        } else {
-            QVERIFY(frame.strictlyEquals(eng.globalObject()));
-            QVERIFY(obj.property("functionName").toString().isEmpty());
-        }
-
-        --counter;
-    }
-
-    {
-        QScriptValue bt = result.property("backtrace").call(result);
-        QCOMPARE(qscriptvalue_cast<QStringList>(bt), backtrace);
-    }
-
     // throw something that isn't an Error object
     eng.clearExceptions();
     QVERIFY(eng.uncaughtExceptionBacktrace().isEmpty());
