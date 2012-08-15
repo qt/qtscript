@@ -145,6 +145,8 @@ QScriptContextInfoPrivate::QScriptContextInfoPrivate(const QScriptContext *conte
         frame = rewindContext; //for retreiving the global context's "fake" frame
         // An agent might have provided the line number.
         lineNumber = QScript::scriptEngineFromExec(frame)->agentLineNumber;
+        if (lineNumber == -1)
+            lineNumber = QScript::scriptEngineFromExec(frame)->uncaughtExceptionLineNumber;
     } else {
         // rewind the stack from the top in order to find the frame from the caller where the returnPC is stored
         while (rewindContext && QScriptEnginePrivate::contextForFrame(rewindContext->callerFrame()->removeHostCallFrameFlag()) != context)

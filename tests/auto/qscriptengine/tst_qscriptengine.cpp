@@ -3057,20 +3057,19 @@ void tst_QScriptEngine::stacktrace()
     const QString fileName("testfile");
 
     QStringList backtrace;
-    backtrace << "foo(5)@testfile:9"
-              << "foo(4)@testfile:7"
-              << "foo(3)@testfile:6"
-              << "foo(2)@testfile:5"
-              << "foo(1)@testfile:4"
-              << "foo(0)@testfile:3"
-              << "<global>()@testfile:12";
+    backtrace << "foo(counter = 5) at testfile:9"
+              << "foo(counter = 4) at testfile:7"
+              << "foo(counter = 3) at testfile:6"
+              << "foo(counter = 2) at testfile:5"
+              << "foo(counter = 1) at testfile:4"
+              << "foo(counter = 0) at testfile:3"
+              << "<global>() at testfile:12";
 
     QScriptEngine eng;
     QScriptValue result = eng.evaluate(script, fileName);
     QVERIFY(eng.hasUncaughtException());
     QVERIFY(result.isError());
 
-    QEXPECT_FAIL("", "QTBUG-6139: uncaughtExceptionBacktrace() doesn't give the full backtrace", Abort);
     QCOMPARE(eng.uncaughtExceptionBacktrace(), backtrace);
     QVERIFY(eng.hasUncaughtException());
     QVERIFY(result.strictlyEquals(eng.uncaughtException()));

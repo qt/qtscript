@@ -42,6 +42,7 @@
 #include <QtCore/qnumeric.h>
 #include <QtCore/qregexp.h>
 #include <QtCore/qset.h>
+#include <QtCore/qstringlist.h>
 #include "qscriptvalue_p.h"
 #include "qscriptstring_p.h"
 #include "bridge/qscriptclassobject_p.h"
@@ -141,6 +142,8 @@ struct GlobalClientData : public JSC::JSGlobalData::ClientData
         : engine(e) {}
     virtual ~GlobalClientData() {}
     virtual void mark(JSC::MarkStack& markStack);
+    virtual void uncaughtException(JSC::ExecState*, unsigned bytecodeOffset,
+                                   JSC::JSValue);
 
     QScriptEnginePrivate *engine;
 };
@@ -270,12 +273,20 @@ public:
 
     void agentDeleted(QScriptEngineAgent *agent);
 
+    static bool isLikelyStackOverflowError(JSC::ExecState *, JSC::JSValue);
+    void uncaughtException(JSC::ExecState *, unsigned bytecodeOffset, JSC::JSValue);
+
     static inline void saveException(JSC::ExecState *, JSC::JSValue *);
     static inline void restoreException(JSC::ExecState *, JSC::JSValue);
 
     void setCurrentException(QScriptValue exception) { m_currentException = exception; }
     QScriptValue currentException() const { return m_currentException; }
-    void clearCurrentException() { m_currentException.d_ptr.reset(); }
+    void clearCurrentException()
+    {
+        m_currentException.d_ptr.reset();
+        uncaughtExceptionBacktrace.clear();
+        uncaughtExceptionLineNumber = -1;
+    }
 
     static QScriptSyntaxCheckResult checkSyntax(const QString &program);
     static bool canEvaluate(const QString &program);
@@ -394,6 +405,8 @@ public:
     
     QHash<intptr_t, QScript::UStringSourceProviderWithFeedback*> loadedScripts;
     QScriptValue m_currentException;
+    QStringList uncaughtExceptionBacktrace;
+    int uncaughtExceptionLineNumber;
 
     QSet<JSC::JSObject*> visitedConversionObjects;
 

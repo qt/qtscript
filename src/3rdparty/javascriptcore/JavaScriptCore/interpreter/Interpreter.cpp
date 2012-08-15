@@ -584,6 +584,8 @@ NEVER_INLINE HandlerInfo* Interpreter::throwException(CallFrame*& callFrame, JSV
     }
     if (debugger)
         debugger->exceptionThrow(DebuggerCallFrame(callFrame, exceptionValue), codeBlock->ownerExecutable()->sourceID(), hasHandler);
+    else if (!hasHandler)
+        callFrame->globalData().clientData->uncaughtException(callFrame, bytecodeOffset, exceptionValue);
 #endif
 
     while (!(handler = codeBlock->handlerForBytecodeOffset(bytecodeOffset))) {

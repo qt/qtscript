@@ -161,8 +161,10 @@ QScriptContext::QScriptContext()
 QScriptValue QScriptContext::throwValue(const QScriptValue &value)
 {
     JSC::CallFrame *frame = QScriptEnginePrivate::frameForContext(this);
-    QScript::APIShim shim(QScript::scriptEngineFromExec(frame));
-    JSC::JSValue jscValue = QScript::scriptEngineFromExec(frame)->scriptValueToJSCValue(value);
+    QScriptEnginePrivate *engine = QScript::scriptEngineFromExec(frame);
+    QScript::APIShim shim(engine);
+    JSC::JSValue jscValue = engine->scriptValueToJSCValue(value);
+    engine->clearCurrentException();
     frame->setException(jscValue);
     return value;
 }
@@ -184,7 +186,8 @@ QScriptValue QScriptContext::throwValue(const QScriptValue &value)
 QScriptValue QScriptContext::throwError(Error error, const QString &text)
 {
     JSC::CallFrame *frame = QScriptEnginePrivate::frameForContext(this);
-    QScript::APIShim shim(QScript::scriptEngineFromExec(frame));
+    QScriptEnginePrivate *engine = QScript::scriptEngineFromExec(frame);
+    QScript::APIShim shim(engine);
     JSC::ErrorType jscError = JSC::GeneralError;
     switch (error) {
     case UnknownError:
@@ -206,7 +209,8 @@ QScriptValue QScriptContext::throwError(Error error, const QString &text)
         break;
     }
     JSC::JSObject *result = JSC::throwError(frame, jscError, text);
-    return QScript::scriptEngineFromExec(frame)->scriptValueFromJSCValue(result);
+    engine->clearCurrentException();
+    return engine->scriptValueFromJSCValue(result);
 }
 
 /*!
@@ -220,9 +224,11 @@ QScriptValue QScriptContext::throwError(Error error, const QString &text)
 QScriptValue QScriptContext::throwError(const QString &text)
 {
     JSC::CallFrame *frame = QScriptEnginePrivate::frameForContext(this);
-    QScript::APIShim shim(QScript::scriptEngineFromExec(frame));
+    QScriptEnginePrivate *engine = QScript::scriptEngineFromExec(frame);
+    QScript::APIShim shim(engine);
+    engine->clearCurrentException();
     JSC::JSObject *result = JSC::throwError(frame, JSC::GeneralError, text);
-    return QScript::scriptEngineFromExec(frame)->scriptValueFromJSCValue(result);
+    return engine->scriptValueFromJSCValue(result);
 }
 
 /*!

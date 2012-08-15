@@ -89,6 +89,7 @@ namespace JSC {
             virtual ~ClientData() = 0;
 #ifdef QT_BUILD_SCRIPT_LIB
             virtual void mark(MarkStack&) {}
+            virtual void uncaughtException(ExecState*, unsigned bytecodeOffset, JSValue) = 0;
 #endif
         };
 
