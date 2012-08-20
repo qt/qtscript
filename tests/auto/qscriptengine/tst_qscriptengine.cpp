@@ -146,6 +146,8 @@ private slots:
     void throwErrorFromProcessEvents();
     void disableProcessEventsInterval();
     void stacktrace();
+    void stacktrace_callJSFromCpp_data();
+    void stacktrace_callJSFromCpp();
     void numberParsing_data();
     void numberParsing();
     void automaticSemicolonInsertion();
@@ -3105,6 +3107,45 @@ void tst_QScriptEngine::stacktrace()
     eng.clearExceptions();
     QVERIFY(!eng.hasUncaughtException());
     QVERIFY(eng.uncaughtExceptionBacktrace().isEmpty());
+}
+
+void tst_QScriptEngine::stacktrace_callJSFromCpp_data()
+{
+    QTest::addColumn<QString>("callbackExpression");
+
+    QTest::newRow("explicit throw") << QString::fromLatin1("throw new Error('callback threw')");
+    QTest::newRow("reference error") << QString::fromLatin1("noSuchFunction()");
+}
+
+// QTBUG-26889
+void tst_QScriptEngine::stacktrace_callJSFromCpp()
+{
+    struct CallbackCaller {
+        static QScriptValue call(QScriptContext *, QScriptEngine *eng)
+        { return eng->globalObject().property(QStringLiteral("callback")).call(); }
+
+    };
+
+    QFETCH(QString, callbackExpression);
+    QString script = QString::fromLatin1(
+                "function callback() {\n"
+                "    %0\n"
+                "}\n"
+                "callCallbackFromCpp()").arg(callbackExpression);
+
+    QScriptEngine eng;
+    eng.globalObject().setProperty(QStringLiteral("callCallbackFromCpp"),
+                                   eng.newFunction(&CallbackCaller::call));
+    eng.evaluate(script, QStringLiteral("test.js"));
+
+    QVERIFY(eng.hasUncaughtException());
+    QCOMPARE(eng.uncaughtExceptionLineNumber(), 2);
+
+    QStringList expectedBacktrace;
+    expectedBacktrace << QStringLiteral("callback() at test.js:2")
+                      << QStringLiteral("<native>() at -1")
+                      << QStringLiteral("<global>() at test.js:4");
+    QCOMPARE(eng.uncaughtExceptionBacktrace(), expectedBacktrace);
 }
 
 void tst_QScriptEngine::numberParsing_data()

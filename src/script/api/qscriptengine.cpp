@@ -1434,12 +1434,20 @@ bool QScriptEnginePrivate::isLikelyStackOverflowError(JSC::ExecState *exec, JSC:
 
 /*!
   \internal
-  Called by the VM when an uncaught exception is detected.
-  At the time of this call, the VM stack has not yet been unwound.
+  Called by the VM when an uncaught exception is being processed.
+  If the VM call stack contains a native call inbetween two JS calls at the
+  time the exception is thrown, this function will get called multiple times
+  for a single exception (once per "interval" of JS call frames). In other
+  words, at the time of this call, the VM stack can be in a partially unwound
+  state.
 */
 void QScriptEnginePrivate::uncaughtException(JSC::ExecState *exec, unsigned bytecodeOffset,
                                              JSC::JSValue value)
 {
+    // Don't capture exception information if we already have.
+    if (uncaughtExceptionLineNumber != -1)
+        return;
+
     QScript::SaveFrameHelper saveFrame(this, exec);
 
     uncaughtExceptionLineNumber = exec->codeBlock()->lineNumberForBytecodeOffset(exec, bytecodeOffset);
