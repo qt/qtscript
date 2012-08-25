@@ -204,6 +204,7 @@ doc-build
 doc/html/*
 doc/qch
 doc-build
+doc/qtscript
 .rcc
 .pch
 .metadata
