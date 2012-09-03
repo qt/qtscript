@@ -1,5 +1,3 @@
-load(qt_build_config)
-
 TARGET  = qtscriptdbus
 DESTDIR = $$QT.script.plugins/script
 load(qt_plugin)

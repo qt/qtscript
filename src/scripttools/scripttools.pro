@@ -1,5 +1,3 @@
-load(qt_build_config)
-
 TARGET     = QtScriptTools
 QT         = core-private
 QT_PRIVATE = gui widgets-private script
