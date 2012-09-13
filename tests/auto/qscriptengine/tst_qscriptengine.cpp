@@ -3653,10 +3653,10 @@ void tst_QScriptEngine::isEvaluating_fromEvent()
 static QtMsgType theMessageType;
 static QString theMessage;
 
-static void myMsgHandler(QtMsgType type, const char *msg)
+static void myMsgHandler(QtMsgType type, const QMessageLogContext &, const QString &msg)
 {
     theMessageType = type;
-    theMessage = QString::fromLatin1(msg);
+    theMessage = msg;
 }
 
 void tst_QScriptEngine::printFunctionWithCustomHandler()
@@ -3666,7 +3666,7 @@ void tst_QScriptEngine::printFunctionWithCustomHandler()
     // redirected without changing the print() function itself.
     // This behavior is not documented.
     QScriptEngine eng;
-    QtMsgHandler oldHandler = qInstallMsgHandler(myMsgHandler);
+    QtMessageHandler oldHandler = qInstallMessageHandler(myMsgHandler);
     QVERIFY(eng.globalObject().property("print").isFunction());
 
     theMessageType = QtSystemMsg;
@@ -3681,7 +3681,7 @@ void tst_QScriptEngine::printFunctionWithCustomHandler()
     QCOMPARE(theMessageType, QtDebugMsg);
     QCOMPARE(theMessage, QString::fromLatin1("3 true little pigs"));
 
-    qInstallMsgHandler(oldHandler);
+    qInstallMessageHandler(oldHandler);
 }
 
 void tst_QScriptEngine::printThrowsException()
