@@ -40,6 +40,7 @@
 ****************************************************************************/
 
 #ifndef QTSCRIPTGLOBAL_H
+#define QTSCRIPTGLOBAL_H
 
 #include <QtCore/qglobal.h>
 
