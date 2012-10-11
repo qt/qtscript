@@ -6,11 +6,11 @@ DEFINES   += QT_NO_USING_NAMESPACE
 DEFINES   += QLALR_NO_QSCRIPTGRAMMAR_DEBUG_INFO
 #win32-msvc*|win32-icc:QMAKE_LFLAGS += /BASE:0x66000000       ### FIXME
 
+QMAKE_DOCS = $$PWD/doc/qtscript.qdocconf
+
 load(qt_module)
 
 CONFIG += building-libs
-
-QMAKE_DOCS = $$PWD/doc/qtscript.qdocconf
 
 WEBKITDIR = $$PWD/../3rdparty/javascriptcore
 GENERATED_SOURCES_DIR = generated

@@ -1,5 +1,5 @@
-include(../../../doc/global/qt-html-templates-offline.qdocconf)
-include(../../../doc/global/qt-module-defaults.qdocconf)
+include($QT_INSTALL_DOCS/global/qt-html-templates-offline.qdocconf)
+include($QT_INSTALL_DOCS/global/qt-module-defaults.qdocconf)
 
 project                 = QtScript
 description             = Qt Script Reference Documentation
@@ -45,7 +45,6 @@ headers.fileextensions  = "*.ch *.h *.h++ *.hh *.hpp *.hxx"
 examples.fileextensions = "*.cpp *.h *.js *.xq *.svg *.xml *.ui *.qhp *.qhcp *.qml *.css"
 examples.imageextensions = "*.png"
 
-outputdir               = ../../../doc/qtscript
 tagfile                 = ../../../doc/qtscript/qtscript.tags
 
 HTML.generatemacrefs    = "true"
