@@ -50,7 +50,10 @@
 #include <QtTest/QtTest>
 
 #include <QtScript/QtScript>
-#include <QtScriptTools/QtScriptTools>
+
+#ifdef QT_SCRIPTTOOLS_LIB
+# include <QtScriptTools/QtScriptTools>
+#endif
 
 class tst_HeadersClean: public QObject
 {

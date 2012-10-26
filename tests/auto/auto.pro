@@ -23,4 +23,12 @@ SUBDIRS=\
            qtipc \
            qscriptengineagent
 
+isEmpty(QT.widgets.name):SUBDIRS -= \
+    qscriptable \
+    qscriptengine \
+    qscriptenginedebugger \
+    qscriptextqobject \
+    qscriptqwidgets \
+    qscriptvalue
+
 !cross_compile:                             SUBDIRS += host.pro
