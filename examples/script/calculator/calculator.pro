@@ -1,5 +1,4 @@
-QT += script widgets
-CONFIG += uitools
+QT += script widgets uitools
 RESOURCES += calculator.qrc
 SOURCES += main.cpp
 QMAKE_PROJECT_NAME = scripted_calculator
