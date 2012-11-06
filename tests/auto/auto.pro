@@ -16,11 +16,9 @@ SUBDIRS=\
            qscriptvalueiterator \
            qscriptqwidgets \
            cmake \
-#           qtipc \
 
 !contains(QT_CONFIG, private_tests):SUBDIRS -= \
            qscriptcontext \
-           qtipc \
            qscriptengineagent
 
 isEmpty(QT.widgets.name):SUBDIRS -= \
