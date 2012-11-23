@@ -138,15 +138,7 @@ static QScriptValue loadScripts(QScriptContext *context, QScriptEngine *engine)
 
 int main(int argc, char *argv[])
 {
-    QApplication *app;
-    if (argc >= 2 && !qstrcmp(argv[1], "-tty")) {
-        ++argv;
-       --argc;
-        app = new QApplication(argc, argv, QApplication::Tty);
-    } else {
-        app = new QApplication(argc, argv);
-    }
-
+    QCoreApplication *app = new QCoreApplication(argc, argv);
     QScriptEngine *eng = new QScriptEngine();
 
     QScriptValue globalObject = eng->globalObject();

@@ -1,5 +1,5 @@
 
-QT += widgets script
+QT += script
 win32:CONFIG += console no_batch
 mac:CONFIG -= app_bundle
 
