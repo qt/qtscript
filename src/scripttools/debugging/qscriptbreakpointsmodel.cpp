@@ -475,7 +475,7 @@ Qt::ItemFlags QScriptBreakpointsModel::flags(const QModelIndex &index) const
 {
     if (!index.isValid())
         return 0;
-    Qt::ItemFlags ret = Qt::ItemIsEnabled | Qt::ItemIsSelectable;
+    Qt::ItemFlags ret = QAbstractItemModel::flags(index);
     switch (index.column()) {
     case 0:
         ret |= Qt::ItemIsUserCheckable;

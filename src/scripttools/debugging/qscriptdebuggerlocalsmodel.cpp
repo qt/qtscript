@@ -910,7 +910,7 @@ Qt::ItemFlags QScriptDebuggerLocalsModel::flags(const QModelIndex &index) const
     Q_D(const QScriptDebuggerLocalsModel);
     if (!index.isValid())
         return 0;
-    Qt::ItemFlags ret = Qt::ItemIsEnabled | Qt::ItemIsSelectable;
+    Qt::ItemFlags ret = QAbstractItemModel::flags(index);
     if ((index.column() == 1) && index.parent().isValid()) {
         QScriptDebuggerLocalsModelNode *node = d->nodeFromIndex(index);
         if (!(node->property.flags() & QScriptValue::ReadOnly))
