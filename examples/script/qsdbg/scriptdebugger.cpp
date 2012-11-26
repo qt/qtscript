@@ -176,7 +176,8 @@ int ScriptInfo::lineOffset(int lineNumber)
     } else {
         int index;
         it = m_lineOffsets.lowerBound(lineNumber);
-        --it;
+        if (it != m_lineOffsets.constBegin())
+            --it;
         if (it != m_lineOffsets.constBegin()) {
             index = it.key();
             offset = it.value();
