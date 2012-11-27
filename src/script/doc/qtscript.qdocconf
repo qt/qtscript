@@ -35,7 +35,7 @@ dita.metadata.default.author      = Qt Project
 dita.metadata.default.permissions = all
 dita.metadata.default.publisher   = Qt Project
 dita.metadata.default.copyryear = 2012
-dita.metadata.default.copyrholder = Nokia
+dita.metadata.default.copyrholder = Digia
 dita.metadata.default.audience = programmer
 
 sources.fileextensions  = "*.c++ *.cc *.cpp *.cxx *.mm *.qml *.qdoc"
