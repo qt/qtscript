@@ -26,18 +26,11 @@
 ****************************************************************************/
 
 /*!
-    \group script
-    \title Scripting Classes and Overviews
+  \page qtscript-index.html
+  \title Qt Script
+  \ingroup technology-apis
 
-    \brief Classes that add scripting capabilities to Qt applications.
-*/
-
-/*!
-  \page scripting.html
-  \title Making Applications Scriptable
-  \ingroup frameworks-technologies
-
-  Qt 4.3 and later provides support for application scripting with ECMAScript.
+  Qt provides support for application scripting with ECMAScript.
   The following guides and references cover aspects of programming with
   ECMAScript and Qt.
 
@@ -1876,3 +1869,11 @@
   \endlist
 
  */
+
+/*!
+    \group script
+    \title Scripting Classes and Overviews
+
+    \brief Classes that add scripting capabilities to Qt applications.
+*/
+
