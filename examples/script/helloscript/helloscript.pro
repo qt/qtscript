@@ -8,5 +8,4 @@ sources.files = $$SOURCES $$HEADERS $$RESOURCES $$FORMS helloscript.pro helloscr
 sources.path = $$[QT_INSTALL_EXAMPLES]/qtscript/script/helloscript
 INSTALLS += target sources
 
-symbian: CONFIG += qt_example
 maemo5: CONFIG += qt_example

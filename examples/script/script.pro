@@ -5,8 +5,6 @@ SUBDIRS = customclass
 !wince*:!contains(QT_CONFIG, no-gui):SUBDIRS += qscript marshal
 !wince*:SUBDIRS *= marshal
 
-symbian: SUBDIRS = context2d
-
 isEmpty(QT.widgets.name):SUBDIRS -= \
     context2d \
     defaultprototypes \
@@ -19,5 +17,4 @@ sources.files = $$SOURCES $$HEADERS $$RESOURCES $$FORMS script.pro README
 sources.path = $$[QT_INSTALL_EXAMPLES]/qtscript/script
 INSTALLS += target sources
 
-symbian: CONFIG += qt_example
 maemo5: CONFIG += qt_example
