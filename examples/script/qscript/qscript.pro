@@ -7,10 +7,7 @@ SOURCES += main.cpp
 
 include(../customclass/bytearrayclass.pri)
 
-# install
-target.path = $$[QT_INSTALL_EXAMPLES]/qtscript/script/qscript
-sources.files = $$RESOURCES $$FORMS main.cpp qscript.pro
-sources.path = $$[QT_INSTALL_EXAMPLES]/qtscript/script/qscript
-INSTALLS += target sources
+target.path = $$[QT_INSTALL_EXAMPLES]/script/qscript
+INSTALLS += target
 
 maemo5: CONFIG += qt_example
