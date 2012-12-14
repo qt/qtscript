@@ -10,8 +10,6 @@ CONFIG(standalone_package) {
     OUTPUT_DIR=$$PWD
 }
 
-CONFIG += depend_includepath
-
 isEmpty(OUTPUT_DIR) {
     CONFIG(debug, debug|release) {
         OUTPUT_DIR=$$PWD/WebKitBuild/Debug
