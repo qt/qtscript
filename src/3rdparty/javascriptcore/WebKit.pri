@@ -41,7 +41,6 @@ building-libs {
             }
         }
     }
-    DEPENDPATH += $$PWD/WebKit/qt/Api
 }
 greaterThan(QT_MINOR_VERSION, 5):DEFINES += WTF_USE_ACCELERATED_COMPOSITING
 
