@@ -3,13 +3,13 @@ SUBDIRS = \
     customclass \
     qsdbg
 
-!isEmpty(QT.widgets.name) {
+qtHaveModule(widgets) {
     SUBDIRS += \
         helloscript \
         context2d \
         defaultprototypes
 
-    !isEmpty(QT.uitools.name) {
+    qtHaveModule(uitools) {
         SUBDIRS += \
             calculator \
             qstetrix
