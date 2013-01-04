@@ -48,6 +48,10 @@
 #include <wtf/DateMath.h>
 #include <wtf/StringExtras.h>
 
+#if OS(WINDOWS)
+#include <windows.h>
+#endif
+
 using namespace WTF;
 
 namespace JSC {
@@ -79,12 +83,22 @@ void formatDateUTCVariant(const GregorianDateTime &t, DateConversionBuffer& buff
 void formatTime(const GregorianDateTime &t, DateConversionBuffer& buffer)
 {
     int offset = abs(gmtoffset(t));
+#if OS(WINDOWS)
+    TIME_ZONE_INFORMATION timeZoneInformation;
+    GetTimeZoneInformation(&timeZoneInformation);
+    const WCHAR* timeZoneName = t.isDST ? timeZoneInformation.DaylightName : timeZoneInformation.StandardName;
+#else
     char timeZoneName[70];
     struct tm gtm = t;
     strftime(timeZoneName, sizeof(timeZoneName), "%Z", &gtm);
+#endif
 
     if (timeZoneName[0]) {
+#if OS(WINDOWS)
+        snprintf(buffer, DateConversionBufferSize, "%02d:%02d:%02d GMT%c%02d%02d (%S)",
+#else
         snprintf(buffer, DateConversionBufferSize, "%02d:%02d:%02d GMT%c%02d%02d (%s)",
+#endif
             t.hour, t.minute, t.second,
             gmtoffset(t) < 0 ? '-' : '+', offset / (60*60), (offset / 60) % 60, timeZoneName);
     } else {

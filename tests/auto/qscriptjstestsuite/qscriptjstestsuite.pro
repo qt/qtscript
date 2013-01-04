@@ -5,9 +5,9 @@ SOURCES  += tst_qscriptjstestsuite.cpp
 RESOURCES += qscriptjstestsuite.qrc
 include(../qscriptv8testsuite/abstracttestsuite.pri)
 
-!symbian: DEFINES += SRCDIR=\\\"$$PWD\\\"
+DEFINES += SRCDIR=\\\"$$PWD\\\"
 
-wince*|symbian: {
+wince* {
 testFiles.files = tests
 testFiles.path = .
 DEPLOYMENT += testFiles

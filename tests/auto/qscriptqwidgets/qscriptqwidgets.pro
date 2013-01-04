@@ -3,7 +3,6 @@ CONFIG += testcase
 
 TEMPLATE = app
 TARGET = tst_qscriptqwidgets
-DEPENDPATH += .
 INCLUDEPATH += .
 
 QT += widgets script testlib

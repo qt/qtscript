@@ -13,12 +13,6 @@ CONFIG(debug, debug|release) {
     OBJECTS_DIR = obj/release
 }
 
-symbian: {
-    # Need to guarantee this comes before system includes of /epoc32/include
-    MMP_RULES += "USERINCLUDE ../JavaScriptCore/profiler"
-    LIBS += -lhal
-}
-
 INCLUDEPATH = \
     $$PWD \
     $$PWD/.. \
@@ -69,8 +63,6 @@ contains(JAVASCRIPTCORE_JIT,no) {
 }
 
 wince* {
-    INCLUDEPATH += $$QT.core.sources/../3rdparty/ce-compat
-    SOURCES += $$QT.core.sources/../3rdparty/ce-compat/ce_time.c
     DEFINES += WINCEBASIC
 }
 

@@ -16,19 +16,8 @@ RESOURCES += context2d.qrc
 
 contains(QT_CONFIG, scripttools): QT += scripttools
 
-# install
-target.path = $$[QT_INSTALL_EXAMPLES]/qtscript/script/context2d
-sources.files = $$SOURCES $$HEADERS $$RESOURCES $$FORMS context2d.pro scripts
-sources.path = $$[QT_INSTALL_EXAMPLES]/qtscript/script/context2d
-INSTALLS += target sources
+target.path = $$[QT_INSTALL_EXAMPLES]/script/context2d
+INSTALLS += target
 
-symbian:{
-    TARGET.UID3 = 0xA000C608
-    CONFIG += qt_example
-    TARGET.EPOCHEAPSIZE = 0x200000 0xA00000
-    contextScripts.path = .
-    contextScripts.files = scripts
-    DEPLOYMENT += contextScripts
-}
 maemo5: CONFIG += qt_example
 

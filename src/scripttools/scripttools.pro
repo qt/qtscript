@@ -8,5 +8,3 @@ DEFINES   += QT_NO_USING_NAMESPACE
 load(qt_module)
 
 include(debugging/debugging.pri)
-
-symbian:TARGET.UID3=0x2001E625
