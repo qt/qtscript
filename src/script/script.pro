@@ -92,3 +92,14 @@ integrity {
 # WebKit doesn't compile in C++0x mode
 *-g++*:QMAKE_CXXFLAGS -= -std=c++0x -std=gnu++0x
 CONFIG -= c++11
+
+CONFIG(android) {
+    !CONFIG(x86): DEFINES += arm
+    contains(QMAKE_CFLAGS, -mfpu=vfp): DEFINES += HAVE_VFP
+    !CONFIG(armeabi-v7a):!CONFIG(x86) {
+        QMAKE_CFLAGS_RELEASE -= -mthumb
+        QMAKE_CFLAGS_RELEASE += -marm
+        QMAKE_CXXFLAGS_RELEASE -= -mthumb
+        QMAKE_CXXFLAGS_RELEASE += -marm
+    }
+}

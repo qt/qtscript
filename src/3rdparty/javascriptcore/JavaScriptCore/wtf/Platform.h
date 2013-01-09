@@ -450,8 +450,10 @@
     || OS(SYMBIAN)          \
     || defined(unix)        \
     || defined(__unix)      \
-    || defined(__unix__)
+    || defined(__unix__)    \
+    || defined(ANDROID)
 #define WTF_OS_UNIX 1
+
 #endif
 
 /* Operating environments */
@@ -642,7 +644,7 @@
 #define HAVE_PTHREAD_RWLOCK 1
 #endif
 
-#if PLATFORM(ANDROID)
+#if PLATFORM(ANDROID)  && !PLATFORM(QT)
 #define WTF_USE_PTHREADS 1
 #define WTF_PLATFORM_SGL 1
 #define USE_SYSTEM_MALLOC 1
@@ -696,7 +698,9 @@
     && !OS(ANDROID) && !OS(AIX) && !OS(HPUX)
 #define HAVE_TM_GMTOFF 1
 #define HAVE_TM_ZONE 1
+#ifndef ANDROID
 #define HAVE_TIMEGM 1
+#endif
 #endif
 
 #if OS(DARWIN)
@@ -774,7 +778,7 @@
 
 #define HAVE_ERRNO_H 1
 /* As long as Haiku doesn't have a complete support of locale this will be disabled. */
-#if !OS(HAIKU)
+#if !OS(HAIKU) && !defined(ANDROID)
 #define HAVE_LANGINFO_H 1
 #endif
 #define HAVE_MMAP 1

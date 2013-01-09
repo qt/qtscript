@@ -36,14 +36,16 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <elf.h>
+#if !OS(ANDROID)
 #include <asm/hwcap.h>
+#endif
 #endif
 
 namespace JSC {
 
 static bool isVFPPresent()
 {
-#if OS(LINUX)
+#if OS(LINUX) && !OS(ANDROID)
     int fd = open("/proc/self/auxv", O_RDONLY);
     if (fd > 0) {
         Elf32_auxv_t aux;
@@ -56,8 +58,15 @@ static bool isVFPPresent()
         close(fd);
     }
 #endif
-
+#if OS(ANDROID)
+# if HAVE_VFP
+    return true;
+# else
     return false;
+# endif
+#else
+    return false;
+#endif
 }
 
 const bool MacroAssemblerARM::s_isVFPPresent = isVFPPresent();
