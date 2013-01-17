@@ -6,7 +6,7 @@ SOURCES = main.cpp \
 
 RESOURCES = tetrix.qrc
 
-contains(QT_CONFIG, scripttools): QT += scripttools
+qtHaveModule(scripttools): QT += scripttools
 
 target.path = $$[QT_INSTALL_EXAMPLES]/script/qstetrix
 INSTALLS += target
