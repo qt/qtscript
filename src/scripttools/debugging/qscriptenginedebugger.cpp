@@ -70,12 +70,12 @@ public:
 };
 
 /*!
-  \since 4.5
-  \class QScriptEngineDebugger
+    \since 4.5
+    \class QScriptEngineDebugger
+    \inmodule QtScriptTools
+    \brief The QScriptEngineDebugger class provides a QScriptEngine debugger.
 
-  \brief The QScriptEngineDebugger class provides a QScriptEngine debugger.
-
-  \ingroup script
+    \ingroup script
 
 
   The QScriptEngineDebugger class provides a debugger that can be
@@ -86,7 +86,7 @@ public:
   To attach the debugger to a script engine, call the attachTo()
   function.
 
-  \snippet code/src.scripttools.qscriptenginedebugger.cpp 0
+  \snippet src.scripttools.qscriptenginedebugger.cpp 0
 
   Once the debugger has been attached to a script engine, you can
   proceed to evaluate scripts as usual, e.g. by calling
@@ -140,7 +140,7 @@ public:
   the function call does not return until the user has finished
   interacting with the debugger.
 
-  \snippet code/src.scripttools.qscriptenginedebugger.cpp 1
+  \snippet src.scripttools.qscriptenginedebugger.cpp 1
 
   When the Qt Script debugger is running, the C++ application itself
   is not "frozen". This means that it is possible that more scripts
