@@ -135,7 +135,7 @@ namespace JSC {
 
     class JSImmediate {
 #ifdef QT_BUILD_SCRIPT_LIB
-    public: // QtScript needs isImmediate() and from() functions
+    public: // Qt Script needs isImmediate() and from() functions
 #else
     private:
 #endif

@@ -156,7 +156,7 @@ bool QScriptString::operator!=(const QScriptString &other) const
 /*!
   \since 4.6
 
-  Attempts to convert this QScriptString to a QtScript array index,
+  Attempts to convert this QScriptString to a Qt Script array index,
   and returns the result.
 
   If a conversion error occurs, *\a{ok} is set to false; otherwise

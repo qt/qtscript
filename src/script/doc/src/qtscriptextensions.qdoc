@@ -27,10 +27,10 @@
 
 /*!
     \page qtscriptextensions.html
-    \title Creating QtScript Extensions
-    \brief A guide to creating and using QtScript extensions.
+    \title Creating Qt Script Extensions
+    \brief A guide to creating and using Qt Script extensions.
 
-    QtScript extensions can make additional functionality available to scripts
+    Qt Script extensions can make additional functionality available to scripts
     evaluated by a QScriptEngine. Extensions are imported by calling
     the QScriptEngine::importExtension() function.
 
