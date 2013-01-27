@@ -29,8 +29,6 @@
 #include <QtCore/qobject.h>
 #include <QtScript/qtscriptglobal.h>
 
-QT_BEGIN_HEADER
-
 QT_BEGIN_NAMESPACE
 
 
@@ -47,7 +45,5 @@ struct Q_SCRIPT_EXPORT QScriptExtensionInterface
 Q_DECLARE_INTERFACE(QScriptExtensionInterface, QScriptExtensionInterface_iid)
 
 QT_END_NAMESPACE
-
-QT_END_HEADER
 
 #endif // QSCRIPTEXTENSIONINTERFACE_H
