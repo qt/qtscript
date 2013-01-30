@@ -32,7 +32,7 @@ qhp.qtscript.file = qtscript.qhp
 
 # Namespace for the output file. This namespace is used to distinguish between
 # different documentation files in Creator/Assistant.
-qhp.qtscript.namespace = org.qt-project.qtscript.501
+qhp.qtscript.namespace = org.qt-project.qtscript.$QT_VERSION_TAG
 
 # Title for the package, will be the main title for the package in
 # Assistant/Creator.
