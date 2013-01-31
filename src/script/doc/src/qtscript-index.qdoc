@@ -1637,7 +1637,7 @@
   doesn't provide any debugging-specific functionality (e.g. setting
   breakpoints), but it is the basis of tools that do.
 
-  The QScriptEngineDebugger class introduced in Qt 4.5 provides a 
+  The \l{Qt Script Tools} module provides a
   \l{Qt Script Debugger Manual}{Qt Script debugger} that can be embedded
   into your application.
 
@@ -1876,4 +1876,3 @@
 
     \brief Classes that add scripting capabilities to Qt applications.
 */
-
