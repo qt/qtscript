@@ -368,7 +368,7 @@ bool Environment::hasIntervalTimers() const
     return !m_intervalHash.isEmpty();
 }
 
-// This is used by the Context2D QtScript benchmark.
+// This is used by the Context2D Qt Script benchmark.
 void Environment::triggerTimers()
 {
     for (int x = 0; x < 2; ++x) {

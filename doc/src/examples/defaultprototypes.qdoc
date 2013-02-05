@@ -35,7 +35,7 @@
     \image defaultprototypes-example.png
 
     With QScriptEngine::setDefaultPrototype() you can specify
-    a QtScript object that defines a scripting interface for
+    a Qt Script object that defines a scripting interface for
     a C++ type; Qt Script operations on values of such types
     will then be delegated to your prototype object. In this
     example, a simple scripting interface for QListWidgetItem is

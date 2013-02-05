@@ -44,7 +44,7 @@ QT_BEGIN_NAMESPACE
     functions, and exporting the class using the Q_PLUGIN_METADATA()
     macro. See \l {How to Create Qt Plugins} for details.
 
-    \sa QScriptEngine::importExtension(), {Creating QtScript Extensions}
+    \sa QScriptEngine::importExtension(), {Creating Qt Script Extensions}
 */
 
 /*!

@@ -1170,7 +1170,7 @@ DEFINE_STUB_FUNCTION(int, timeout_check)
     }
 #ifdef QT_BUILD_SCRIPT_LIB
     else {
-        // It's possible that the call to QtScript's implementation of
+        // It's possible that the call to Qt Script's implementation of
         // TimeoutChecker::didTimeOut() caused an error to be thrown.
         // In that case, didTimeOut() should still return false, since
         // we don't want the interrupted-exception to override the

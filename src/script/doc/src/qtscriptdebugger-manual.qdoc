@@ -30,8 +30,8 @@
     \title Qt Script Debugger Manual
     \brief A manual describing how to use the Qt Script debugger.
 
-  The Qt Script debugger is a tool for debugging script execution in
-  Qt applications that use Qt Script. Application developers can embed
+  The \l{Qt Script Tools} module provides a debugger for script execution in
+  Qt applications that use \l{Qt Script}. Application developers can embed
   the debugger into their application through the
   QScriptEngineDebugger class. This manual describes how to use the
   debugger. We assume that the reader is somewhat familiar with
@@ -291,7 +291,7 @@
   previously.
 
   \section3 ignore <breakpoint-id> <count>
-  
+
   Sets the ignore-count of a breakpoint, i.e., the breakpoint will not
   stop the program execution unless it have been reached \c count
   times. This can, for instance, be useful in loops to stop at a
@@ -356,7 +356,7 @@
 
   \section3 eval <program>
 
-  Evaluates a program. 
+  Evaluates a program.
 
   \section3 finish
 
@@ -402,7 +402,7 @@
 
   Selects the previous (inner) stack frame. The execution will not
   return to this frame, but you will get access to its local
-  variables. 
+  variables.
 
   \section3 frame <index>
 
