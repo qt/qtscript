@@ -1,7 +1,7 @@
 include($QT_INSTALL_DOCS/global/qt-module-defaults.qdocconf)
 
 # Name of the project which must match the outputdir. Determines the .index file
-project = qtscript
+project = qtscripttools
 
 # Directories in which to search for files to document and images.
 # By default set to the root directory of the project for sources
@@ -16,7 +16,7 @@ headerdirs += ..
 imagedirs += images
 sourcedirs += ..
 
-depends += qtcore qtlinguist qtscripttools
+depends += qtcore qtlinguist qtscript
 
 # The following parameters are for creating a qhp file, the qhelpgenerator
 # program can convert the qhp file into a qch file which can be opened in
@@ -25,23 +25,23 @@ depends += qtcore qtlinguist qtscripttools
 # Defines the name of the project. You cannot use operators (+, =, -) in
 # the name. Properties for this project are set using a qhp.<projectname>.property
 # format.
-qhp.projects = qtscript
+qhp.projects = qtscripttools
 
 # Sets the name of the output qhp file.
-qhp.qtscript.file = qtscript.qhp
+qhp.qtscripttools.file = qtscripttools.qhp
 
 # Namespace for the output file. This namespace is used to distinguish between
 # different documentation files in Creator/Assistant.
-qhp.qtscript.namespace = org.qt-project.qtscript.501
+qhp.qtscripttools.namespace = org.qt-project.qtscripttools.501
 
 # Title for the package, will be the main title for the package in
 # Assistant/Creator.
-qhp.qtscript.indexTitle = Qt Script
+qhp.qtscripttools.indexTitle = Qt Script
 
 # Only update the name of the project for the next variables.
-qhp.qtscript.virtualFolder  = qtscript
-qhp.qtscript.subprojects = classes
-qhp.qtscript.subprojects.classes.title = C++ Classes
-qhp.qtscript.subprojects.classes.indexTitle = Qt Script C++ Classes
-qhp.qtscript.subprojects.classes.selectors = class fake:headerfile
-qhp.qtscript.subprojects.classes.sortPages = true
+qhp.qtscripttools.virtualFolder  = qtscripttools
+qhp.qtscripttools.subprojects = classes
+qhp.qtscripttools.subprojects.classes.title = C++ Classes
+qhp.qtscripttools.subprojects.classes.indexTitle = Qt Script Tools C++ Classes
+qhp.qtscripttools.subprojects.classes.selectors = class fake:headerfile
+qhp.qtscripttools.subprojects.classes.sortPages = true

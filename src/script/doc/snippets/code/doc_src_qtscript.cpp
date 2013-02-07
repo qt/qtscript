@@ -65,7 +65,7 @@ public:
 
     void aNonScriptableFunction();
 
-public slots: // these functions (slots) will be available in QtScript
+public slots: // these functions (slots) will be available in Qt Script
     void calculate( ... );
     void setEnabled( bool enabled );
     bool isEnabled() const;
@@ -103,7 +103,7 @@ public:
 
     void aNonScriptableFunction();
 
-public slots: // these functions (slots) will be available in QtScript
+public slots: // these functions (slots) will be available in Qt Script
     void calculate( ... );
     void setEnabled( bool enabled );
     bool isEnabled() const;
@@ -132,7 +132,7 @@ public:
 
     void aNonScriptableFunction();
 
-public slots: // these functions (slots) will be available in QtScript
+public slots: // these functions (slots) will be available in Qt Script
     void calculate( ... );
     void setEnabled( bool enabled );
     bool isEnabled() const;
