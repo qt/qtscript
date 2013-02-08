@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2012 Digia Plc and/or its subsidiary(-ies).
+** Copyright (C) 2013 Digia Plc and/or its subsidiary(-ies).
 ** Contact: http://www.qt-project.org/legal
 **
 ** This file is part of the QtScript module of the Qt Toolkit.
@@ -94,7 +94,7 @@
   not have the requested property. Note that this prototype-based
   lookup is not performed by setProperty(); setProperty() will always
   create the property in the script object itself.  For more
-  information, see the \l{QtScript} documentation.
+  information, see the \l{Qt Script} documentation.
 
   Function objects (objects for which isFunction() returns true) can
   be invoked by calling call(). Constructor functions can be used to
@@ -2014,7 +2014,7 @@ bool QScriptValue::isValid() const
 /*!
   \since 4.4
 
-  Returns the internal data of this QScriptValue object. QtScript uses
+  Returns the internal data of this QScriptValue object. Qt Script uses
   this property to store the primitive value of Date, String, Number
   and Boolean objects. For other types of object, custom data may be
   stored using setData().

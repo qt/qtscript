@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2012 Digia Plc and/or its subsidiary(-ies).
+** Copyright (C) 2013 Digia Plc and/or its subsidiary(-ies).
 ** Contact: http://www.qt-project.org/legal
 **
 ** This file is part of the QtScript module of the Qt Toolkit.
@@ -179,7 +179,7 @@ QScriptEngine *QScriptClass::engine() const
   your class, then return it in this function.
 
   See the "Making Use of Prototype-Based Inheritance" section in the
-  QtScript documentation for more information on how prototypes are
+  Qt Script documentation for more information on how prototypes are
   used.
 */
 QScriptValue QScriptClass::prototype() const

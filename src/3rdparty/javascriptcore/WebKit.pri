@@ -10,8 +10,6 @@ CONFIG(standalone_package) {
     OUTPUT_DIR=$$PWD
 }
 
-CONFIG += depend_includepath
-
 isEmpty(OUTPUT_DIR) {
     CONFIG(debug, debug|release) {
         OUTPUT_DIR=$$PWD/WebKitBuild/Debug
@@ -40,18 +38,13 @@ building-libs {
                 else: LIBS += $${QTWEBKITLIBNAME}.lib
             } else {
                 LIBS += -lQtWebKit
-                symbian {
-                    TARGET.EPOCSTACKSIZE = 0x14000 // 80 kB
-                    TARGET.EPOCHEAPSIZE = 0x20000 0x2000000 // Min 128kB, Max 32MB
-                }
             }
         }
     }
-    DEPENDPATH += $$PWD/WebKit/qt/Api
 }
 greaterThan(QT_MINOR_VERSION, 5):DEFINES += WTF_USE_ACCELERATED_COMPOSITING
 
-!mac:!unix|symbian {
+!mac:!unix {
     DEFINES += USE_SYSTEM_MALLOC
 }
 
@@ -66,7 +59,7 @@ CONFIG -= warn_on
 *-g++*:QMAKE_CXXFLAGS += -Wall -Wreturn-type -fno-strict-aliasing -Wcast-align -Wchar-subscripts -Wformat-security -Wreturn-type -Wno-unused-parameter -Wno-sign-compare -Wno-switch -Wno-switch-enum -Wundef -Wmissing-noreturn -Winit-self
 
 # Enable GNU compiler extensions to the ARM compiler for all Qt ports using RVCT
-symbian|*-armcc {
+*-armcc {
     RVCT_COMMON_CFLAGS = --gnu --diag_suppress 68,111,177,368,830,1293
     RVCT_COMMON_CXXFLAGS = $$RVCT_COMMON_CFLAGS --no_parse_templates
 }
@@ -76,11 +69,7 @@ symbian|*-armcc {
     QMAKE_CXXFLAGS += $$RVCT_COMMON_CXXFLAGS
 }
 
-symbian {
-    QMAKE_CXXFLAGS.ARMCC += $$RVCT_COMMON_CXXFLAGS
-}
-
-symbian|maemo5: DEFINES *= QT_NO_UITOOLS
+maemo5: DEFINES *= QT_NO_UITOOLS
 
 contains(DEFINES, QT_NO_UITOOLS): CONFIG -= uitools
 

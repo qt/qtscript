@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2012 Digia Plc and/or its subsidiary(-ies).
+** Copyright (C) 2013 Digia Plc and/or its subsidiary(-ies).
 ** Contact: http://www.qt-project.org/legal
 **
 ** This file is part of the test suite of the Qt Toolkit.
@@ -1559,7 +1559,7 @@ void tst_QScriptEngine::builtinFunctionNames_data()
 
     // See ECMA-262 Chapter 15, "Standard Built-in ECMAScript Objects".
 
-    QTest::newRow("print") << QString("print") << QString("print"); // QtScript extension.
+    QTest::newRow("print") << QString("print") << QString("print"); // Qt Script extension.
     QTest::newRow("parseInt") << QString("parseInt") << QString("parseInt");
     QTest::newRow("parseFloat") << QString("parseFloat") << QString("parseFloat");
     QTest::newRow("isNaN") << QString("isNaN") << QString("isNaN");
@@ -1570,8 +1570,8 @@ void tst_QScriptEngine::builtinFunctionNames_data()
     QTest::newRow("encodeURIComponent") << QString("encodeURIComponent") << QString("encodeURIComponent");
     QTest::newRow("escape") << QString("escape") << QString("escape");
     QTest::newRow("unescape") << QString("unescape") << QString("unescape");
-    QTest::newRow("version") << QString("version") << QString("version"); // QtScript extension.
-    QTest::newRow("gc") << QString("gc") << QString("gc"); // QtScript extension.
+    QTest::newRow("version") << QString("version") << QString("version"); // Qt Script extension.
+    QTest::newRow("gc") << QString("gc") << QString("gc"); // Qt Script extension.
 
     QTest::newRow("Array") << QString("Array") << QString("Array");
     QTest::newRow("Array.prototype.toString") << QString("Array.prototype.toString") << QString("toString");
@@ -4035,7 +4035,7 @@ void tst_QScriptEngine::jsFunctionDeclarationAsStatement()
     // at the beginning of chapter 12 in ECMA-262 5th edition, where it's
     // recommended that implementations either disallow this usage or issue
     // a warning.
-    // Since we had a bug report long ago about QtScript not supporting this
+    // Since we had a bug report long ago about Qt Script not supporting this
     // "feature" (and thus deviating from other implementations), we still
     // check this behavior.
 
@@ -4376,7 +4376,7 @@ void tst_QScriptEngine::jsShadowReadOnlyPrototypeProperty()
     // SpiderMonkey has different behavior than JSC and V8; it disallows
     // creating a property on the instance if there's a property with the
     // same name in the prototype, and that property is read-only. We
-    // adopted that behavior in the old (4.5) QtScript back-end, but it
+    // adopted that behavior in the old (4.5) Qt Script back-end, but it
     // just seems weird -- and non-compliant. Adopt the JSC behavior instead.
     QScriptEngine eng;
     QVERIFY(eng.evaluate("o = {}; o.__proto__ = parseInt; o.length").isNumber());
@@ -5802,7 +5802,7 @@ void tst_QScriptEngine::qRegExpInport()
 }
 
 // QScriptValue::toDateTime() returns a local time, whereas JS dates
-// are always stored as UTC. QtScript must respect the current time
+// are always stored as UTC. Qt Script must respect the current time
 // zone, and correctly adjust for daylight saving time that may be in
 // effect at a given date (QTBUG-9770).
 void tst_QScriptEngine::dateRoundtripJSQtJS()

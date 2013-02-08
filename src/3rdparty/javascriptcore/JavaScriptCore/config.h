@@ -39,10 +39,10 @@
 
 #if OS(WINDOWS)
 
-// If we don't define these, they get defined in windef.h. 
-// We want to use std::min and std::max
-#define max max
-#define min min
+// windef.h defines min and max unless NOMINMAX is defined.
+#ifndef NOMINMAX
+#  define NOMINMAX
+#endif
 
 #if !COMPILER(MSVC7) && !OS(WINCE)
 // We need to define this before the first #include of stdlib.h or it won't contain rand_s.

@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2012 Digia Plc and/or its subsidiary(-ies).
+** Copyright (C) 2013 Digia Plc and/or its subsidiary(-ies).
 ** Contact: http://www.qt-project.org/legal
 **
 ** This file is part of the QtScript module of the Qt Toolkit.
@@ -156,7 +156,7 @@ bool QScriptString::operator!=(const QScriptString &other) const
 /*!
   \since 4.6
 
-  Attempts to convert this QScriptString to a QtScript array index,
+  Attempts to convert this QScriptString to a Qt Script array index,
   and returns the result.
 
   If a conversion error occurs, *\a{ok} is set to false; otherwise

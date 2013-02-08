@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2012 Digia Plc and/or its subsidiary(-ies).
+** Copyright (C) 2013 Digia Plc and/or its subsidiary(-ies).
 ** Contact: http://www.qt-project.org/legal
 **
 ** This file is part of the documentation of the Qt Toolkit.
@@ -31,10 +31,10 @@
     \since 4.3
     \ingroup modules
 
-    \brief The QtScript module provides classes for making Qt applications scriptable.
+    \brief The Qt Script module provides classes for making Qt applications scriptable.
 
-    The QtScript module only provides core scripting facilities; the
-    QtScriptTools module provides additional Qt Script-related
+    The Qt Script module only provides core scripting facilities; the
+    Qt Script Tools module provides additional Qt Script-related
     components that application developers may find useful.
 
     This module is mainly provided for backwards compatibility reasons
@@ -52,13 +52,13 @@
     \snippet code/doc_src_qtscript.pro 1
 
     For detailed information on how to make your application
-    scriptable with QtScript, see \l{Making Applications
+    scriptable with Qt Script, see \l{Making Applications
     Scriptable}.
 
     \section1 License Information
 
     Qt Commercial Edition licensees that wish to distribute applications that
-    use the QtScript module need to be aware of their obligations under the
+    use the Qt Script module need to be aware of their obligations under the
     GNU Library General Public License (LGPL).
 
     Developers using the Open Source Edition can choose to redistribute
@@ -70,7 +70,7 @@
     sufficient for most use cases and is not dependent on LGPL code.
 
     \legalese
-    QtScript is licensed under the GNU Library General Public License.
+    Qt Script is licensed under the GNU Library General Public License.
     Individual contributor names and copyright dates can be found
     inline in the code.
 

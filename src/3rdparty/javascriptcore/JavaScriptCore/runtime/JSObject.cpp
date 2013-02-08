@@ -533,7 +533,7 @@ NEVER_INLINE void JSObject::fillGetterPropertySlot(PropertySlot& slot, JSValue* 
 Structure* JSObject::createInheritorID()
 {
 #ifdef QT_BUILD_SCRIPT_LIB
-    // ### QtScript needs the hasOwnProperty() calls etc. for QScriptObject
+    // ### Qt Script needs the hasOwnProperty() calls etc. for QScriptObject
     m_inheritorID = Structure::create(this, TypeInfo(ObjectType, ImplementsHasInstance | JSC::OverridesHasInstance | JSC::OverridesGetOwnPropertySlot | JSC::OverridesMarkChildren | JSC::OverridesGetPropertyNames));
 #else
     m_inheritorID = JSObject::createStructure(this);

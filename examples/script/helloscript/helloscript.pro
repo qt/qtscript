@@ -2,11 +2,7 @@ QT += widgets script
 RESOURCES += helloscript.qrc
 SOURCES += main.cpp
 
-# install
-target.path = $$[QT_INSTALL_EXAMPLES]/qtscript/script/helloscript
-sources.files = $$SOURCES $$HEADERS $$RESOURCES $$FORMS helloscript.pro helloscript.js
-sources.path = $$[QT_INSTALL_EXAMPLES]/qtscript/script/helloscript
-INSTALLS += target sources
+target.path = $$[QT_INSTALL_EXAMPLES]/script/helloscript
+INSTALLS += target
 
-symbian: CONFIG += qt_example
 maemo5: CONFIG += qt_example

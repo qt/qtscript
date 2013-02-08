@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2012 Digia Plc and/or its subsidiary(-ies).
+** Copyright (C) 2013 Digia Plc and/or its subsidiary(-ies).
 ** Contact: http://www.qt-project.org/legal
 **
 ** This file is part of the QtScript module of the Qt Toolkit.
@@ -41,10 +41,10 @@ QT_BEGIN_NAMESPACE
 
     Writing a script extension plugin is achieved by subclassing this
     base class, reimplementing the pure virtual keys() and initialize()
-    functions, and exporting the class using the Q_EXPORT_PLUGIN2()
+    functions, and exporting the class using the Q_PLUGIN_METADATA()
     macro. See \l {How to Create Qt Plugins} for details.
 
-    \sa QScriptEngine::importExtension(), {Creating QtScript Extensions}
+    \sa QScriptEngine::importExtension(), {Creating Qt Script Extensions}
 */
 
 /*!
@@ -71,7 +71,7 @@ QT_BEGIN_NAMESPACE
     Constructs a script extension plugin with the given \a parent.
 
     Note that this constructor is invoked automatically by the
-    Q_EXPORT_PLUGIN2() macro, so there is no need for calling it
+    Q_PLUGIN_METADATA() macro, so there is no need for calling it
     explicitly.
 */
 QScriptExtensionPlugin::QScriptExtensionPlugin(QObject *parent)

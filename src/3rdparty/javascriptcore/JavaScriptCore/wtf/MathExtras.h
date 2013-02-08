@@ -27,6 +27,7 @@
 #define WTF_MathExtras_h
 
 #include <float.h>
+#include <limits>
 #include <math.h>
 #include <stdlib.h>
 
@@ -37,13 +38,6 @@
 #if OS(OPENBSD)
 #include <sys/types.h>
 #include <machine/ieee.h>
-#endif
-
-#if COMPILER(MSVC)
-#if OS(WINCE)
-#include <stdlib.h>
-#endif
-#include <limits>
 #endif
 
 #ifndef M_PI
@@ -185,5 +179,27 @@ inline float turn2deg(float t) { return t * 360.0f; }
 inline float deg2turn(float d) { return d / 360.0f; }
 inline float rad2grad(float r) { return r * 200.0f / piFloat; }
 inline float grad2rad(float g) { return g * piFloat / 200.0f; }
+
+#if COMPILER(MINGW64) && (!defined(__MINGW64_VERSION_RC) || __MINGW64_VERSION_RC < 1)
+inline double wtf_pow(double x, double y)
+{
+    // MinGW-w64 has a custom implementation for pow.
+    // This handles certain special cases that are different.
+    if ((x == 0.0 || isinf(x)) && isfinite(y)) {
+        double f;
+        if (modf(y, &f) != 0.0)
+            return ((x == 0.0) ^ (y > 0.0)) ? std::numeric_limits<double>::infinity() : 0.0;
+    }
+
+    if (x == 2.0) {
+        int yInt = static_cast<int>(y);
+        if (y == yInt)
+            return ldexp(1.0, yInt);
+    }
+
+    return pow(x, y);
+}
+#define pow(x, y) wtf_pow(x, y)
+#endif // COMPILER(MINGW64) && (!defined(__MINGW64_VERSION_RC) || __MINGW64_VERSION_RC < 1)
 
 #endif // #ifndef WTF_MathExtras_h
