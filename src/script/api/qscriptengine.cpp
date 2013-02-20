@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2012 Digia Plc and/or its subsidiary(-ies).
+** Copyright (C) 2013 Digia Plc and/or its subsidiary(-ies).
 ** Contact: http://www.qt-project.org/legal
 **
 ** This file is part of the QtScript module of the Qt Toolkit.
@@ -98,7 +98,7 @@ QT_BEGIN_NAMESPACE
   \ingroup script
   \mainclass
 
-  See the \l{QtScript} documentation for information about the Qt Script language,
+  See the \l{Qt Script} documentation for information about the Qt Script language,
   and how to get started with scripting your C++ application.
 
   \section1 Evaluating Scripts
@@ -1262,7 +1262,7 @@ void QScriptEnginePrivate::setContextFlags(JSC::ExecState *exec, uint flags)
 
 // This function is called by JSC after all objects reachable by JSC itself
 // have been processed (see JSC::Heap::markRoots()).
-// Here we should mark additional objects managed by QtScript.
+// Here we should mark additional objects managed by Qt Script.
 void QScriptEnginePrivate::mark(JSC::MarkStack& markStack)
 {
     Q_Q(QScriptEngine);
@@ -2183,7 +2183,7 @@ QScriptValue QScriptEngine::newFunction(QScriptEngine::FunctionSignature fun,
 #ifndef QT_NO_REGEXP
 
 /*!
-  Creates a QtScript object of class RegExp with the given
+  Creates a Qt Script object of class RegExp with the given
   \a regexp.
 
   \sa QScriptValue::toRegExp()
@@ -2198,7 +2198,7 @@ QScriptValue QScriptEngine::newRegExp(const QRegExp &regexp)
 #endif // QT_NO_REGEXP
 
 /*!
-  Creates a QtScript object holding the given variant \a value.
+  Creates a Qt Script object holding the given variant \a value.
 
   If a default prototype has been registered with the meta type id of
   \a value, then the prototype of the created object will be that
@@ -2251,13 +2251,13 @@ QScriptValue QScriptEngine::newVariant(const QScriptValue &object,
 
 #ifndef QT_NO_QOBJECT
 /*!
-  Creates a QtScript object that wraps the given QObject \a
+  Creates a Qt Script object that wraps the given QObject \a
   object, using the given \a ownership. The given \a options control
   various aspects of the interaction with the resulting script object.
 
   Signals and slots, properties and children of \a object are
   available as properties of the created QScriptValue. For more
-  information, see the \l{QtScript} documentation.
+  information, see the \l{Qt Script} documentation.
 
   If \a object is a null pointer, this function returns nullValue().
 
@@ -2265,8 +2265,8 @@ QScriptValue QScriptEngine::newVariant(const QScriptValue &object,
   (or its superclass, recursively), the prototype of the new script
   object will be set to be that default prototype.
 
-  If the given \a object is deleted outside of QtScript's control, any
-  attempt to access the deleted QObject's members through the QtScript
+  If the given \a object is deleted outside of Qt Script's control, any
+  attempt to access the deleted QObject's members through the Qt Script
   wrapper object (either by script code or C++) will result in a
   script exception.
 
@@ -2337,7 +2337,7 @@ QScriptValue QScriptEngine::newQObject(const QScriptValue &scriptObject,
 #endif // QT_NO_QOBJECT
 
 /*!
-  Creates a QtScript object of class Object.
+  Creates a Qt Script object of class Object.
 
   The prototype of the created object will be the Object
   prototype object.
@@ -2355,7 +2355,7 @@ QScriptValue QScriptEngine::newObject()
   \since 4.4
   \overload
 
-  Creates a QtScript Object of the given class, \a scriptClass.
+  Creates a Qt Script Object of the given class, \a scriptClass.
 
   The prototype of the created object will be the Object
   prototype object.
@@ -2467,7 +2467,7 @@ QScriptValue QScriptEngine::newFunction(QScriptEngine::FunctionWithArgSignature 
 }
 
 /*!
-  Creates a QtScript object of class Array with the given \a length.
+  Creates a Qt Script object of class Array with the given \a length.
 
   \sa newObject()
 */
@@ -2479,7 +2479,7 @@ QScriptValue QScriptEngine::newArray(uint length)
 }
 
 /*!
-  Creates a QtScript object of class RegExp with the given
+  Creates a Qt Script object of class RegExp with the given
   \a pattern and \a flags.
 
   The legal flags are 'g' (global), 'i' (ignore case), and 'm'
@@ -2493,7 +2493,7 @@ QScriptValue QScriptEngine::newRegExp(const QString &pattern, const QString &fla
 }
 
 /*!
-  Creates a QtScript object of class Date with the given
+  Creates a Qt Script object of class Date with the given
   \a value (the number of milliseconds since 01 January 1970,
   UTC).
 */
@@ -2505,7 +2505,7 @@ QScriptValue QScriptEngine::newDate(qsreal value)
 }
 
 /*!
-  Creates a QtScript object of class Date from the given \a value.
+  Creates a Qt Script object of class Date from the given \a value.
 
   \sa QScriptValue::toDateTime()
 */
@@ -2518,7 +2518,7 @@ QScriptValue QScriptEngine::newDate(const QDateTime &value)
 
 #ifndef QT_NO_QOBJECT
 /*!
-  Creates a QtScript object that represents a QObject class, using the
+  Creates a Qt Script object that represents a QObject class, using the
   the given \a metaObject and constructor \a ctor.
 
   Enums of \a metaObject (declared with Q_ENUMS) are available as
@@ -2591,7 +2591,7 @@ QScriptValue QScriptEngine::newQMetaObject(
   valid, and so on.
 
   A typical usage of canEvaluate() is to implement an interactive
-  interpreter for QtScript. The user is repeatedly queried for
+  interpreter for Qt Script. The user is repeatedly queried for
   individual lines of code; the lines are concatened internally, and
   only when canEvaluate() returns true for the resulting program is it
   passed to evaluate().
@@ -2599,7 +2599,7 @@ QScriptValue QScriptEngine::newQMetaObject(
   The following are some examples to illustrate the behavior of
   canEvaluate(). (Note that all example inputs are assumed to have an
   explicit newline as their last character, since otherwise the
-  QtScript parser would automatically insert a semi-colon character at
+  Qt Script parser would automatically insert a semi-colon character at
   the end of the input, and this could cause canEvaluate() to produce
   different results.)
 
@@ -2620,7 +2620,7 @@ QScriptValue QScriptEngine::newQMetaObject(
   Given the input
   \snippet code/src_script_qscriptengine.cpp 17
   canEvaluate() will return true, even though the code is clearly not
-  syntactically valid QtScript code. evaluate() will throw a
+  syntactically valid Qt Script code. evaluate() will throw a
   SyntaxError when this code is evaluated.
 
   Given the input
@@ -3607,7 +3607,7 @@ void QScriptEngine::installTranslatorFunctions(const QScriptValue &object)
     once; subsequent calls to importExtension() with the same extension
     name will do nothing and return undefinedValue().
 
-    \sa availableExtensions(), QScriptExtensionPlugin, {Creating QtScript Extensions}
+    \sa availableExtensions(), QScriptExtensionPlugin, {Creating Qt Script Extensions}
 */
 QScriptValue QScriptEngine::importExtension(const QString &extension)
 {
@@ -3876,10 +3876,10 @@ QStringList QScriptEngine::importedExtensions() const
 
     Note that the template type \c{T} must be known to QMetaType.
 
-    See \l{Conversion Between QtScript and C++ Types} for a
+    See \l{Conversion Between Qt Script and C++ Types} for a
     description of the built-in type conversion provided by
-    QtScript. By default, the types that are not specially handled by
-    QtScript are represented as QVariants (e.g. the \a value is passed
+    Qt Script. By default, the types that are not specially handled by
+    Qt Script are represented as QVariants (e.g. the \a value is passed
     to newVariant()); you can change this behavior by installing your
     own type conversion functions with qScriptRegisterMetaType().
 
@@ -3892,9 +3892,9 @@ QStringList QScriptEngine::importedExtensions() const
 
     Note that \c{T} must be known to QMetaType.
 
-    See \l{Conversion Between QtScript and C++ Types} for a
+    See \l{Conversion Between Qt Script and C++ Types} for a
     description of the built-in type conversion provided by
-    QtScript.
+    Qt Script.
 
     \sa toScriptValue(), qScriptRegisterMetaType()
 */
@@ -3947,7 +3947,7 @@ QStringList QScriptEngine::importedExtensions() const
 
     Additionally, the type of each element in the sequence should be
     suitable for conversion to a QScriptValue.  See
-    \l{Conversion Between QtScript and C++ Types} for more information
+    \l{Conversion Between Qt Script and C++ Types} for more information
     about the restrictions on types that can be used with QScriptValue.
 
     \sa QScriptEngine::fromScriptValue()
@@ -3967,7 +3967,7 @@ QStringList QScriptEngine::importedExtensions() const
 
     Additionally, the type of each element in the sequence must be
     suitable for conversion to a C++ type from a QScriptValue.  See
-    \l{Conversion Between QtScript and C++ Types} for more information
+    \l{Conversion Between Qt Script and C++ Types} for more information
     about the restrictions on types that can be used with
     QScriptValue.
 

@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2012 Digia Plc and/or its subsidiary(-ies).
+** Copyright (C) 2013 Digia Plc and/or its subsidiary(-ies).
 ** Contact: http://www.qt-project.org/legal
 **
 ** This file is part of the QtScript module of the Qt Toolkit.
@@ -2317,7 +2317,7 @@ int QObjectData::markConnections(JSC::MarkStack& markStack)
 
 // This function assumes all objects reachable elsewhere in the JS environment
 // (stack, heap) have been marked already (see QScriptEnginePrivate::mark()).
-// This determines whether any of QtScript's internal QObject wrappers are only
+// This determines whether any of Qt Script's internal QObject wrappers are only
 // weakly referenced and can be discarded.
 void QObjectData::markWrappers(JSC::MarkStack& markStack)
 {

@@ -14,7 +14,7 @@ SOURCES += qcontext2dcanvas.cpp \
 	   main.cpp
 RESOURCES += context2d.qrc
 
-contains(QT_CONFIG, scripttools): QT += scripttools
+qtHaveModule(scripttools): QT += scripttools
 
 target.path = $$[QT_INSTALL_EXAMPLES]/script/context2d
 INSTALLS += target

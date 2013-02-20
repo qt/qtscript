@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2012 Digia Plc and/or its subsidiary(-ies).
+** Copyright (C) 2013 Digia Plc and/or its subsidiary(-ies).
 ** Contact: http://www.qt-project.org/legal
 **
 ** This file is part of the QtScript module of the Qt Toolkit.
@@ -44,7 +44,7 @@ QT_BEGIN_NAMESPACE
     functions, and exporting the class using the Q_PLUGIN_METADATA()
     macro. See \l {How to Create Qt Plugins} for details.
 
-    \sa QScriptEngine::importExtension(), {Creating QtScript Extensions}
+    \sa QScriptEngine::importExtension(), {Creating Qt Script Extensions}
 */
 
 /*!

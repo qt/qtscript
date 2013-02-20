@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2012 Digia Plc and/or its subsidiary(-ies).
+** Copyright (C) 2013 Digia Plc and/or its subsidiary(-ies).
 ** Contact: http://www.qt-project.org/legal
 **
 ** This file is part of the documentation of the Qt Toolkit.
@@ -65,7 +65,7 @@ public:
 
     void aNonScriptableFunction();
 
-public slots: // these functions (slots) will be available in QtScript
+public slots: // these functions (slots) will be available in Qt Script
     void calculate( ... );
     void setEnabled( bool enabled );
     bool isEnabled() const;
@@ -103,7 +103,7 @@ public:
 
     void aNonScriptableFunction();
 
-public slots: // these functions (slots) will be available in QtScript
+public slots: // these functions (slots) will be available in Qt Script
     void calculate( ... );
     void setEnabled( bool enabled );
     bool isEnabled() const;
@@ -132,7 +132,7 @@ public:
 
     void aNonScriptableFunction();
 
-public slots: // these functions (slots) will be available in QtScript
+public slots: // these functions (slots) will be available in Qt Script
     void calculate( ... );
     void setEnabled( bool enabled );
     bool isEnabled() const;

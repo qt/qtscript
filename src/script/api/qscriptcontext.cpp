@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2012 Digia Plc and/or its subsidiary(-ies).
+** Copyright (C) 2013 Digia Plc and/or its subsidiary(-ies).
 ** Contact: http://www.qt-project.org/legal
 **
 ** This file is part of the QtScript module of the Qt Toolkit.
@@ -179,7 +179,7 @@ QScriptValue QScriptContext::throwValue(const QScriptValue &value)
   The error object will be initialized to contain information about
   the location where the error occurred; specifically, it will have
   properties \c{lineNumber}, \c{fileName} and \c{stack}. These
-  properties are described in \l {QtScript Extensions to ECMAScript}.
+  properties are described in \l {Qt Script Extensions to ECMAScript}.
 
   \sa throwValue(), state()
 */

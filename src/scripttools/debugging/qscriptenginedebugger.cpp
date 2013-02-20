@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2012 Digia Plc and/or its subsidiary(-ies).
+** Copyright (C) 2013 Digia Plc and/or its subsidiary(-ies).
 ** Contact: http://www.qt-project.org/legal
 **
 ** This file is part of the QtSCriptTools module of the Qt Toolkit.
@@ -166,7 +166,7 @@ public:
   currently not supported. If you need to debug painting-related
   script code, that code should be evaluated outside of the C++
   paintEvent(), e.g. by rendering to an image, like the Context2D and
-  Tetrix QtScript examples do. This will make the code safe for
+  Tetrix Qt Script examples do. This will make the code safe for
   debugging.
 
   The debugger adds some special properties to the script engine:

@@ -1,6 +1,6 @@
 /****************************************************************************
 **
-** Copyright (C) 2012 Digia Plc and/or its subsidiary(-ies).
+** Copyright (C) 2013 Digia Plc and/or its subsidiary(-ies).
 ** Contact: http://www.qt-project.org/legal
 **
 ** This file is part of the test suite of the Qt Toolkit.
@@ -2343,7 +2343,7 @@ void tst_QScriptExtQObject::cppConnectAndDisconnect2()
         QVERIFY(qScriptConnect(m_myObject, SIGNAL(mySignal()), QScriptValue(), fun));
         QCOMPARE(m_myObject->connectNotifySignals().size(), 2);
         QVERIFY(m_myObject->hasConnectNotifySignal(QMetaMethod::fromSignal(&MyQObject::mySignal)));
-        // We get a destroyed() connection as well, used internally by QtScript
+        // We get a destroyed() connection as well, used internally by Qt Script
         QVERIFY(m_myObject->hasConnectNotifySignal(QMetaMethod::fromSignal(&QObject::destroyed)));
 
         m_myObject->clearDisconnectNotifySignals();

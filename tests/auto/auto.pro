@@ -17,11 +17,11 @@ SUBDIRS=\
            qscriptqwidgets \
            cmake \
 
-!contains(QT_CONFIG, private_tests):SUBDIRS -= \
+!contains(QT_CONFIG, private_tests): SUBDIRS -= \
            qscriptcontext \
            qscriptengineagent
 
-isEmpty(QT.widgets.name):SUBDIRS -= \
+!qtHaveModule(widgets):SUBDIRS -= \
     qscriptable \
     qscriptengine \
     qscriptenginedebugger \
