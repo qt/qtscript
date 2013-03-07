@@ -2653,6 +2653,7 @@ void tst_QScriptEngine::importExtension()
     QCoreApplication::instance()->setLibraryPaths(libPaths);
 }
 
+#if 0 //The native C++ stack overflow before the JS stack
 static QScriptValue recurse(QScriptContext *ctx, QScriptEngine *eng)
 {
     Q_UNUSED(eng);
@@ -2664,6 +2665,7 @@ static QScriptValue recurse2(QScriptContext *ctx, QScriptEngine *eng)
     Q_UNUSED(eng);
     return ctx->callee().construct();
 }
+#endif
 
 void tst_QScriptEngine::infiniteRecursion()
 {
