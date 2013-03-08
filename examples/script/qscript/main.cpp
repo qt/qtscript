@@ -119,7 +119,7 @@ static QScriptValue importExtension(QScriptContext *context, QScriptEngine *engi
 static QScriptValue loadScripts(QScriptContext *context, QScriptEngine *engine)
 {
     for (int i = 0; i < context->argumentCount(); ++i) {
-        QString fileName = context->argument(0).toString();
+        QString fileName = context->argument(i).toString();
         QFile file(fileName);
         if (!file.open(QIODevice::ReadOnly))
             return context->throwError(QString::fromLatin1("could not open %0 for reading").arg(fileName));
