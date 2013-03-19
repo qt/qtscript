@@ -30,8 +30,6 @@
 #include <QtCore/qsharedpointer.h>
 #include <QtScript/qtscriptglobal.h>
 
-QT_BEGIN_HEADER
-
 QT_BEGIN_NAMESPACE
 
 
@@ -217,7 +215,5 @@ Q_DECLARE_OPERATORS_FOR_FLAGS(QScriptValue::ResolveFlags)
 Q_DECLARE_OPERATORS_FOR_FLAGS(QScriptValue::PropertyFlags)
 
 QT_END_NAMESPACE
-
-QT_END_HEADER
 
 #endif

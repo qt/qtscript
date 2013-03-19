@@ -31,8 +31,6 @@
 #include <QtCore/qsharedpointer.h>
 #include <QtScript/qtscriptglobal.h>
 
-QT_BEGIN_HEADER
-
 QT_BEGIN_NAMESPACE
 
 
@@ -69,9 +67,7 @@ public:
     qint64 scriptId() const;
     QString fileName() const;
     int lineNumber() const;
-#ifdef QT_DEPRECATED
-    QT_DEPRECATED int columnNumber() const;
-#endif
+    int columnNumber() const;
 
     QString functionName() const;
     FunctionType functionType() const;
@@ -100,7 +96,5 @@ Q_SCRIPT_EXPORT QDataStream &operator>>(QDataStream &, QScriptContextInfo &);
 #endif
 
 QT_END_NAMESPACE
-
-QT_END_HEADER
 
 #endif
