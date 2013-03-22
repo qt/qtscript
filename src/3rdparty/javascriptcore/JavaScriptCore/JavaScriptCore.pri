@@ -63,6 +63,8 @@ contains(JAVASCRIPTCORE_JIT,no) {
 }
 
 wince* {
+    INCLUDEPATH += $$PWD/../../ce-compat
+    SOURCES += $$PWD/../../ce-compat/ce_time.c
     DEFINES += WINCEBASIC
 }
 
