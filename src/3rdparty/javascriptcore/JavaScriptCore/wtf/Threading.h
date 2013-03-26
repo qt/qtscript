@@ -73,7 +73,7 @@
 #include <windows.h>
 #elif OS(DARWIN)
 #include <libkern/OSAtomic.h>
-#elif OS(ANDROID)
+#elif OS(ANDROID) && !PLATFORM(QT)
 #include <cutils/atomic.h>
 #elif OS(QNX)
 #include <atomic.h>
@@ -236,7 +236,7 @@ inline int atomicDecrement(int volatile* addend) { return InterlockedDecrement(r
 inline int atomicIncrement(int volatile* addend) { return OSAtomicIncrement32Barrier(const_cast<int*>(addend)); }
 inline int atomicDecrement(int volatile* addend) { return OSAtomicDecrement32Barrier(const_cast<int*>(addend)); }
 
-#elif OS(ANDROID)
+#elif OS(ANDROID) && !PLATFORM(QT)
 
 inline int atomicIncrement(int volatile* addend) { return android_atomic_inc(addend); }
 inline int atomicDecrement(int volatile* addend) { return android_atomic_dec(addend); }
