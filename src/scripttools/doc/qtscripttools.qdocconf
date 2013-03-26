@@ -32,11 +32,11 @@ qhp.qtscripttools.file = qtscripttools.qhp
 
 # Namespace for the output file. This namespace is used to distinguish between
 # different documentation files in Creator/Assistant.
-qhp.qtscripttools.namespace = org.qt-project.qtscripttools.501
+qhp.qtscripttools.namespace = org.qt-project.qtscripttools.$QT_VERSION_TAG
 
 # Title for the package, will be the main title for the package in
 # Assistant/Creator.
-qhp.qtscripttools.indexTitle = Qt Script
+qhp.qtscripttools.indexTitle = Qt Script Tools
 
 # Only update the name of the project for the next variables.
 qhp.qtscripttools.virtualFolder  = qtscripttools
