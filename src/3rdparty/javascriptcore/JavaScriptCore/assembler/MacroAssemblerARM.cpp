@@ -36,7 +36,18 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <elf.h>
-#include <asm/hwcap.h>
+#if !OS(ANDROID) && !PLATFORM(QT)
+# include <asm/hwcap.h>
+# else
+typedef struct
+{
+    uint32_t a_type;
+    union
+    {
+        uint32_t a_val;
+    } a_un;
+} Elf32_auxv_t;
+# endif
 #endif
 
 namespace JSC {
@@ -56,7 +67,6 @@ static bool isVFPPresent()
         close(fd);
     }
 #endif
-
     return false;
 }
 

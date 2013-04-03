@@ -452,6 +452,7 @@
     || defined(__unix)      \
     || defined(__unix__)
 #define WTF_OS_UNIX 1
+
 #endif
 
 /* Operating environments */
@@ -643,16 +644,18 @@
 #endif
 
 #if PLATFORM(ANDROID)
+#if !PLATFORM(QT)
 #define WTF_USE_PTHREADS 1
+#define ENABLE_MAC_JAVA_BRIDGE 1
+#define ENABLE_JAVASCRIPT_DEBUGGER 0
+#endif /* !PLATFORM(QT) */
 #define WTF_PLATFORM_SGL 1
 #define USE_SYSTEM_MALLOC 1
-#define ENABLE_MAC_JAVA_BRIDGE 1
 #define LOG_DISABLED 1
 /* Prevents Webkit from drawing the caret in textfields and textareas
    This prevents unnecessary invals. */
 #define ENABLE_TEXT_CARET 1
-#define ENABLE_JAVASCRIPT_DEBUGGER 0
-#endif
+#endif /* PLATFORM(ANDROID) */
 
 #if PLATFORM(WIN)
 #define WTF_USE_WININET 1
