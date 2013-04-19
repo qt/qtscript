@@ -1,7 +1,7 @@
 include($QT_INSTALL_DOCS/global/qt-module-defaults.qdocconf)
 
 # Name of the project which must match the outputdir. Determines the .index file
-project = qtscripttools
+project = QtScriptTools
 
 # Directories in which to search for files to document and images.
 # By default set to the root directory of the project for sources
@@ -25,23 +25,23 @@ depends += qtcore qtlinguist qtscript
 # Defines the name of the project. You cannot use operators (+, =, -) in
 # the name. Properties for this project are set using a qhp.<projectname>.property
 # format.
-qhp.projects = qtscripttools
+qhp.projects = QtScriptTools
 
 # Sets the name of the output qhp file.
-qhp.qtscripttools.file = qtscripttools.qhp
+qhp.QtScriptTools.file = qtscripttools.qhp
 
 # Namespace for the output file. This namespace is used to distinguish between
 # different documentation files in Creator/Assistant.
-qhp.qtscripttools.namespace = org.qt-project.qtscripttools.$QT_VERSION_TAG
+qhp.QtScriptTools.namespace = org.qt-project.qtscripttools.$QT_VERSION_TAG
 
 # Title for the package, will be the main title for the package in
 # Assistant/Creator.
-qhp.qtscripttools.indexTitle = Qt Script Tools
+qhp.QtScriptTools.indexTitle = Qt Script Tools
 
 # Only update the name of the project for the next variables.
-qhp.qtscripttools.virtualFolder  = qtscripttools
-qhp.qtscripttools.subprojects = classes
-qhp.qtscripttools.subprojects.classes.title = C++ Classes
-qhp.qtscripttools.subprojects.classes.indexTitle = Qt Script Tools C++ Classes
-qhp.qtscripttools.subprojects.classes.selectors = class fake:headerfile
-qhp.qtscripttools.subprojects.classes.sortPages = true
+qhp.QtScriptTools.virtualFolder  = qtscripttools
+qhp.QtScriptTools.subprojects = classes
+qhp.QtScriptTools.subprojects.classes.title = C++ Classes
+qhp.QtScriptTools.subprojects.classes.indexTitle = Qt Script Tools C++ Classes
+qhp.QtScriptTools.subprojects.classes.selectors = class fake:headerfile
+qhp.QtScriptTools.subprojects.classes.sortPages = true
