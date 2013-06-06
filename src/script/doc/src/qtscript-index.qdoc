@@ -28,7 +28,6 @@
 /*!
   \page qtscript-index.html
   \title Qt Script
-  \ingroup technology-apis
 
   Qt provides support for application scripting with ECMAScript.
   The following guides and references cover aspects of programming with
