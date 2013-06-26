@@ -16,7 +16,7 @@ headerdirs += ..
 imagedirs += images
 sourcedirs += ..
 
-depends += qtcore qtlinguist qtscripttools
+depends += qtcore qtlinguist qtscripttools qtdoc
 
 # The following parameters are for creating a qhp file, the qhelpgenerator
 # program can convert the qhp file into a qch file which can be opened in
@@ -45,3 +45,6 @@ qhp.QtScript.subprojects.classes.title = C++ Classes
 qhp.QtScript.subprojects.classes.indexTitle = Qt Script C++ Classes
 qhp.QtScript.subprojects.classes.selectors = class fake:headerfile
 qhp.QtScript.subprojects.classes.sortPages = true
+
+navigation.landingpage = "Qt Script"
+navigation.cppclassespage = "Qt Script C++ Classes"
