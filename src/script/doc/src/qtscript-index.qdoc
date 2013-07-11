@@ -52,10 +52,6 @@
   several existing tutorials and books that cover this subject, such
   as \l{JavaScript: The Definitive Guide}.
 
-  Existing users of \l{Qt Script for Applications (QSA)} may find the
-  \l{Moving from QSA to Qt Script} document useful when porting
-  QSA scripts to Qt Script.
-
   \section1 Basic Usage
 
   To evaluate script code, you create a QScriptEngine and call its
