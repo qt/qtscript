@@ -30,6 +30,7 @@
     \title Qt Script Tools C++ Classes
     \since 4.5
     \ingroup modules
+    \qtvariable scripttools
 
     \brief Provides additional components for applications that use Qt Script.
 

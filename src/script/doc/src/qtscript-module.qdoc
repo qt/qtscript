@@ -30,6 +30,7 @@
     \title Qt Script C++ Classes
     \since 4.3
     \ingroup modules
+    \qtvariable script
 
     \brief The Qt Script module provides classes for making Qt applications scriptable.
 
@@ -91,4 +92,3 @@
     \endlegalese
 
 */
-
