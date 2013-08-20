@@ -137,8 +137,6 @@ ecma_3/Operators/order-01.js | operator evaluation order: 11.7.3 >>> | QTBUG-805
 ecma_3/Operators/order-01.js | operator evaluation order: 11.13.2 >>>= | QTBUG-8056
 
 [Q_CC_MINGW]
-ecma/Math/15.8.2.13.js | Math.pow(NaN,0)
-ecma/Math/15.8.2.13.js | Math.pow(NaN,-0)
 ecma/Math/15.8.2.5.js | Math.atan2(Infinity, Infinity)
 ecma/Math/15.8.2.5.js | Math.atan2(Infinity, -Infinity)
 ecma/Math/15.8.2.5.js | Math.atan2(-Infinity, Infinity)
