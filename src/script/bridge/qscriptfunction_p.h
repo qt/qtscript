@@ -22,7 +22,7 @@
 ****************************************************************************/
 
 #ifndef QSCRIPTFUNCTION_P_H
-#define QSCRIPTFUNCTIOn_P_H
+#define QSCRIPTFUNCTION_P_H
 
 //
 //  W A R N I N G
