@@ -131,10 +131,14 @@ ecma_3/Unicode/uc-001.js | Unicode format-control character test (Category Cf.)
 ecma_2/RegExp/exec-001.js | NO TESTS EXIST
 ecma_2/String/replace-001.js | NO TESTS EXIST
 
-[Q_CC_MSVC]
+[Q_CC_MSVC32]
 ecma_3/Expressions/11.7.3-01.js | 11.7.3 - >>> should evaluate operands in order: order | QTBUG-8056
 ecma_3/Operators/order-01.js | operator evaluation order: 11.7.3 >>> | QTBUG-8056
 ecma_3/Operators/order-01.js | operator evaluation order: 11.13.2 >>>= | QTBUG-8056
+
+[Q_CC_MSVC64]
+ecma/Expressions/11.4.7-02.js | -(-2147483648) == 2147483648 | QTBUG-32829
+ecma/TypeConversion/9.3.1-3.js | - -"0x80000000" | QTBUG-32829
 
 [Q_CC_MINGW]
 ecma/Math/15.8.2.5.js | Math.atan2(Infinity, Infinity)
