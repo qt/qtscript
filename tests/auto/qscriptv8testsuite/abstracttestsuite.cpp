@@ -42,6 +42,7 @@
 #include "abstracttestsuite.h"
 #include <QtTest/QtTest>
 #include <QtCore/qset.h>
+#include <QtCore/QSysInfo>
 #include <QtCore/qtextstream.h>
 #include <private/qmetaobjectbuilder_p.h>
 
@@ -189,8 +190,14 @@ bool TestConfigParser::isKnownSymbol(const QString &symbol)
             << "Q_OS_MAC"
             << "Q_OS_WIN"
             << "Q_CC_MSVC"
+            << "Q_CC_MSVC32"
+            << "Q_CC_MSVC64"
             << "Q_CC_MINGW"
+            << "Q_CC_MINGW32"
+            << "Q_CC_MINGW64"
             << "Q_CC_INTEL"
+            << "Q_CC_INTEL32"
+            << "Q_CC_INTEL64"
             ;
     }
     return knownSymbols.contains(symbol);
@@ -220,12 +227,15 @@ bool TestConfigParser::isDefined(const QString &symbol)
 #endif
 #ifdef Q_CC_MSVC
             << "Q_CC_MSVC"
+            << (QStringLiteral("Q_CC_MSVC") + QString::number(QSysInfo::WordSize))
 #endif
 #ifdef Q_CC_MINGW
             << "Q_CC_MINGW"
+            << (QStringLiteral("Q_CC_MINGW") + QString::number(QSysInfo::WordSize))
 #endif
 #ifdef Q_CC_INTEL
             << "Q_CC_INTEL"
+            << (QStringLiteral("Q_CC_INTEL") + QString::number(QSysInfo::WordSize))
 #endif
             ;
     }
