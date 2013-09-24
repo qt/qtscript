@@ -5809,6 +5809,9 @@ void tst_QScriptEngine::qRegExpInport()
 // effect at a given date (QTBUG-9770).
 void tst_QScriptEngine::dateRoundtripJSQtJS()
 {
+#ifdef Q_OS_WIN
+    QSKIP("This test fails on Windows due to a bug in QDateTime.");
+#endif
     uint secs = QDateTime(QDate(2009, 1, 1)).toUTC().toTime_t();
     QScriptEngine eng;
     for (int i = 0; i < 8000; ++i) {
@@ -5836,6 +5839,9 @@ void tst_QScriptEngine::dateRoundtripQtJSQt()
 
 void tst_QScriptEngine::dateConversionJSQt()
 {
+#ifdef Q_OS_WIN
+    QSKIP("This test fails on Windows due to a bug in QDateTime.");
+#endif
     uint secs = QDateTime(QDate(2009, 1, 1)).toUTC().toTime_t();
     QScriptEngine eng;
     for (int i = 0; i < 8000; ++i) {
