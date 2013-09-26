@@ -54,6 +54,8 @@
 #include <QtCore/qset.h>
 #include <QtCore/qdebug.h>
 
+#include <algorithm>
+
 QT_BEGIN_NAMESPACE
 
 class QScriptCompletionTaskPrivate
@@ -284,7 +286,7 @@ void QScriptCompletionTask::start()
                         if (isPrefixOf(arg, name))
                             d->results.append(name);
                     }
-                    qStableSort(d->results);
+                    std::stable_sort(d->results.begin(), d->results.end());
                 } else if (argType == QLatin1String("script")) {
                     d->completeScriptExpression();
                 } else {

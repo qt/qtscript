@@ -54,6 +54,8 @@
 #include <QtWidgets/qboxlayout.h>
 #include <QtWidgets/qcompleter.h>
 
+#include <algorithm>
+
 QT_BEGIN_NAMESPACE
 
 namespace {
@@ -277,7 +279,7 @@ void QScriptDebuggerConsoleWidgetPrivate::_q_onCompletionTaskFinished()
             QStringList lst;
             for (int i = 0; i < task->resultCount(); ++i)
                 lst.append(task->resultAt(i).mid(task->length()));
-            qSort(lst.begin(), lst.end(), lengthLessThan);
+            std::sort(lst.begin(), lst.end(), lengthLessThan);
             QString lcp = longestCommonPrefix(lst);
             if (!lcp.isEmpty()) {
                 QString tmp = commandLine->input();
