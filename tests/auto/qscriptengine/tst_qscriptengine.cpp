@@ -5812,7 +5812,7 @@ void tst_QScriptEngine::dateRoundtripJSQtJS()
     uint secs = QDateTime(QDate(2009, 1, 1)).toUTC().toTime_t();
     QScriptEngine eng;
     for (int i = 0; i < 8000; ++i) {
-        QScriptValue jsDate = eng.evaluate(QString::fromLatin1("new Date(%0)").arg(secs * 1000.0));
+        QScriptValue jsDate = eng.evaluate(QString::fromLatin1("new Date(%0 * 1000.0)").arg(secs));
         QDateTime qtDate = jsDate.toDateTime();
         QScriptValue jsDate2 = eng.newDate(qtDate);
         if (jsDate2.toNumber() != jsDate.toNumber())
@@ -5839,7 +5839,7 @@ void tst_QScriptEngine::dateConversionJSQt()
     uint secs = QDateTime(QDate(2009, 1, 1)).toUTC().toTime_t();
     QScriptEngine eng;
     for (int i = 0; i < 8000; ++i) {
-        QScriptValue jsDate = eng.evaluate(QString::fromLatin1("new Date(%0)").arg(secs * 1000.0));
+        QScriptValue jsDate = eng.evaluate(QString::fromLatin1("new Date(%0 * 1000.0)").arg(secs));
         QDateTime qtDate = jsDate.toDateTime();
         QString qtUTCDateStr = qtDate.toUTC().toString(Qt::ISODate);
         QString jsUTCDateStr = jsDate.property("toISOString").call(jsDate).toString();
