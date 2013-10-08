@@ -32,7 +32,7 @@ QT_BEGIN_NAMESPACE
     \since 4.3
     \class QScriptExtensionPlugin
     \brief The QScriptExtensionPlugin class provides an abstract base for custom QScript extension plugins.
-
+    \inmodule QtScript
     \ingroup plugins
 
     QScriptExtensionPlugin is a plugin interface that makes it

@@ -35,6 +35,7 @@ QT_BEGIN_NAMESPACE
 /*!
   \since 4.4
   \class QScriptEngineAgent
+  \inmodule QtScript
 
   \brief The QScriptEngineAgent class provides an interface to report events pertaining to QScriptEngine execution.
 

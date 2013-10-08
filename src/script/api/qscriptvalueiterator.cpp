@@ -41,7 +41,7 @@ QT_BEGIN_NAMESPACE
 /*!
   \since 4.3
   \class QScriptValueIterator
-
+  \inmodule QtScript
   \brief The QScriptValueIterator class provides a Java-style iterator for QScriptValue.
 
   \ingroup script

@@ -93,6 +93,7 @@ QT_BEGIN_NAMESPACE
   \since 4.3
   \class QScriptEngine
   \reentrant
+  \inmodule QtScript
 
   \brief The QScriptEngine class provides an environment for evaluating Qt Script code.
 
@@ -4418,6 +4419,7 @@ QScriptValue QScriptEngine::objectById(qint64 id) const
 /*!
   \since 4.5
   \class QScriptSyntaxCheckResult
+  \inmodule QtScript
 
   \brief The QScriptSyntaxCheckResult class provides the result of a script syntax check.
 

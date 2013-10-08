@@ -35,7 +35,7 @@ QT_BEGIN_NAMESPACE
 /*!
   \since 4.7
   \class QScriptProgram
-
+  \inmodule QtScript
   \brief The QScriptProgram class encapsulates a Qt Script program.
 
   \ingroup script

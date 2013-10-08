@@ -44,7 +44,7 @@ QT_BEGIN_NAMESPACE
 /*!
   \since 4.3
   \class QScriptContext
-
+  \inmodule QtScript
   \brief The QScriptContext class represents a Qt Script function invocation.
 
   \ingroup script

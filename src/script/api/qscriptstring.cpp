@@ -32,7 +32,7 @@ QT_BEGIN_NAMESPACE
 /*!
   \since 4.4
   \class QScriptString
-
+  \inmodule QtScript
   \brief The QScriptString class acts as a handle to "interned" strings in a QScriptEngine.
 
   \ingroup script
