@@ -473,7 +473,7 @@ QScriptValue QScriptContext::activationObject() const
         return QScriptValue();
         /*JSC::CodeBlock *codeBlock = frame->codeBlock();
         if (!codeBlock) {
-            // non-Qt native function 
+            // non-Qt native function
             Q_ASSERT(true); //### this should in theorry not happen
             result = new (frame)QScript::QScriptActivationObject(frame);
         } else {
