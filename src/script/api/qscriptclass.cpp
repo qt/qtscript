@@ -27,7 +27,7 @@
 /*!
   \since 4.4
   \class QScriptClass
-
+  \inmodule QtScript
   \brief The QScriptClass class provides an interface for defining custom behavior of (a class of) Qt Script objects.
 
   \ingroup script

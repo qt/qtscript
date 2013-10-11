@@ -56,6 +56,8 @@
 #include <QtScript/qscriptvalueiterator.h>
 #include <QtCore/qdebug.h>
 
+#include <algorithm>
+
 Q_DECLARE_METATYPE(QScriptScriptsDelta)
 Q_DECLARE_METATYPE(QScriptDebuggerValueProperty)
 Q_DECLARE_METATYPE(QScriptDebuggerValuePropertyList)
@@ -399,7 +401,7 @@ QScriptDebuggerResponse QScriptDebuggerCommandExecutor::execute(
             }
         }
         QStringList matchesList = matches.toList();
-        qStableSort(matchesList);
+        std::stable_sort(matchesList.begin(), matchesList.end());
         response.setResult(matchesList);
     }   break;
 

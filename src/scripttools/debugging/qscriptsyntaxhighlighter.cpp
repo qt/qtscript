@@ -42,6 +42,8 @@
 #include "qscriptsyntaxhighlighter_p.h"
 #include "private/qfunctions_p.h"
 
+#include <algorithm>
+
 #ifndef QT_NO_SYNTAXHIGHLIGHTER
 
 QT_BEGIN_NAMESPACE
@@ -143,9 +145,11 @@ static bool isKeyword(const QString &word)
 {
     const char * const *start = &keywords[0];
     const char * const *end = &keywords[MAX_KEYWORD - 1];
-    const char * const *kw = qBinaryFind(start, end, KeywordHelper(word));
 
-    return kw != end;
+    const KeywordHelper keywordHelper(word);
+    const char * const *kw = std::lower_bound(start, end, keywordHelper);
+
+    return kw != end && !(keywordHelper < *kw);
 }
 
 QScriptSyntaxHighlighter::QScriptSyntaxHighlighter(QTextDocument *document)

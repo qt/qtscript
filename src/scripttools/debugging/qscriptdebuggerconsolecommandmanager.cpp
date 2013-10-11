@@ -46,6 +46,8 @@
 #include <QtCore/qlist.h>
 #include <QtCore/qstringlist.h>
 
+#include <algorithm>
+
 QT_BEGIN_NAMESPACE
 
 /*!
@@ -237,7 +239,7 @@ QStringList QScriptDebuggerConsoleCommandManager::completions(const QString &pre
                 result.append(name);
         }
     }
-    qStableSort(result);
+    std::stable_sort(result.begin(), result.end());
     return result;
 }
 

@@ -42,6 +42,7 @@
 #include <QtCore/qmetaobject.h>
 
 #include <math.h>
+#include <algorithm>
 
 #include "CodeBlock.h"
 #include "Error.h"
@@ -92,6 +93,7 @@ QT_BEGIN_NAMESPACE
   \since 4.3
   \class QScriptEngine
   \reentrant
+  \inmodule QtScript
 
   \brief The QScriptEngine class provides an environment for evaluating Qt Script code.
 
@@ -3849,7 +3851,7 @@ QStringList QScriptEngine::availableExtensions() const
     }
 
     QStringList lst = result.toList();
-    qSort(lst);
+    std::sort(lst.begin(), lst.end());
     return lst;
 #endif
 }
@@ -3866,7 +3868,7 @@ QStringList QScriptEngine::importedExtensions() const
 {
     Q_D(const QScriptEngine);
     QStringList lst = d->importedExtensions.toList();
-    qSort(lst);
+    std::sort(lst.begin(), lst.end());
     return lst;
 }
 
@@ -4417,6 +4419,7 @@ QScriptValue QScriptEngine::objectById(qint64 id) const
 /*!
   \since 4.5
   \class QScriptSyntaxCheckResult
+  \inmodule QtScript
 
   \brief The QScriptSyntaxCheckResult class provides the result of a script syntax check.
 

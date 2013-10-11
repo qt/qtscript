@@ -30,6 +30,7 @@ QT_BEGIN_NAMESPACE
 /*!
   \since 4.3
   \class QScriptable
+  \inmodule QtScript
 
   \brief The QScriptable class provides access to the Qt Script environment from Qt C++ member functions.
 

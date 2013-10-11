@@ -42,7 +42,7 @@ QT_BEGIN_NAMESPACE
 /*!
   \since 4.4
   \class QScriptContextInfo
-
+  \inmodule QtScript
   \brief The QScriptContextInfo class provides additional information about a QScriptContext.
 
   \ingroup script

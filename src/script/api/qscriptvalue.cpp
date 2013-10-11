@@ -45,7 +45,7 @@
 /*!
   \since 4.3
   \class QScriptValue
-
+  \inmodule QtScript
   \brief The QScriptValue class acts as a container for the Qt Script data types.
 
   \ingroup script

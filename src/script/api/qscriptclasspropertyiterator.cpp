@@ -30,7 +30,7 @@ QT_BEGIN_NAMESPACE
 /*!
   \since 4.4
   \class QScriptClassPropertyIterator
-
+  \inmodule QtScript
   \brief The QScriptClassPropertyIterator class provides an iterator interface for custom Qt Script objects.
 
   \ingroup script
