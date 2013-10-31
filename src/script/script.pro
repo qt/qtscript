@@ -26,7 +26,7 @@ win32-msvc*: QMAKE_CXXFLAGS += -wd4396 -wd4099
 wince* {
     INCLUDEPATH += $$WEBKITDIR/JavaScriptCore/os-wince
     INCLUDEPATH += $$WEBKITDIR/JavaScriptCore/os-win32
-    LIBS += -lmmtimer
+    LIBS_PRIVATE += -lmmtimer
 }
 
 mac {
