@@ -229,7 +229,7 @@ static bool isLegalUTF8(const unsigned char* source, int length)
 // This table contains as many values as there might be trailing bytes
 // in a UTF-8 sequence.
 static const UChar32 offsetsFromUTF8[6] = { 0x00000000UL, 0x00003080UL, 0x000E2080UL, 
-            0x03C82080UL, 0xFA082080UL, 0x82082080UL };
+            0x03C82080UL, static_cast<UChar32>(0xFA082080UL), static_cast<UChar32>(0x82082080UL) };
 
 ConversionResult convertUTF8ToUTF16(
     const char** sourceStart, const char* sourceEnd, 

@@ -316,8 +316,10 @@ namespace JSC {
         Structure* existingTransition = singleTransition();
         TransitionTable* transitionTable = new TransitionTable;
         setTransitionTable(transitionTable);
-        if (existingTransition)
-            add(StructureTransitionTableHash::Key(RefPtr<UString::Rep>(existingTransition->m_nameInPrevious.get()), existingTransition->m_attributesInPrevious), existingTransition, existingTransition->m_specificValueInPrevious);
+        if (existingTransition) {
+            const unsigned attrsInPrev = existingTransition->m_attributesInPrevious;
+            add(StructureTransitionTableHash::Key(RefPtr<UString::Rep>(existingTransition->m_nameInPrevious.get()), attrsInPrev), existingTransition, existingTransition->m_specificValueInPrevious);
+        }
     }
 } // namespace JSC
 
