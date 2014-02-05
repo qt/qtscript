@@ -13,3 +13,4 @@ testFiles.path = .
 DEPLOYMENT += testFiles
 }
 DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0
+win32:CONFIG += insignificant_test # QTBUG-36632
