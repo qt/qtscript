@@ -1,4 +1,4 @@
-QT += script
+QT = core script
 win32: CONFIG += console
 mac: CONFIG -= app_bundle
 
