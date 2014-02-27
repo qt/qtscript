@@ -509,6 +509,7 @@
 #define WTF_PLATFORM_WIN 1
 #endif
 
+#if !PLATFORM(QT)
 /* PLATFORM(IPHONE) */
 /* FIXME: this is sometimes used as an OS switch and sometimes for higher-level things */
 #if (defined(TARGET_OS_EMBEDDED) && TARGET_OS_EMBEDDED) || (defined(TARGET_OS_IPHONE) && TARGET_OS_IPHONE)
@@ -525,6 +526,7 @@
 
 #if !defined(WTF_PLATFORM_IPHONE)
 #define WTF_PLATFORM_IPHONE 0
+#endif
 #endif
 
 /* PLATFORM(ANDROID) */
