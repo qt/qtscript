@@ -202,6 +202,11 @@
 #if   defined(__x86_64__) \
     || defined(_M_X64)
 #define WTF_CPU_X86_64 1
+
+#if defined(__ILP32__)
+#define WTF_CPU_X32 1
+#endif
+
 #endif
 
 /* 64-bit mode on AIX */
@@ -509,6 +514,7 @@
 #define WTF_PLATFORM_WIN 1
 #endif
 
+#if !PLATFORM(QT)
 /* PLATFORM(IPHONE) */
 /* FIXME: this is sometimes used as an OS switch and sometimes for higher-level things */
 #if (defined(TARGET_OS_EMBEDDED) && TARGET_OS_EMBEDDED) || (defined(TARGET_OS_IPHONE) && TARGET_OS_IPHONE)
@@ -525,6 +531,7 @@
 
 #if !defined(WTF_PLATFORM_IPHONE)
 #define WTF_PLATFORM_IPHONE 0
+#endif
 #endif
 
 /* PLATFORM(ANDROID) */
@@ -904,7 +911,7 @@
 #endif
 
 #if !defined(WTF_USE_JSVALUE64) && !defined(WTF_USE_JSVALUE32) && !defined(WTF_USE_JSVALUE32_64)
-#if (CPU(X86_64) && (OS(UNIX) || OS(WINDOWS) || OS(SOLARIS) || OS(HPUX))) || (CPU(IA64) && !CPU(IA64_32)) || CPU(ALPHA) || CPU(AIX64) || CPU(SPARC64) || CPU(MIPS64) || CPU(AARCH64)
+#if (CPU(X86_64) && !CPU(X32) && (OS(UNIX) || OS(WINDOWS) || OS(SOLARIS) || OS(HPUX))) || (CPU(IA64) && !CPU(IA64_32)) || CPU(ALPHA) || CPU(AIX64) || CPU(SPARC64) || CPU(MIPS64) || CPU(AARCH64)
 #define WTF_USE_JSVALUE64 1
 #elif CPU(ARM) || CPU(PPC64)
 #define WTF_USE_JSVALUE32 1
@@ -919,6 +926,11 @@ on MinGW. See https://bugs.webkit.org/show_bug.cgi?id=29268 */
 
 #if !defined(ENABLE_REPAINT_THROTTLING)
 #define ENABLE_REPAINT_THROTTLING 0
+#endif
+
+/* Disable JIT on x32 */
+#if CPU(X32)
+#define ENABLE_JIT 0
 #endif
 
 #if !defined(ENABLE_JIT)

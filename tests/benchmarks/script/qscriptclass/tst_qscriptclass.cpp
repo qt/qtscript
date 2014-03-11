@@ -117,7 +117,7 @@ private:
     QScriptString foo;
 };
 
-// Test the overhead of getting a value of QScriptClass accross the Javascript engine
+// Test the overhead of getting a value of QScriptClass across the Javascript engine
 void tst_QScriptClass::property()
 {
     QScriptEngine eng;
@@ -130,7 +130,7 @@ void tst_QScriptClass::property()
     }
 }
 
-// Test the overhead of setting a value on QScriptClass accross the Javascript engine
+// Test the overhead of setting a value on QScriptClass across the Javascript engine
 void tst_QScriptClass::setProperty()
 {
     QScriptEngine eng;
@@ -144,7 +144,7 @@ void tst_QScriptClass::setProperty()
     }
 }
 
-// Test the time taken to get the propeties flags accross the engine
+// Test the time taken to get the propeties flags across the engine
 void tst_QScriptClass::propertyFlags()
 {
     QScriptEngine eng;

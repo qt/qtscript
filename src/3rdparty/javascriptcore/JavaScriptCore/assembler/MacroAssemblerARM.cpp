@@ -37,14 +37,7 @@
 #include <unistd.h>
 #include <elf.h>
 # if OS(ANDROID) && PLATFORM(QT)
-typedef struct
-{
-    uint32_t a_type;
-    union
-    {
-        uint32_t a_val;
-    } a_un;
-} Elf32_auxv_t;
+# include <asm/procinfo.h>
 # else
 # include <asm/hwcap.h>
 # endif
