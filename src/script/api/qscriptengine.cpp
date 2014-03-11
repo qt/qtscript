@@ -1366,7 +1366,7 @@ JSC::JSValue QScriptEnginePrivate::evaluateHelper(JSC::ExecState *exec, intptr_t
     q->clearExceptions();
     JSC::DynamicGlobalObjectScope dynamicGlobalObjectScope(exec, exec->scopeChain()->globalObject);
 
-    if (compile) {
+    if (compile && !executable->isCompiled()) {
         JSC::JSObject* error = executable->compile(exec, exec->scopeChain());
         if (error) {
             compile = false;
