@@ -30,7 +30,6 @@
 #include "JSString.h"
 #include "ObjectPrototype.h"
 #include "PrototypeFunction.h"
-#include <math.h>
 #include <time.h>
 #include <wtf/DateMath.h>
 #include <wtf/MathExtras.h>
@@ -89,13 +88,13 @@ JSObject* constructDate(ExecState* exec, const ArgList& args)
                 value = primitive.toNumber(exec);
         }
     } else {
-        if (isnan(args.at(0).toNumber(exec))
-                || isnan(args.at(1).toNumber(exec))
-                || (numArgs >= 3 && isnan(args.at(2).toNumber(exec)))
-                || (numArgs >= 4 && isnan(args.at(3).toNumber(exec)))
-                || (numArgs >= 5 && isnan(args.at(4).toNumber(exec)))
-                || (numArgs >= 6 && isnan(args.at(5).toNumber(exec)))
-                || (numArgs >= 7 && isnan(args.at(6).toNumber(exec))))
+        if (std::isnan(args.at(0).toNumber(exec))
+                || std::isnan(args.at(1).toNumber(exec))
+                || (numArgs >= 3 && std::isnan(args.at(2).toNumber(exec)))
+                || (numArgs >= 4 && std::isnan(args.at(3).toNumber(exec)))
+                || (numArgs >= 5 && std::isnan(args.at(4).toNumber(exec)))
+                || (numArgs >= 6 && std::isnan(args.at(5).toNumber(exec)))
+                || (numArgs >= 7 && std::isnan(args.at(6).toNumber(exec))))
             value = NaN;
         else {
             GregorianDateTime t;
@@ -157,13 +156,13 @@ static JSValue JSC_HOST_CALL dateNow(ExecState* exec, JSObject*, JSValue, const 
 static JSValue JSC_HOST_CALL dateUTC(ExecState* exec, JSObject*, JSValue, const ArgList& args) 
 {
     int n = args.size();
-    if (isnan(args.at(0).toNumber(exec))
-            || isnan(args.at(1).toNumber(exec))
-            || (n >= 3 && isnan(args.at(2).toNumber(exec)))
-            || (n >= 4 && isnan(args.at(3).toNumber(exec)))
-            || (n >= 5 && isnan(args.at(4).toNumber(exec)))
-            || (n >= 6 && isnan(args.at(5).toNumber(exec)))
-            || (n >= 7 && isnan(args.at(6).toNumber(exec))))
+    if (std::isnan(args.at(0).toNumber(exec))
+            || std::isnan(args.at(1).toNumber(exec))
+            || (n >= 3 && std::isnan(args.at(2).toNumber(exec)))
+            || (n >= 4 && std::isnan(args.at(3).toNumber(exec)))
+            || (n >= 5 && std::isnan(args.at(4).toNumber(exec)))
+            || (n >= 6 && std::isnan(args.at(5).toNumber(exec)))
+            || (n >= 7 && std::isnan(args.at(6).toNumber(exec))))
         return jsNaN(exec);
 
     GregorianDateTime t;

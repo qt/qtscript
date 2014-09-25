@@ -2395,7 +2395,7 @@ void doubleToStringInJavaScriptFormat(double d, DtoaBuffer buffer, unsigned* res
     ASSERT(buffer);
 
     // avoid ever printing -NaN, in JS conceptually there is only one NaN value
-    if (isnan(d)) {
+    if (std::isnan(d)) {
         append(buffer, "NaN", 3);
         if (resultLength)
             *resultLength = 3;

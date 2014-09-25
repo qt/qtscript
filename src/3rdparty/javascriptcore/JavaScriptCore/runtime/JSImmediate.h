@@ -490,7 +490,7 @@ namespace JSC {
         const int intVal = static_cast<int>(d);
 
         // Check for data loss from conversion to int.
-        if (intVal != d || (!intVal && signbit(d)))
+        if (intVal != d || (!intVal && std::signbit(d)))
             return fromNumberOutsideIntegerRange(d);
 
         return from(intVal);
