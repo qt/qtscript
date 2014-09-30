@@ -26,11 +26,13 @@
 
 #if !USE(JSVALUE32_64)
 
+#include "JSValue.h"
+
 #include <wtf/Assertions.h>
 #include <wtf/AlwaysInline.h>
 #include <wtf/MathExtras.h>
 #include <wtf/StdLibExtras.h>
-#include "JSValue.h"
+
 #include <limits>
 #include <limits.h>
 #include <stdarg.h>
