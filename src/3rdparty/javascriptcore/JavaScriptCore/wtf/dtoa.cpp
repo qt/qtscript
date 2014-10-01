@@ -147,11 +147,12 @@
 #include <wtf/AlwaysInline.h>
 #include <wtf/Assertions.h>
 #include <wtf/FastMalloc.h>
-#include <wtf/MathExtras.h>
 #include <wtf/Vector.h>
 #include <wtf/Threading.h>
 
 #include <stdio.h>
+
+#include <wtf/MathExtras.h>
 
 #if COMPILER(MSVC)
 #pragma warning(disable: 4244)

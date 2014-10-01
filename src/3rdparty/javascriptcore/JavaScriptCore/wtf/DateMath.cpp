@@ -74,7 +74,6 @@
 #include "Assertions.h"
 #include "ASCIICType.h"
 #include "CurrentTime.h"
-#include "MathExtras.h"
 #include "StringExtras.h"
 
 #include <algorithm>
@@ -104,6 +103,8 @@ extern "C" struct tm * localtime(const time_t *timer);
 #if USE(JSC)
 #include "CallFrame.h"
 #endif
+
+#include "MathExtras.h"
 
 #define NaN std::numeric_limits<double>::quiet_NaN()
 
