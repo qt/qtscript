@@ -29,8 +29,6 @@
 #include <wtf/RandomNumber.h>
 #include <wtf/RandomNumberSeed.h>
 
-using std::signbit;
-
 namespace JSC {
 
 ASSERT_CLASS_FITS_IN_CELL(MathObject);
@@ -174,7 +172,7 @@ JSValue JSC_HOST_CALL mathProtoFuncMax(ExecState* exec, JSObject*, JSValue, cons
             result = NaN;
             break;
         }
-        if (val > result || (val == 0 && result == 0 && !signbit(val)))
+        if (val > result || (val == 0 && result == 0 && !std::signbit(val)))
             result = val;
     }
     return jsNumber(exec, result);
@@ -190,7 +188,7 @@ JSValue JSC_HOST_CALL mathProtoFuncMin(ExecState* exec, JSObject*, JSValue, cons
             result = NaN;
             break;
         }
-        if (val < result || (val == 0 && result == 0 && signbit(val)))
+        if (val < result || (val == 0 && result == 0 && std::signbit(val)))
             result = val;
     }
     return jsNumber(exec, result);
@@ -218,7 +216,7 @@ JSValue JSC_HOST_CALL mathProtoFuncRandom(ExecState* exec, JSObject*, JSValue, c
 JSValue JSC_HOST_CALL mathProtoFuncRound(ExecState* exec, JSObject*, JSValue, const ArgList& args)
 {
     double arg = args.at(0).toNumber(exec);
-    if (signbit(arg) && arg >= -0.5)
+    if (std::signbit(arg) && arg >= -0.5)
          return jsNumber(exec, -0.0);
     double integer = ceil(arg);
     return jsNumber(exec, integer - (integer - arg > 0.5));
