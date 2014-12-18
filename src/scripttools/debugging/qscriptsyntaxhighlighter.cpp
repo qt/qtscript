@@ -32,7 +32,6 @@
 ****************************************************************************/
 
 #include "qscriptsyntaxhighlighter_p.h"
-#include "private/qfunctions_p.h"
 
 #include <algorithm>
 
@@ -123,12 +122,12 @@ struct KeywordHelper
     const QString needle;
 };
 
-Q_STATIC_GLOBAL_OPERATOR bool operator<(const KeywordHelper &helper, const char *kw)
+static bool operator<(const KeywordHelper &helper, const char *kw)
 {
     return helper.needle < QLatin1String(kw);
 }
 
-Q_STATIC_GLOBAL_OPERATOR bool operator<(const char *kw, const KeywordHelper &helper)
+static bool operator<(const char *kw, const KeywordHelper &helper)
 {
     return QLatin1String(kw) < helper.needle;
 }
