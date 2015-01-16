@@ -34,34 +34,34 @@
     to process the result of the evaluation. The example also shows how to
     apply internationalization to scripts.
 
-    \snippet examples/script/helloscript/main.cpp 0
+    \snippet script/helloscript/main.cpp 0
 
     The application will load the script file to evaluate from a resource, so
     we first make sure that the resource is initialized.
 
-    \snippet examples/script/helloscript/main.cpp 1
+    \snippet script/helloscript/main.cpp 1
 
     We attempt to load a translation, and install translation functions in the
     script engine. How to produce a translation is explained later.
 
-    \snippet examples/script/helloscript/main.cpp 2
+    \snippet script/helloscript/main.cpp 2
 
     A push button is created and exported to the script environment as a
     global variable, \c button. Scripts will be able to access properties,
     signals and slots of the button as properties of the \c button script
     object; the script object acts as a proxy to the C++ button object.
 
-    \snippet examples/script/helloscript/main.cpp 3
+    \snippet script/helloscript/main.cpp 3
 
     The contents of the script file are read.
 
-    \snippet examples/script/helloscript/helloscript.js 0
+    \snippet script/helloscript/helloscript.js 0
 
     The script sets the \c text (note that the qTr() function is used to allow
     for translation) and \c styleSheet properties of the button, and calls the
     button's \c show() slot.
 
-    \snippet examples/script/helloscript/main.cpp 4
+    \snippet script/helloscript/main.cpp 4
 
     The script is evaluated. Note that the file name is passed as the
     (optional) second parameter; this makes it possible for the script engine
@@ -69,14 +69,14 @@
     qTr() function be able to resolve the translations that are associated
     with this script.
 
-    \snippet examples/script/helloscript/main.cpp 5
+    \snippet script/helloscript/main.cpp 5
 
     If the result is an Error object (e.g. the script contained a syntax
     error, or tried to call a function that doesn't exist), we obtain
     the line number and string representation of the error and display
     it in a message box.
 
-    \snippet examples/script/helloscript/main.cpp 6
+    \snippet script/helloscript/main.cpp 6
 
     If the evaluation went well, the application event loop is entered.
 
@@ -109,11 +109,11 @@
     Click the \gui Done checkbox and choose \gui File|Save from the
     menu bar. The TS file will no longer contain
 
-    \snippet doc/src/snippets/code/doc_src_examples_hellotr.qdoc 3
+    \snippet code/doc_src_examples_hellotr.qdoc 3
 
     but instead will have
 
-    \snippet doc/src/snippets/code/doc_src_examples_hellotr.qdoc 4
+    \snippet code/doc_src_examples_hellotr.qdoc 4
 
     To see the application running in Latin, we have to generate a QM
     file from the TS file. Generating a QM file can be achieved

@@ -1315,7 +1315,7 @@
 
   When experimenting with Qt Script objects and inheritance, it can be
   helpful to use the interactive interpreter included with the
-  \l{Qt Script Examples}, located in \c{examples/script/qscript}.
+  Qt Script examples, located in \c{examples/script}.
 
   \section2 Prototype Objects and Shared Properties
 
