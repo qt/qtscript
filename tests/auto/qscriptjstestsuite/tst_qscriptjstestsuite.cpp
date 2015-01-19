@@ -320,7 +320,7 @@ void tst_QScriptJSTestSuite::runTestFunction(int testIndex)
 
 tst_QScriptJSTestSuite::tst_QScriptJSTestSuite()
     : AbstractTestSuite("tst_QScriptJsTestSuite",
-                        QString::fromLatin1("%0/tests").arg(SRCDIR),
+                        QFINDTESTDATA("tests"),
                         ":/")
 {
 // don't execute any tests on slow machines
