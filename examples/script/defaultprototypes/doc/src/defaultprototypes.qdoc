@@ -45,12 +45,12 @@
     To define a scripting API for QListWidgetItem in terms of
     Qt properties and slots, we subclass QObject and QScriptable.
 
-    \snippet examples/script/defaultprototypes/prototypes.h 0
+    \snippet script/defaultprototypes/prototypes.h 0
 
     A single property, \c{text}, is defined, along with a slot,
     \c{toString}.
 
-    \snippet examples/script/defaultprototypes/prototypes.cpp 0
+    \snippet script/defaultprototypes/prototypes.cpp 0
 
     The implementation of the property accessors use
     the qscriptvalue_cast() function to cast the script object
@@ -70,13 +70,13 @@
     found in the QListWidget object itself, the prototype will be used
     as a fallback.
 
-    \snippet examples/script/defaultprototypes/prototypes.h 1
+    \snippet script/defaultprototypes/prototypes.h 1
 
     The additional slots will make it possible to add items to
     a QListWidget from script code, and to set the background
     color of the widget from a string.
 
-    \snippet examples/script/defaultprototypes/prototypes.cpp 1
+    \snippet script/defaultprototypes/prototypes.cpp 1
 
     Again, we use qscriptvalue_cast() to cast the script object
     to the relevant C++ type, in this case a QListWidget pointer.
@@ -86,12 +86,12 @@
     a QColor from the given string argument and changes the palette
     accordingly.
 
-    \snippet examples/script/defaultprototypes/main.cpp 0
+    \snippet script/defaultprototypes/main.cpp 0
 
     The relevant C++ types must be made known to Qt's meta type
     system.
 
-    \snippet examples/script/defaultprototypes/main.cpp 1
+    \snippet script/defaultprototypes/main.cpp 1
 
     For each type that we want to associate a prototype object with,
     we create an instance of the prototype class, pass it to
@@ -99,19 +99,19 @@
     the C++ type and the resulting script object by calling
     QScriptEngine::setDefaultPrototype().
 
-    \snippet examples/script/defaultprototypes/main.cpp 2
+    \snippet script/defaultprototypes/main.cpp 2
 
     In this example, a single QListWidget object is added as
     a global script variable, called \c{listWidget}. Script code
     can add items to this widget by calling addItem() or addItems().
 
-    \snippet examples/script/defaultprototypes/code.js 0
+    \snippet script/defaultprototypes/code.js 0
 
     Script code can connect to signals of the QListWidget object;
     signal handlers can use the interface defined in
     the QListWidgetItem prototype to manipulate item arguments.
 
-    \snippet examples/script/defaultprototypes/code.js 1
+    \snippet script/defaultprototypes/code.js 1
 
     Not shown in this example is how to make QListWidgetItem
     constructible from Qt Script code, i.e. to be able to

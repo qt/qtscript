@@ -84,7 +84,7 @@
   script class supports one or more of the extensions specified by the
   Extension enum.
 
-  \sa QScriptClassPropertyIterator, QScriptEngine::newObject(), {Custom Script Class Example}
+  \sa QScriptClassPropertyIterator, QScriptEngine::newObject(), {Defining Custom Script Classes with QScriptClass}
 */
 
 /*!

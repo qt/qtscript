@@ -44,7 +44,7 @@
 
     \snippet doc_src_qtscripttools.cpp 0
 
-    To link against the module, add this line to your \l qmake \c .pro file:
+    To link against the module, add this line to your \l {qmake Manual}{qmake} \c .pro file:
 
     \snippet doc_src_qtscripttools.pro 1
 */
