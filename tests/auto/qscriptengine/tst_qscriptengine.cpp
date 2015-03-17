@@ -5795,6 +5795,20 @@ void tst_QScriptEngine::qRegExpInport()
     }
 }
 
+static QByteArray msgDateRoundtripJSQtJS(int i, uint secs,
+                                         const QScriptValue &jsDate2,
+                                         const QScriptValue &jsDate)
+{
+    QString result;
+    const qsreal diff = jsDate.toNumber() - jsDate2.toNumber();
+    QTextStream(&result) << "jsDate2=\"" << jsDate2.toString()
+        << "\" (" << jsDate2.toNumber() << "), jsDate=\""
+        << jsDate.toString() << "\" (" << jsDate.toNumber()
+        << "), diff=" << diff << "\", i=" << i << ", secs=" << secs
+        << ", TZ=\"" << qgetenv("TZ") << '"';
+    return result.toLocal8Bit();
+}
+
 // QScriptValue::toDateTime() returns a local time, whereas JS dates
 // are always stored as UTC. Qt Script must respect the current time
 // zone, and correctly adjust for daylight saving time that may be in
@@ -5807,8 +5821,8 @@ void tst_QScriptEngine::dateRoundtripJSQtJS()
         QScriptValue jsDate = eng.evaluate(QString::fromLatin1("new Date(%0 * 1000.0)").arg(secs));
         QDateTime qtDate = jsDate.toDateTime();
         QScriptValue jsDate2 = eng.newDate(qtDate);
-        if (jsDate2.toNumber() != jsDate.toNumber())
-            QFAIL(qPrintable(jsDate.toString()));
+        QVERIFY2(jsDate2.toNumber() == jsDate.toNumber(),
+                 msgDateRoundtripJSQtJS(i, secs, jsDate2, jsDate));
         secs += 2*60*60;
     }
 }
@@ -5826,6 +5840,19 @@ void tst_QScriptEngine::dateRoundtripQtJSQt()
     }
 }
 
+static QByteArray msgDateConversionJSQt(int i, uint secs,
+                                        const QString &qtUTCDateStr,
+                                        const QString &jsUTCDateStr,
+                                        const QScriptValue &jsDate)
+{
+    QString result;
+    QTextStream(&result) << "qtUTCDateStr=\"" << qtUTCDateStr
+        << "\", jsUTCDateStr=\"" << jsUTCDateStr << "\", jsDate=\""
+        << jsDate.toString() << "\", i=" << i << ", secs=" << secs
+        << ", TZ=\"" << qgetenv("TZ") << '"';
+    return result.toLocal8Bit();
+}
+
 void tst_QScriptEngine::dateConversionJSQt()
 {
     uint secs = QDateTime(QDate(2009, 1, 1)).toUTC().toTime_t();
@@ -5836,8 +5863,8 @@ void tst_QScriptEngine::dateConversionJSQt()
         QString qtUTCDateStr = qtDate.toUTC().toString(Qt::ISODate);
         QString jsUTCDateStr = jsDate.property("toISOString").call(jsDate).toString();
         jsUTCDateStr.remove(jsUTCDateStr.length() - 5, 4); // get rid of milliseconds (".000")
-        if (qtUTCDateStr != jsUTCDateStr)
-            QFAIL(qPrintable(jsDate.toString()));
+        QVERIFY2(qtUTCDateStr == jsUTCDateStr,
+                 msgDateConversionJSQt(i, secs, qtUTCDateStr, jsUTCDateStr, jsDate));
         secs += 2*60*60;
     }
 }
