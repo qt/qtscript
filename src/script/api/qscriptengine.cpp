@@ -98,7 +98,6 @@ QT_BEGIN_NAMESPACE
   \brief The QScriptEngine class provides an environment for evaluating Qt Script code.
 
   \ingroup script
-  \mainclass
 
   See the \l{Qt Script} documentation for information about the Qt Script language,
   and how to get started with scripting your C++ application.
@@ -4424,7 +4423,6 @@ QScriptValue QScriptEngine::objectById(qint64 id) const
   \brief The QScriptSyntaxCheckResult class provides the result of a script syntax check.
 
   \ingroup script
-  \mainclass
 
   QScriptSyntaxCheckResult is returned by QScriptEngine::checkSyntax() to
   provide information about the syntactical (in)correctness of a script.
