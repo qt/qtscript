@@ -3035,7 +3035,6 @@ void QScriptEngine::setDefaultPrototype(int metaTypeId, const QScriptValue &prot
 
 /*!
   \typedef QScriptEngine::FunctionSignature
-  \relates QScriptEngine
 
   The function signature \c{QScriptValue f(QScriptContext *, QScriptEngine *)}.
 
@@ -3045,7 +3044,6 @@ void QScriptEngine::setDefaultPrototype(int metaTypeId, const QScriptValue &prot
 
 /*!
   \typedef QScriptEngine::FunctionWithArgSignature
-  \relates QScriptEngine
 
   The function signature \c{QScriptValue f(QScriptContext *, QScriptEngine *, void *)}.
 
