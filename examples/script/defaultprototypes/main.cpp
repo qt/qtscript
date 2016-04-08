@@ -80,10 +80,6 @@ int main(int argc, char **argv)
         qWarning() << "line" << lineNo << ":" << result.toString();
     }
 
-#if defined(Q_OS_SYMBIAN)
-    listWidget.showMaximized();
-#else
     listWidget.show();
-#endif
     return app.exec();
 }

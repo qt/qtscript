@@ -37,10 +37,6 @@
 
 #include <QtScript>
 
-#if defined(Q_OS_SYMBIAN)
-# define SRCDIR "."
-#endif
-
 struct TestRecord
 {
     TestRecord() : lineNumber(-1) { }
