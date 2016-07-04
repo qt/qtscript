@@ -44,8 +44,6 @@ include($$WEBKITDIR/JavaScriptCore/JavaScriptCore.pri)
 # This line copied from WebCore.pro
 DEFINES += WTF_USE_JAVASCRIPTCORE_BINDINGS=1 WTF_CHANGES=1
 
-CONFIG(release, debug|release):DEFINES += NDEBUG
-
 # Avoid JSC C API functions being exported.
 DEFINES += JS_NO_EXPORT
 
