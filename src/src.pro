@@ -1,4 +1,7 @@
 TEMPLATE = subdirs
 CONFIG += ordered
 SUBDIRS += script
-qtHaveModule(widgets): SUBDIRS += scripttools
+qtHaveModule(widgets): {
+    QT_FOR_CONFIG += widgets
+    qtConfig(textedit): SUBDIRS += scripttools
+}

@@ -1,6 +1,3 @@
-load(qfeatures)
-requires(!contains(QT_DISABLED_FEATURES, textedit))
-
 TARGET     = QtScriptTools
 QT         = core-private
 QT_PRIVATE = gui widgets-private script
