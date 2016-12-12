@@ -70,7 +70,7 @@
     These classes offer a similar but more narrow scripting API that is
     sufficient for most use cases and is not dependent on LGPL code.
 
-    \legalese
+    \badcode
     Qt Script is licensed under the GNU Library General Public License.
     Individual contributor names and copyright dates can be found
     inline in the code.
@@ -89,6 +89,10 @@
     along with this library; see the file COPYING.LIB.  If not, write to
     the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
     Boston, MA 02110-1301, USA.
-    \endlegalese
+    \endcode
 
+    Qt Script furthermore contains third party code that is also licensed
+    under the \l{GNU General Public License, version 2}, or later:
+
+    \generatelist{groupsbymodule attributions-qtscript}
 */

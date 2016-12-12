@@ -67,12 +67,6 @@ mingw:equals(QT_ARCH, x86_64): DEFINES+=ENABLE_YARR_JIT=0
     }
 }
 
-wince* {
-    INCLUDEPATH += $$PWD/../../ce-compat
-    SOURCES += $$PWD/../../ce-compat/ce_time.c
-    DEFINES += WINCEBASIC
-}
-
 include(pcre/pcre.pri)
 
 SOURCES += \
