@@ -41,11 +41,7 @@
 #include "context2d.h"
 
 #include <QVariant>
-
-#include <math.h>
-static const double Q_PI   = 3.14159265358979323846;   // pi
-
-#define DEGREES(t) ((t) * 180.0 / Q_PI)
+#include <qmath.h>
 
 #define qClamp(val, min, max) qMin(qMax(val, min), max)
 static QList<qreal> parseNumbersList(QString::const_iterator &itr)
@@ -224,7 +220,7 @@ void Context2D::scale(qreal x, qreal y)
 
 void Context2D::rotate(qreal angle)
 {
-    m_state.matrix.rotate(DEGREES(angle));
+    m_state.matrix.rotate(qRadiansToDegrees(angle));
     m_state.flags |= DirtyTransformationMatrix;
 }
 
@@ -573,8 +569,8 @@ void Context2D::arc(qreal xc, qreal yc, qreal radius,
     anticlockwise = !anticlockwise;
     //end hack
 
-    float sa = DEGREES(sar);
-    float ea = DEGREES(ear);
+    float sa = qRadiansToDegrees(sar);
+    float ea = qRadiansToDegrees(ear);
 
     double span = 0;
 
