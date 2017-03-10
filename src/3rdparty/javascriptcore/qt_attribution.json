@@ -8,7 +8,7 @@
     "Version": "This is a snapshot of JavaScriptCore from git://code.qt.io/qt/qtwebkit.git",
     "License": "GNU Library General Public License v2 or later",
     "LicenseId": "LGPL-2.0+",
-    "LicenseFile": "JavaScriptCore/COPYING.lib",
+    "LicenseFile": "JavaScriptCore/COPYING.LIB",
     "Copyright": "Copyright 2006-2008 the V8 project authors.
 Copyright 2009, The Android Open Source Project
 Copyright (C) 1984, 1989, 1990, 2000, 2001, 2002, 2003, 2004, 2005, 2006
