@@ -17,7 +17,7 @@ include($$WEBKITDIR/WebKit.pri)
 
 # Disable a few warnings on Windows.
 # These are in addition to the ones disabled in WebKit.pri
-win32-msvc*: QMAKE_CXXFLAGS += -wd4396 -wd4099
+win32-msvc*: QMAKE_CXXFLAGS += -wd4396 -wd4099 -wd4577
 
 # Windows CE-specific stuff copied from WebCore.pro
 # ### Should rather be in JavaScriptCore.pri?
