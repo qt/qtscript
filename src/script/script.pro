@@ -58,3 +58,6 @@ integrity {
 TR_EXCLUDE = $$WEBKITDIR/*
 
 load(qt_module)
+# Override the module default, as it breaks compilation with libc++>=5.0:
+# auto_ptr is no longer part of the c++1z standard.
+CONFIG -= c++1z
