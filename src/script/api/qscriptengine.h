@@ -264,7 +264,7 @@ protected:
 
     QScriptEngine(QScriptEnginePrivate &dd);
 #else
-    explicit QScriptEngine(QScriptEnginePrivate &dd, QObject *parent = Q_NULLPTR);
+    explicit QScriptEngine(QScriptEnginePrivate &dd, QObject *parent = nullptr);
 #endif
 
 private:
