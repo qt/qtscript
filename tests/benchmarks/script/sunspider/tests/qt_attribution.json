@@ -11,6 +11,7 @@ the same browser, and different browsers to each other.",
     "Homepage": "https://webkit.org/perf/sunspider/sunspider.html",
     "Version": "0.9.1",
     "LicenseId": "BSD-3-Clause AND LGPL-2.1 AND MIT",
+    "License": "BSD 3-clause \"New\" or \"Revised\" License, GNU Lesser General Public License v2.1 only, and MIT License",
     "LicenseFile": "LICENSE.txt",
     "Copyright": "Copyright (C) 2004-2007, The Dojo Foundation
 Copyright (C) 2004 Baron Schwartz <baron at sequent dot org>

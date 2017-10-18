@@ -125,7 +125,6 @@
             'jit/JITStubs.h',
             'jsc.cpp',
             'os-win32/stdbool.h',
-            'os-win32/stdint.h',
             'parser/Lexer.cpp',
             'parser/Lexer.h',
             'parser/NodeConstructors.h',
