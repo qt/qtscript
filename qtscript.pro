@@ -1,3 +1,3 @@
-requires(!integrity:!winrt:!tvos:!watchos)
+requires(!integrity:!vxworks:!winrt:!tvos:!watchos)
 
 load(qt_parts)
