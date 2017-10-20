@@ -30,3 +30,8 @@ SUBDIRS=\
     qscriptvalue
 
 !cross_compile:                             SUBDIRS += host.pro
+
+# QTBUG-63916
+boot2qt: {
+        contains(QT_ARCH, arm64): SUBDIRS -= cmake
+}
