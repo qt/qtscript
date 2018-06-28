@@ -277,7 +277,7 @@ void tst_QScriptJSTestSuite::runTestFunction(int testIndex)
                                actual.toString(), expect.toString(),
                                relpath, lineNumber);
 
-                QTest::newRow(description.toLatin1()) << rec;
+                QTest::newRow(description.toUtf8()) << rec;
             }
         }
         if (!hasData)
