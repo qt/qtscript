@@ -36,6 +36,8 @@ mac {
     }
 }
 
+qtConfig(asm_hwcap_h): DEFINES += HAVE_asm_hwcap_h
+
 # Suppress 'LEAK' messages (see QTBUG-18201)
 DEFINES += LOG_DISABLED=1
 
