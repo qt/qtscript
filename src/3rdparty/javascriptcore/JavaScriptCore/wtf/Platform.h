@@ -252,7 +252,7 @@
 #endif
 
 /* CPU(AARCH64) - AArch64 */
-#if defined(__aarch64__)
+#if defined(__aarch64__) || defined(_M_ARM64)
 #define WTF_CPU_AARCH64 1
 #if defined(__AARCH64EB__)
 #define WTF_CPU_BIG_ENDIAN 1
