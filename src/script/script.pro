@@ -63,3 +63,14 @@ load(qt_module)
 # Override the module default, as it breaks compilation with libc++>=5.0:
 # auto_ptr is no longer part of the c++1z standard.
 CONFIG -= c++1z
+
+android-clang:equals(ANDROID_TARGET_ARCH, armeabi-v7a) {
+    QMAKE_CFLAGS_RELEASE -= -mthumb
+    QMAKE_CFLAGS_RELEASE *= -marm
+    QMAKE_CFLAGS_RELEASE_WITH_DEBUGINFO -= -mthumb
+    QMAKE_CFLAGS_RELEASE_WITH_DEBUGINFO *= -marm
+    QMAKE_CXXFLAGS_RELEASE -= -mthumb
+    QMAKE_CXXFLAGS_RELEASE *= -marm
+    QMAKE_CXXFLAGS_RELEASE_WITH_DEBUGINFO -= -mthumb
+    QMAKE_CXXFLAGS_RELEASE_WITH_DEBUGINFO *= -marm
+}
