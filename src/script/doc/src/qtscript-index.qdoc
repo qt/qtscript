@@ -33,6 +33,8 @@
   The following guides and references cover aspects of programming with
   ECMAScript and Qt.
 
+  \include deprecation.qdocinc
+
   \tableofcontents
 
   \section1 Licenses and Attributions
