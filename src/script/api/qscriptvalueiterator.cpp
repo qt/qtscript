@@ -28,13 +28,13 @@
 #include "qscriptengine.h"
 #include "qscriptengine_p.h"
 #include "qscriptvalue_p.h"
-#include "qlinkedlist.h"
-
 
 #include "JSObject.h"
 #include "PropertyNameArray.h"
 #include "JSArray.h"
 #include "JSFunction.h"
+
+#include <list>
 
 QT_BEGIN_NAMESPACE
 
@@ -118,16 +118,16 @@ public:
 
         JSC::PropertyNameArray::const_iterator propertyNamesIt = propertyNamesArray.begin();
         for(; propertyNamesIt != propertyNamesArray.end(); ++propertyNamesIt) {
-            propertyNames.append(*propertyNamesIt);
+            propertyNames.push_back(*propertyNamesIt);
         }
         it = propertyNames.begin();
         initialized = true;
     }
 
     QScriptValue objectValue;
-    QLinkedList<JSC::Identifier> propertyNames;
-    QLinkedList<JSC::Identifier>::iterator it;
-    QLinkedList<JSC::Identifier>::iterator current;
+    std::list<JSC::Identifier> propertyNames;
+    std::list<JSC::Identifier>::iterator it;
+    std::list<JSC::Identifier>::iterator current;
     bool initialized;
 };
 
