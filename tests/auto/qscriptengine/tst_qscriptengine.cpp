@@ -2091,12 +2091,12 @@ static void fooFromScriptValueV2(const QScriptValue &value, Foo &foo)
     foo.x = value.toInt32();
 }
 
-Q_DECLARE_METATYPE(QLinkedList<QString>)
+Q_DECLARE_METATYPE(std::list<QString>)
 Q_DECLARE_METATYPE(QList<Foo>)
 Q_DECLARE_METATYPE(QVector<QChar>)
 Q_DECLARE_METATYPE(QStack<int>)
 Q_DECLARE_METATYPE(QQueue<char>)
-Q_DECLARE_METATYPE(QLinkedList<QStack<int> >)
+Q_DECLARE_METATYPE(std::list<QStack<int> >)
 
 void tst_QScriptEngine::valueConversion_basic()
 {
@@ -2215,11 +2215,10 @@ void tst_QScriptEngine::valueConversion_customType()
 void tst_QScriptEngine::valueConversion_sequence()
 {
     QScriptEngine eng;
-    qScriptRegisterSequenceMetaType<QLinkedList<QString> >(&eng);
+    qScriptRegisterSequenceMetaType<std::list<QString> >(&eng);
 
     {
-        QLinkedList<QString> lst;
-        lst << QLatin1String("foo") << QLatin1String("bar");
+        std::list<QString> lst = {QLatin1String("foo"), QLatin1String("bar")};
         QScriptValue lstVal = qScriptValueFromValue(&eng, lst);
         QCOMPARE(lstVal.isArray(), true);
         QCOMPARE(lstVal.property("length").toInt32(), 2);
@@ -2233,12 +2232,12 @@ void tst_QScriptEngine::valueConversion_sequence()
     qScriptRegisterSequenceMetaType<QStack<int> >(&eng);
     qScriptRegisterSequenceMetaType<QVector<QChar> >(&eng);
     qScriptRegisterSequenceMetaType<QQueue<char> >(&eng);
-    qScriptRegisterSequenceMetaType<QLinkedList<QStack<int> > >(&eng);
+    qScriptRegisterSequenceMetaType<std::list<QStack<int> > >(&eng);
 
     {
-        QLinkedList<QStack<int> > lst;
-        QStack<int> first; first << 13 << 49; lst << first;
-        QStack<int> second; second << 99999;lst << second;
+        QStack<int> first; first << 13 << 49;
+        QStack<int> second; second << 99999;
+        std::list<QStack<int> > lst = {first, second};
         QScriptValue lstVal = qScriptValueFromValue(&eng, lst);
         QCOMPARE(lstVal.isArray(), true);
         QCOMPARE(lstVal.property("length").toInt32(), 2);
@@ -2251,7 +2250,7 @@ void tst_QScriptEngine::valueConversion_sequence()
         QCOMPARE(lstVal.property("1").property("0").toInt32(), second.at(0));
         QCOMPARE(qscriptvalue_cast<QStack<int> >(lstVal.property("0")), first);
         QCOMPARE(qscriptvalue_cast<QStack<int> >(lstVal.property("1")), second);
-        QCOMPARE(qscriptvalue_cast<QLinkedList<QStack<int> > >(lstVal), lst);
+        QCOMPARE(qscriptvalue_cast<std::list<QStack<int> > >(lstVal), lst);
     }
 
     // pointers
