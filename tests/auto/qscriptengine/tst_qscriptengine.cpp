@@ -5783,7 +5783,7 @@ void tst_QScriptEngine::qRegExpInport()
     }
 }
 
-static QByteArray msgDateRoundtripJSQtJS(int i, uint secs,
+static QByteArray msgDateRoundtripJSQtJS(int i, qint64 secs,
                                          const QScriptValue &jsDate2,
                                          const QScriptValue &jsDate)
 {
@@ -5803,7 +5803,7 @@ static QByteArray msgDateRoundtripJSQtJS(int i, uint secs,
 // effect at a given date (QTBUG-9770).
 void tst_QScriptEngine::dateRoundtripJSQtJS()
 {
-    uint secs = QDateTime(QDate(2009, 1, 1)).toUTC().toTime_t();
+    qint64 secs = QDateTime(QDate(2009, 1, 1)).toUTC().toSecsSinceEpoch();
     QScriptEngine eng;
     for (int i = 0; i < 8000; ++i) {
         QScriptValue jsDate = eng.evaluate(QString::fromLatin1("new Date(%0 * 1000.0)").arg(secs));
@@ -5828,7 +5828,7 @@ void tst_QScriptEngine::dateRoundtripQtJSQt()
     }
 }
 
-static QByteArray msgDateConversionJSQt(int i, uint secs,
+static QByteArray msgDateConversionJSQt(int i, qint64 secs,
                                         const QString &qtUTCDateStr,
                                         const QString &jsUTCDateStr,
                                         const QScriptValue &jsDate)
@@ -5843,7 +5843,7 @@ static QByteArray msgDateConversionJSQt(int i, uint secs,
 
 void tst_QScriptEngine::dateConversionJSQt()
 {
-    uint secs = QDateTime(QDate(2009, 1, 1)).toUTC().toTime_t();
+    qint64 secs = QDateTime(QDate(2009, 1, 1)).toUTC().toSecsSinceEpoch();
     QScriptEngine eng;
     for (int i = 0; i < 8000; ++i) {
         QScriptValue jsDate = eng.evaluate(QString::fromLatin1("new Date(%0 * 1000.0)").arg(secs));
