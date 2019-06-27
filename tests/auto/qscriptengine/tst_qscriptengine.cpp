@@ -2057,13 +2057,13 @@ void tst_QScriptEngine::getSetDefaultPrototype_customType()
     QCOMPARE(eng.defaultPrototype(qMetaTypeId<Foo>()).isValid(), false);
     eng.setDefaultPrototype(qMetaTypeId<Foo>(), object);
     QCOMPARE(eng.defaultPrototype(qMetaTypeId<Foo>()).strictlyEquals(object), true);
-    QScriptValue value = eng.newVariant(qVariantFromValue(Foo()));
+    QScriptValue value = eng.newVariant(QVariant::fromValue(Foo()));
     QCOMPARE(value.prototype().isObject(), true);
     QCOMPARE(value.prototype().strictlyEquals(object), true);
 
     eng.setDefaultPrototype(qMetaTypeId<Foo>(), QScriptValue());
     QCOMPARE(eng.defaultPrototype(qMetaTypeId<Foo>()).isValid(), false);
-    QScriptValue value2 = eng.newVariant(qVariantFromValue(Foo()));
+    QScriptValue value2 = eng.newVariant(QVariant::fromValue(Foo()));
     QCOMPARE(value2.prototype().strictlyEquals(object), false);
 }
 
@@ -2361,13 +2361,13 @@ void tst_QScriptEngine::valueConversion_QVariant()
         QCOMPARE(val.toString(), str);
     }
     {
-        QScriptValue val = qScriptValueFromValue(&eng, qVariantFromValue((QObject*)this));
+        QScriptValue val = qScriptValueFromValue(&eng, QVariant::fromValue((QObject*)this));
         QVERIFY(!val.isVariant());
         QVERIFY(val.isQObject());
         QCOMPARE(val.toQObject(), (QObject*)this);
     }
     {
-        QVariant var = qVariantFromValue(QPoint(123, 456));
+        QVariant var = QVariant::fromValue(QPoint(123, 456));
         QScriptValue val = qScriptValueFromValue(&eng, var);
         QVERIFY(val.isVariant());
         QCOMPARE(val.toVariant(), var);
