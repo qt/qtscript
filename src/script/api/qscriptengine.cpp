@@ -3847,7 +3847,7 @@ QStringList QScriptEngine::availableExtensions() const
         }
     }
 
-    QStringList lst = result.toList();
+    QStringList lst = result.values();
     std::sort(lst.begin(), lst.end());
     return lst;
 #endif
@@ -3864,7 +3864,7 @@ QStringList QScriptEngine::availableExtensions() const
 QStringList QScriptEngine::importedExtensions() const
 {
     Q_D(const QScriptEngine);
-    QStringList lst = d->importedExtensions.toList();
+    QStringList lst = d->importedExtensions.values();
     std::sort(lst.begin(), lst.end());
     return lst;
 }

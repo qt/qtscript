@@ -168,7 +168,7 @@ QScriptXmlParser::Result QScriptXmlParser::parse(const QString &xml)
     reader.readNext(); // </program>
     reader.readNext(); // EndDocument
     Q_ASSERT(reader.atEnd());
-    return Result(functionsInfo, lineNumbers.toSet());
+    return Result(functionsInfo, QSet<int>(lineNumbers.begin(), lineNumbers.end()));
 }
 
 QT_END_NAMESPACE

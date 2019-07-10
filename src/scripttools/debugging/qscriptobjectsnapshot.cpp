@@ -93,7 +93,8 @@ QScriptObjectSnapshot::Delta QScriptObjectSnapshot::capture(const QScriptValue &
     QSet<QString> prevSet;
     for (int i = 0; i < m_properties.size(); ++i)
         prevSet.insert(m_properties.at(i).name());
-    QSet<QString> currSet = currProps.keys().toSet();
+    QList<QString> currPropsKeys = currProps.keys();
+    QSet<QString> currSet = QSet<QString>(currPropsKeys.begin(), currPropsKeys.end());
     QSet<QString> removedProperties = prevSet - currSet;
     QSet<QString> addedProperties = currSet - prevSet;
     QSet<QString> maybeChangedProperties = currSet & prevSet;
@@ -120,7 +121,7 @@ QScriptObjectSnapshot::Delta QScriptObjectSnapshot::capture(const QScriptValue &
         }
     }
 
-    result.removedProperties = removedProperties.toList();
+    result.removedProperties = removedProperties.values();
 
     m_properties = currProps.values();
 
