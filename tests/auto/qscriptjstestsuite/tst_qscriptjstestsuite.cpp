@@ -353,12 +353,12 @@ void tst_QScriptJSTestSuite::configData(TestConfig::Mode mode, const QStringList
 
 void tst_QScriptJSTestSuite::writeSkipConfigFile(QTextStream &stream)
 {
-    stream << QString::fromLatin1("# testcase | message") << endl;
+    stream << QString::fromLatin1("# testcase | message") << Qt::endl;
 }
 
 void tst_QScriptJSTestSuite::writeExpectFailConfigFile(QTextStream &stream)
 {
-    stream << QString::fromLatin1("# testcase | description | message") << endl;
+    stream << QString::fromLatin1("# testcase | description | message") << Qt::endl;
     for (int i = 0; i < expectedFailures.size(); ++i) {
         const FailureItem &fail = expectedFailures.at(i);
         if (fail.pathRegExp.pattern().isEmpty())
@@ -368,7 +368,7 @@ void tst_QScriptJSTestSuite::writeExpectFailConfigFile(QTextStream &stream)
             .arg(escape(fail.description));
         if (!fail.message.isEmpty())
             stream << QString::fromLatin1(" | %0").arg(escape(fail.message));
-        stream << endl;
+        stream << Qt::endl;
     }
 }
 

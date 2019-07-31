@@ -256,13 +256,13 @@ void ScriptDebuggerPrivate::output(const QString &text)
 
 void ScriptDebuggerPrivate::message(const QString &text)
 {
-    *m_outputStream << text << endl;
+    *m_outputStream << text << Qt::endl;
     m_outputStream->flush();
 }
 
 void ScriptDebuggerPrivate::errorMessage(const QString &text)
 {
-    *m_errorStream << text << endl;
+    *m_errorStream << text << Qt::endl;
     m_errorStream->flush();
 }
 
