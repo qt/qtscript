@@ -394,11 +394,13 @@ void QScriptDebuggerAgent::scriptsCheckpoint()
 QPair<QList<qint64>, QList<qint64> > QScriptDebuggerAgent::scriptsDelta() const
 {
     Q_D(const QScriptDebuggerAgent);
-    QSet<qint64> prevSet = d->previousCheckpointScripts.keys().toSet();
-    QSet<qint64> currSet = d->checkpointScripts.keys().toSet();
+    QList<qint64> prevKeys = d->previousCheckpointScripts.keys();
+    QList<qint64> currKeys = d->checkpointScripts.keys();
+    QSet<qint64> prevSet = QSet<qint64>(prevKeys.begin(), prevKeys.end());
+    QSet<qint64> currSet = QSet<qint64>(currKeys.begin(), currKeys.end());
     QSet<qint64> addedScriptIds = currSet - prevSet;
     QSet<qint64> removedScriptIds = prevSet - currSet;
-    return qMakePair(addedScriptIds.toList(), removedScriptIds.toList());
+    return qMakePair(addedScriptIds.values(), removedScriptIds.values());
 }
 
 /*!

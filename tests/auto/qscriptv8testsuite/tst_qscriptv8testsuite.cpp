@@ -94,12 +94,12 @@ static QScriptValue qscript_fail(QScriptContext *ctx, QScriptEngine *eng)
 
 void tst_QScriptV8TestSuite::writeSkipConfigFile(QTextStream &stream)
 {
-    stream << QString::fromLatin1("# testcase | message") << endl;
+    stream << QString::fromLatin1("# testcase | message") << Qt::endl;
 }
 
 void tst_QScriptV8TestSuite::writeExpectFailConfigFile(QTextStream &stream)
 {
-    stream << QString::fromLatin1("# testcase | actual | expected | message") << endl;
+    stream << QString::fromLatin1("# testcase | actual | expected | message") << Qt::endl;
     for (int i = 0; i < expectedFailures.size(); ++i) {
         const ExpectedFailure &fail = expectedFailures.at(i);
         stream << QString::fromLatin1("%0 | %1 | %2")
@@ -108,7 +108,7 @@ void tst_QScriptV8TestSuite::writeExpectFailConfigFile(QTextStream &stream)
             .arg(escape(fail.expected));
         if (!fail.message.isEmpty())
             stream << QString::fromLatin1(" | %0").arg(escape(fail.message));
-        stream << endl;
+        stream << Qt::endl;
     }
 }
 

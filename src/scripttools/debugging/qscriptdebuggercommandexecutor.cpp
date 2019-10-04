@@ -398,7 +398,7 @@ QScriptDebuggerResponse QScriptDebuggerCommandExecutor::execute(
                 obj = obj.prototype();
             }
         }
-        QStringList matchesList = matches.toList();
+        QStringList matchesList = matches.values();
         std::stable_sort(matchesList.begin(), matchesList.end());
         response.setResult(matchesList);
     }   break;
