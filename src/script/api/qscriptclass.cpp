@@ -236,7 +236,7 @@ QScriptClass::QueryFlags QScriptClass::queryProperty(
     Q_UNUSED(name);
     Q_UNUSED(flags);
     Q_UNUSED(id);
-    return 0;
+    return {};
 }
 
 /*!
@@ -276,7 +276,7 @@ QScriptValue::PropertyFlags QScriptClass::propertyFlags(
     Q_UNUSED(object);
     Q_UNUSED(name);
     Q_UNUSED(id);
-    return 0;
+    return {};
 }
 
 /*!

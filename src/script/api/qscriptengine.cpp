@@ -1990,9 +1990,9 @@ QScriptValue::PropertyFlags QScriptEnginePrivate::propertyFlags(JSC::ExecState *
             JSC::JSValue proto = object->prototype();
             return propertyFlags(exec, proto, id, mode);
         }
-        return 0;
+        return {};
     }
-    QScriptValue::PropertyFlags result = 0;
+    QScriptValue::PropertyFlags result;
     if (attribs & JSC::ReadOnly)
         result |= QScriptValue::ReadOnly;
     if (attribs & JSC::DontEnum)
