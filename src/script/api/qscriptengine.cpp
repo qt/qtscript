@@ -83,6 +83,7 @@
 #include "bridge/qscriptglobalobject_p.h"
 #include "bridge/qscriptactivationobject_p.h"
 #include "bridge/qscriptstaticscopeobject_p.h"
+#include "bridge/qscriptvariant_p.h"
 
 #ifndef QT_NO_QOBJECT
 #include <QtCore/qcoreapplication.h>
@@ -1069,7 +1070,7 @@ QVariant QScriptEnginePrivate::jscValueToVariant(JSC::ExecState *exec, JSC::JSVa
 {
     if (targetType == QMetaType::QVariant || uint(targetType) == QVariant::LastType)
         return toVariant(exec, value);
-    QVariant v(targetType, (void *)0);
+    QVariant v = QScript::createQVariant(targetType, nullptr);
     if (convertValue(exec, value, targetType, v.data()))
         return v;
     if (isVariant(value)) {
@@ -1081,7 +1082,7 @@ QVariant QScriptEnginePrivate::jscValueToVariant(JSC::ExecState *exec, JSC::JSVa
         QByteArray typeName = v.typeName();
         if (typeName.endsWith('*')
             && (QMetaType::type(typeName.left(typeName.size()-1)) == targetType)) {
-            return QVariant(targetType, *reinterpret_cast<void* *>(v.data()));
+            return QScript::createQVariant(targetType, *reinterpret_cast<void* *>(v.data()));
         }
     }
     return QVariant();
@@ -3190,7 +3191,7 @@ JSC::JSValue QScriptEnginePrivate::create(JSC::ExecState *exec, int type, const 
                 if (typeName.endsWith('*') && !*reinterpret_cast<void* const *>(ptr))
                     return JSC::jsNull();
                 else
-                    result = eng->newVariant(QVariant(type, ptr));
+                    result = eng->newVariant(QScript::createQVariant(type, ptr));
             }
         }
     }

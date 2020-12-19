@@ -84,6 +84,15 @@ public:
                       JSC::Structure* prototypeFunctionStructure);
 };
 
+inline QVariant createQVariant(int type, const void *copy)
+{
+#if (QT_VERSION >= QT_VERSION_CHECK(6, 0, 0))
+    return QVariant(QMetaType(type), copy);
+#else
+    return QVariant(type, copy);
+#endif
+}
+
 } // namespace QScript
 
 QT_END_NAMESPACE

@@ -49,6 +49,7 @@
 #include "../api/qscriptcontext_p.h"
 #include "qscriptfunction_p.h"
 #include "qscriptactivationobject_p.h"
+#include "qscriptvariant_p.h"
 
 #include "Error.h"
 #include "PrototypeFunction.h"
@@ -551,7 +552,7 @@ static JSC::JSValue delegateQtMethod(JSC::ExecState *exec, QMetaMethod::MethodTy
 
         if (rtype != QMetaType::Void) {
             // initialize the result
-            args[0] = QVariant(rtype, (void *)0);
+            args[0] = createQVariant(rtype, nullptr);
         }
 
         // try to convert arguments
@@ -567,7 +568,7 @@ static JSC::JSValue delegateQtMethod(JSC::ExecState *exec, QMetaMethod::MethodTy
             int tid = -1;
             QVariant v;
             if (argType.isUnresolved()) {
-                v = QVariant(QMetaType::QObjectStar, (void *)0);
+                v = createQVariant(QMetaType::QObjectStar, nullptr);
                 converted = QScriptEnginePrivate::convertToNativeQObject(
                     exec, actual, argType.name(), reinterpret_cast<void* *>(v.data()));
             } else if (argType.isVariant()) {
@@ -579,7 +580,7 @@ static JSC::JSValue delegateQtMethod(JSC::ExecState *exec, QMetaMethod::MethodTy
                 }
             } else {
                 tid = argType.typeId();
-                v = QVariant(tid, (void *)0);
+                v = createQVariant(tid, nullptr);
                 converted = QScriptEnginePrivate::convertValue(exec, actual, tid, v.data());
                 if (exec->hadException())
                     return exec->exception();
@@ -599,7 +600,7 @@ static JSC::JSValue delegateQtMethod(JSC::ExecState *exec, QMetaMethod::MethodTy
                         QByteArray vvTypeName = vv.typeName();
                         if (vvTypeName.endsWith('*')
                             && (vvTypeName.left(vvTypeName.size()-1) == argType.name())) {
-                            v = QVariant(tid, *reinterpret_cast<void* *>(vv.data()));
+                            v = createQVariant(tid, *reinterpret_cast<void* *>(vv.data()));
                             converted = true;
                             matchDistance += 10;
                         }
@@ -939,7 +940,7 @@ struct QtMethodCaller
             } else if (retType.typeId() != QMetaType::Void) {
                 result = QScriptEnginePrivate::create(exec, retType.typeId(), params[0]);
                 if (!result)
-                    result = engine->newVariant(QVariant(retType.typeId(), params[0]));
+                    result = engine->newVariant(createQVariant((retType.typeId()), params[0]));
             } else {
                 result = JSC::jsUndefined();
             }
