@@ -56,9 +56,15 @@
 #include <QtCore/qdatetime.h>
 #include <QtCore/qhash.h>
 #include <QtCore/qnumeric.h>
-#include <QtCore/qregexp.h>
 #include <QtCore/qset.h>
 #include <QtCore/qstringlist.h>
+
+#if (QT_VERSION >= QT_VERSION_CHECK(6, 0, 0))
+#include <QtCore5Compat/qregexp.h>
+#else
+#include <QtCore/qregexp.h>
+#endif
+
 #include "qscriptvalue_p.h"
 #include "qscriptstring_p.h"
 #include "bridge/qscriptclassobject_p.h"

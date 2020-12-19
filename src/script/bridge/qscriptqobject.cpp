@@ -702,13 +702,10 @@ static JSC::JSValue delegateQtMethod(JSC::ExecState *exec, QMetaMethod::MethodTy
                         break;
                     }
                 } else if (QScriptEnginePrivate::isRegExp(actual)) {
-                    switch (tid) {
-                    case QMetaType::QRegExp:
+                    if (tid == qMetaTypeId<QRegExp>()) {
                         // perfect
-                        break;
-                    default:
+                    } else {
                         matchDistance += 10;
-                        break;
                     }
                 } else if (QScriptEnginePrivate::isVariant(actual)) {
                     if (argType.isVariant()

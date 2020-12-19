@@ -3149,11 +3149,6 @@ JSC::JSValue QScriptEnginePrivate::create(JSC::ExecState *exec, int type, const 
         case QMetaType::QDate:
             result = newDate(exec, QDateTime(*reinterpret_cast<const QDate *>(ptr)));
             break;
-#ifndef QT_NO_REGEXP
-        case QMetaType::QRegExp:
-            result = newRegExp(exec, *reinterpret_cast<const QRegExp *>(ptr));
-            break;
-#endif
 #ifndef QT_NO_QOBJECT
         case QMetaType::QObjectStar:
             result = eng->newQObject(*reinterpret_cast<QObject* const *>(ptr));
@@ -3163,6 +3158,12 @@ JSC::JSValue QScriptEnginePrivate::create(JSC::ExecState *exec, int type, const 
             result = eng->newVariant(*reinterpret_cast<const QVariant*>(ptr));
             break;
         default:
+#ifndef QT_NO_REGEXP
+            if (type == qMetaTypeId<QRegExp>()) {
+                result = newRegExp(exec, *reinterpret_cast<const QRegExp *>(ptr));
+                break;
+            }
+#endif
             if (QMetaType::typeFlags(type) & QMetaType::PointerToQObject) {
                 result = eng->newQObject(*reinterpret_cast<QObject* const *>(ptr));
                 break;
@@ -3279,13 +3280,6 @@ bool QScriptEnginePrivate::convertValue(JSC::ExecState *exec, JSC::JSValue value
             *reinterpret_cast<QDate *>(ptr) = toDateTime(exec, value).date();
             return true;
         } break;
-#ifndef QT_NO_REGEXP
-    case QMetaType::QRegExp:
-        if (isRegExp(value)) {
-            *reinterpret_cast<QRegExp *>(ptr) = toRegExp(exec, value);
-            return true;
-        } break;
-#endif
 #ifndef QT_NO_QOBJECT
     case QMetaType::QObjectStar:
         if (isQObject(value) || value.isNull()) {
@@ -3312,7 +3306,16 @@ bool QScriptEnginePrivate::convertValue(JSC::ExecState *exec, JSC::JSValue value
         *reinterpret_cast<QVariant*>(ptr) = toVariant(exec, value);
         return true;
     default:
-    ;
+#ifndef QT_NO_REGEXP
+        if (type == qMetaTypeId<QRegExp>()) {
+            if (isRegExp(value)) {
+                *reinterpret_cast<QRegExp *>(ptr) = toRegExp(exec, value);
+                return true;
+            }
+            break;
+        }
+#endif
+        break;
     }
 
     QByteArray name = QMetaType::typeName(type);
