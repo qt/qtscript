@@ -3147,7 +3147,7 @@ JSC::JSValue QScriptEnginePrivate::create(JSC::ExecState *exec, int type, const 
             result = newDate(exec, *reinterpret_cast<const QDateTime *>(ptr));
             break;
         case QMetaType::QDate:
-            result = newDate(exec, QDateTime(*reinterpret_cast<const QDate *>(ptr)));
+            result = newDate(exec, reinterpret_cast<const QDate *>(ptr)->startOfDay());
             break;
 #ifndef QT_NO_QOBJECT
         case QMetaType::QObjectStar:
