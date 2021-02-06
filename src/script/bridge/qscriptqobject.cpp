@@ -463,7 +463,7 @@ static QMetaMethod metaMethod(const QMetaObject *meta,
     else
         return meta->constructor(index);
 }
-    
+
 /*!
   \internal
   Derives the actual method to call based on the script arguments,
@@ -2009,8 +2009,12 @@ JSC::JSValue QMetaObjectWrapperObject::execute(JSC::ExecState *exec,
 
 struct StaticQtMetaObject : public QObject
 {
+#if (QT_VERSION >= QT_VERSION_CHECK(6, 0, 0))
+    static const QMetaObject *get() { return &Qt::staticMetaObject; }
+#else
     static const QMetaObject *get()
         { return &static_cast<StaticQtMetaObject*> (0)->staticQtMetaObject; }
+#endif
 };
 
 static JSC::JSValue JSC_HOST_CALL qmetaobjectProtoFuncClassName(
@@ -2033,6 +2037,14 @@ QMetaObjectPrototype::QMetaObjectPrototype(
 }
 
 // Begin moc-generated code -- modify with care! Check "HAND EDIT" parts
+#if (QT_VERSION >= QT_VERSION_CHECK(6, 0, 0))
+struct qt_meta_stringdata_QObjectConnectionManager_t {
+    const uint offsetsAndSize[6];
+    char stringdata[44];
+};
+#define QT_MOC_LITERAL(ofs, len) \
+    uint(offsetof(qt_meta_stringdata_QObjectConnectionManager_t, stringdata) + ofs), len
+#else
 struct qt_meta_stringdata_QObjectConnectionManager_t {
     QByteArrayData data[3];
     char stringdata[44];
@@ -2042,11 +2054,18 @@ struct qt_meta_stringdata_QObjectConnectionManager_t {
         offsetof(qt_meta_stringdata_QObjectConnectionManager_t, stringdata) + ofs \
         - idx * sizeof(QByteArrayData) \
     }
+#endif
 static const qt_meta_stringdata_QObjectConnectionManager_t qt_meta_stringdata_QObjectConnectionManager = {
     {
+#if (QT_VERSION >= QT_VERSION_CHECK(6, 0, 0))
+QT_MOC_LITERAL(0, 33), // "QScript::QObjectConnectionManager..."
+QT_MOC_LITERAL(34, 7), // "execute"
+QT_MOC_LITERAL(42, 0) // ""
+#else
 QT_MOC_LITERAL(0, 0, 33),
 QT_MOC_LITERAL(1, 34, 7),
 QT_MOC_LITERAL(2, 42, 0)
+#endif
     },
     "QScript::QObjectConnectionManager\0"
     "execute\0\0"
@@ -2056,7 +2075,7 @@ QT_MOC_LITERAL(2, 42, 0)
 static const uint qt_meta_data_QObjectConnectionManager[] = {
 
  // content:
-       7,       // revision
+       9,       // revision
        0,       // classname
        0,    0, // classinfo
        1,   14, // methods
@@ -2086,8 +2105,20 @@ void QObjectConnectionManager::qt_static_metacall(QObject *_o, QMetaObject::Call
 }
 
 const QMetaObject QObjectConnectionManager::staticMetaObject = {
+#if (QT_VERSION >= QT_VERSION_CHECK(6, 0, 0))
+    {
+        QMetaObject::SuperData::link<QObject::staticMetaObject>(),
+        qt_meta_stringdata_QObjectConnectionManager.offsetsAndSize,
+        qt_meta_data_QObjectConnectionManager,
+        qt_static_metacall,
+        nullptr,
+        nullptr,
+        nullptr
+    }
+#else
     { &QObject::staticMetaObject, qt_meta_stringdata_QObjectConnectionManager.data,
       qt_meta_data_QObjectConnectionManager, qt_static_metacall, 0, 0 }
+#endif
 };
 
 const QMetaObject *QObjectConnectionManager::metaObject() const
