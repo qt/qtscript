@@ -86,8 +86,8 @@ bool ClassObjectDelegate::getOwnPropertySlot(QScriptObject* object,
         return true;
 
     QScriptValue scriptObject = engine->scriptValueFromJSCValue(object);
-    QScriptString scriptName;
     QScriptStringPrivate scriptName_d(engine, propertyName, QScriptStringPrivate::StackAllocated);
+    QScriptString scriptName;
     QScriptStringPrivate::init(scriptName, &scriptName_d);
     uint id = 0;
     QScriptClass::QueryFlags flags = m_scriptClass->queryProperty(
@@ -160,8 +160,8 @@ void ClassObjectDelegate::put(QScriptObject* object, JSC::ExecState *exec,
     QScriptEnginePrivate *engine = scriptEngineFromExec(exec);
     QScript::SaveFrameHelper saveFrame(engine, exec);
     QScriptValue scriptObject = engine->scriptValueFromJSCValue(object);
-    QScriptString scriptName;
     QScriptStringPrivate scriptName_d(engine, propertyName, QScriptStringPrivate::StackAllocated);
+    QScriptString scriptName;
     QScriptStringPrivate::init(scriptName, &scriptName_d);
     uint id = 0;
     QScriptClass::QueryFlags flags = m_scriptClass->queryProperty(
@@ -180,8 +180,8 @@ bool ClassObjectDelegate::deleteProperty(QScriptObject* object, JSC::ExecState *
     QScriptEnginePrivate *engine = scriptEngineFromExec(exec);
     QScript::SaveFrameHelper saveFrame(engine, exec);
     QScriptValue scriptObject = engine->scriptValueFromJSCValue(object);
-    QScriptString scriptName;
     QScriptStringPrivate scriptName_d(engine, propertyName, QScriptStringPrivate::StackAllocated);
+    QScriptString scriptName;
     QScriptStringPrivate::init(scriptName, &scriptName_d);
     uint id = 0;
     QScriptClass::QueryFlags flags = m_scriptClass->queryProperty(
