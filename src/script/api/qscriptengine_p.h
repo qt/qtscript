@@ -106,7 +106,6 @@ namespace JSC
 QT_BEGIN_NAMESPACE
 
 class QString;
-class QStringList;
 class QScriptContext;
 class QScriptValue;
 class QScriptTypeInfo;
