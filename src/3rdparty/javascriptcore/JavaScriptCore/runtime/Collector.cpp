@@ -93,6 +93,12 @@
 
 #define COLLECT_ON_EVERY_ALLOCATION 0
 
+#if defined(__clang__) || defined (__GNUC__)
+# define ATTRIBUTE_NO_SANITIZE_ADDRESS __attribute__((no_sanitize_address))
+#else
+# define ATTRIBUTE_NO_SANITIZE_ADDRESS
+#endif
+
 using std::max;
 
 namespace JSC {
@@ -786,6 +792,7 @@ static inline bool isPossibleCell(void* p)
 }
 #endif // USE(JSVALUE32)
 
+ATTRIBUTE_NO_SANITIZE_ADDRESS
 void Heap::markConservatively(MarkStack& markStack, void* start, void* end)
 {
     if (start > end) {
